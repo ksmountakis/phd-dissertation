@@ -1,0 +1,108 @@
+\annotate{The following is only a sketch of what I plan to write}
+
+	In this missing part I begin by introducing the dissertation as part of NedTrain's r\&d programme.
+	I redirect the user to Michel's thesis for such information, without discussing the programme.
+
+	I explain that scheduling finds several applications in the real world and as such,
+	existing literature comprises a vast landscape of different approaches in order to accomodate the needs of different domains.
+	I continue by confessing that this dissertation, too, is inspired by a real world application:
+	namely the scheduling of maintenance operations in a train-maintenance workshop.
+	Then I briefly summarize the emerging scheduling problem: temporal and resource constraints, release and due dates.
+
+	Having done this, I explain that existing literature already includes methods for finding
+	high quality fixed schedules subject to the workshop's constraints.
+	However, I claim, the main focus is on countering the effects of uncertainty,
+	which causes schedules to fail, introducing delays in delivering rolling-stock for circulation in the railway network,
+	which in turn translates to customer dissatisfaction.
+	Our contribution, I continue, is the development of scheduling techniques for dispatching tasks successfully under uncertainty.
+	I continue with mentioning the research area of scheduling under uncertainty and citing a few important surveys.
+
+	:
+
+
+\annotate{The following is not a sketch, but almost completely done}
+	% scheduled vss realized dispatching times
+	A schedule prescribes a dispatching or start time for each task.
+	Since uncertain changes in the environment can render the current schedule infeasible, 
+	scheduled dispatching times might have to undergo continuous revisions in order to maintain a feasible, high quality schedule.
+	% impulsive rescheduling or impulsive dispatching
+
+	An obvious question to ask, then, is why not simply solve an updated scheduling problem every time the environment changes, 
+	rendering the current schedule infeasible?
+	In fact, since realised dispatching times will most likely deviate from scheduled dispatching times,
+	one might even consider not generating a schedule at all,
+	with dispatching decisions taken entirely on-the-fly as a function of the environment and a certain set of rules.
+
+	But generating a new schedule from scratch in response to disruptive events or dispatching without scheduling
+	does not offer visibility into the future.
+	When visibility is lacking, we cannot plan ahead for the availability of actors and other resources.
+	That is, we must be able to respond in an agile manner to the entirely unpredictable dispatching demands of the task execution process.
+	But such agility requires that actors and resources are continuously available in the workshop.
+	Constant availability of resources at the workshop in order to accomodate unpredictable dispatching demands 
+	is often not desirable or even possible (e.g. due to excessive costs),
+	which leads us to the following research question:
+
+	\begin{quote}
+	\textbf{Research Question 1.}
+	How to ensure that tasks will get dispatched in the vicinity of certain time-points or within certain time-windows,
+	so as to avoid relying on the continuous availability of actors and other resources at the workshop?
+	\end{quote}
+
+	Another negative characteristic of methods that do not offer visibility into the future
+	is that satisfying the domain's scheduling constraints requires
+	synchronous communication between actors that make dispatching decisions.
+	That is, dispatching a task at a feasible time-point requires accounting 
+	for scheduling constraints in combination with observing other dispatching decisions.
+	However, such sunchronous communication is often undesirable or even impossible.
+	In the NedTrain workshop, for example, actors executing the tasks are organized into teams,
+	each of which is guided by a foreman.
+	These teams would prefer that any dispatching decisions could be taken independently of the decisions of other teams
+	in order to increase efficiency and limit complexity.
+	Moreover, any delays with respect to scheduled dispatching times should not affect the scheduled dispatching times of other teams.
+	
+	\begin{quote}
+	\textbf{Research Question 2.}
+	How to eliminate or at least limit the need for synchronous communication in order to satisfy domain constraints during dispatching?
+	\end{quote}
+
+	Moreover, note that rescheduling of dispatching times, when necessary, must be sufficiently efficient
+	such that it does not become yet another source of disruptive delays.
+
+	telos einai simantiko na shmeiwthei oti to rescheduling twn dispatching times prepei na ginetai me arketa efficient tropo,
+	wste o xronos pou dapanatai na min apotelei alli mia pigi kathusterishs.
+	epilysh resource constraints
+	opws afta pou uparxoun sto depot
+	perilamvanei tin epilush enos hard scheduling problem
+	gia tin ekseuresh kalhs lyshs mporei na xreiastei na dapanithei arketos xronos.
+	ws ek toutou, den mporoume na kanoume afford mia tetoia epilysh resource constraints kathe fora pou 
+	ta krinetai aparaitito na parthei ena dispatching decision,
+	i kathe fora pou prepei ta mellontika dispatching decisions na ginoun rescheduled.
+
+	\begin{quote}
+	\textbf{Research Question 3.}
+	How to ensure that rescheduling future dispatching times can efficient in order to keep pace with task execution?
+	\end{quote}
+
+\annotate{high-level look at the two parts}
+		This thesis summarizes results for two different types of scheduling problems and as such it is divided into respective parts I and II.
+
+		Both types of problems belong to the research area of scheduling under uncertainty, 
+		but uncertainty has a different meaning in each of the two cases.
+		Despite their differences, parts I and II have an underlying theme in common: 
+		beyond finding a fixed schedule for a given scheduling problem,
+		we are interested in finding a strategy for adjusting the solution in a continuous scheduling process.
+
+		Part I focuses on problems related to dispatching instantaneous events subject to Simple Temporal Problem (STP) constraints.
+		Such constraints restrict the minimum and maximum temporal distance between the dispatching of pairs of events.
+		It is assumed that each event is associated with a respective actor that will choose when to dispatch his event from a respective time-window.
+		Uncertainty in this case results from not being able to predict how an actor will choose within a given time-window.
+		We are interested in finding a \emph{flexible} strategy for initializing these time-windows and updating them as choices are being made,
+		striving to maximize the freedom with which actors can make choices as events keep getting dispatched.
+
+		Part II focuses on problems related to dispatching non-instantaneous events that correspond to tasks with random durations,
+		subject to simple precedence constraints and resource constraints.
+		Uncertainty in this case results from not being able to predict the outcome duration of a task.
+		We are interested in finding a dispatching strategy that enables us to predict with some confidence the outcome start-times of the tasks, 
+		even though the outcome task durations are unpredictable.
+		More in particular, we are interested in finding a strategy that optimizes the trade-off between two conflicting qualities:
+		dispatching tasks efficiently and dispatching tasks predictably.

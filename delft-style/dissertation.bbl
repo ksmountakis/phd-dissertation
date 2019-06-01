@@ -1,0 +1,565 @@
+\begin{thebibliography}{10}
+
+\bibitem{adams1988shifting}
+J. Adams, E. Balas, and D. Zawack.
+\newblock {The shifting bottleneck procedure for job shop scheduling}.
+\newblock {\em Management science}, 34(3):391--401, 1988.
+
+\bibitem{adlakha1989}
+V. Adlakha and V. Kulkarni.
+\newblock {A classified bibliography of research on stochastic PERT networks:
+  1966-1987}.
+\newblock {\em Information Systems and Operational Research}, 27(3):272--296,
+  1989.
+
+\bibitem{artigues2013resource}
+C. Artigues, S. Demassey, and E. Neron.
+\newblock {\em Resource-constrained project scheduling: models, algorithms,
+  extensions and applications}.
+\newblock John Wiley \& Sons, 2013.
+
+\bibitem{leus2011robust}
+C. Artigues, R. Leus, and F.~T. Nobibon.
+\newblock Robust optimization for resource-constrained project scheduling with
+  uncertain activity durations.
+\newblock {\em Flexible Services and Manufacturing Journal}, 25(1-2):175--205,
+  2013.
+
+\bibitem{artigues2003insertion}
+C. Artigues, P. Michelon, and S. Reusser.
+\newblock Insertion techniques for static and dynamic resource-constrained
+  project scheduling.
+\newblock {\em European Journal of Operational Research}, 149(2):249--267,
+  2003.
+
+\bibitem{arts2013spare}
+J. Arts.
+\newblock {\em Spare parts planning and control for maintenance operations}.
+\newblock PhD thesis, Eindhoven University of Technology, 2013.
+
+\bibitem{ashtiani2011new}
+B. Ashtiani, R. Leus, and M.-B. Aryanezhad.
+\newblock {New competitive results for the stochastic resource-constrained
+  project scheduling problem: exploring the benefits of pre-processing}.
+\newblock {\em Journal of Scheduling}, 14(2):157--171, 2011.
+
+\bibitem{ballestin2007worthwhile}
+F. Ballest{\'\i}n.
+\newblock {When it is worthwhile to work with the stochastic RCPSP?}
+\newblock {\em Journal of Scheduling}, 10(3):153--166, 2007.
+
+\bibitem{ballestin2009resource}
+F. Ballestin and R. Leus.
+\newblock Resource-constrained project scheduling for timely project completion
+  with stochastic activity durations.
+\newblock {\em Production and Operations Management}, 18(4):459--474, 2009.
+
+\bibitem{bartels2009scheduling}
+J. Bartels and J. Zimmermann.
+\newblock {Scheduling tests in automotive R\&D projects}.
+\newblock {\em European Journal of Operational Research}, 193(3):805--819,
+  2009.
+
+\bibitem{beck2002}
+C. Beck and A. Davenport.
+\newblock A survey of techniques for scheduling with uncertainty, 2002.
+
+\bibitem{bidot2009}
+J. Bidot, T. Vidal, P. Laborie, and J.~C. Beck.
+\newblock A theoretic and practical framework for scheduling in a stochastic
+  environment.
+\newblock {\em Journal of Scheduling}, 12(3):315--344, 2009.
+
+\bibitem{blaauw2008}
+D. Blaauw, K. Chopra, A. Srivastava, and L. Scheffer.
+\newblock {Statistical Timing Analysis: From basic principles to state of the
+  art}.
+\newblock {\em IEEE transactions on computer-aided design of integrated
+  circuits and systems}, 27(4):589--607, 2008.
+
+\bibitem{blazewicz1983scheduling}
+J. Blazewicz, J.~K. Lenstra, and A.~R. Kan.
+\newblock Scheduling subject to resource constraints: classification and
+  complexity.
+\newblock {\em Discrete Applied Mathematics}, 5(1):11--24, 1983.
+
+\bibitem{boerkoel:2011}
+J. Boerkoel and E. Durfee.
+\newblock Distributed algorithms for solving the multiagent temporal decoupling
+  problem.
+\newblock In {\em AAMAS}, pages 141--148, 2011.
+
+\bibitem{boerkoel:2013}
+J. Boerkoel and E. Durfee.
+\newblock Distributed reasoning for multiagent simple temporal problems.
+\newblock {\em Journal of Artificial Intelligence Research}, 47:95--156, 2013.
+
+\bibitem{bomsdorf2008model}
+F. Bomsdorf and U. Derigs.
+\newblock A model, heuristic procedure and decision support system for solving
+  the movie shoot scheduling problem.
+\newblock {\em {OR Spectrum}}, 30(4):751--772, 2008.
+
+\bibitem{bonfietti2014}
+A. Bonfietti, M. Lombardi, and M. Milano.
+\newblock {Disregarding Duration Uncertainty in Partial Order Schedules? {Y}es,
+  we can!}
+\newblock In {\em CPAIOR}, pages 210--225, 2014.
+
+\bibitem{braeckmans2005proactive}
+K. Braeckmans, E. Demeulemeester, W. Herroelen, and R. Leus.
+\newblock Proactive resource allocation heuristics for robust project
+  scheduling.
+\newblock {\em Technical Report -- KU Leuven-Departement toegepaste economische
+  wetenschappen}, 2005.
+
+\bibitem{brambilla:2010}
+A. Brambilla.
+\newblock {\em Artificial Intelligence in Space Systems: Coordination Through
+  Problem Decoupling in Multi Agent Planning for Space Systems}.
+\newblock Lambert Academic Publishing, 2010.
+
+\bibitem{brooks2015}
+J. Brooks, E. Reed, A. Gruver, and J.~C. Boerkoel.
+\newblock Robustness in probabilistic temporal planning.
+\newblock In {\em AAAI}, pages 3239--3246, 2015.
+
+\bibitem{brucker1998branch}
+P. Brucker, S. Knust, A. Schoo, and O. Thiele.
+\newblock A branch and bound algorithm for the resource-constrained project
+  scheduling problem.
+\newblock {\em European Journal of Operational Research}, 107(2):272--288,
+  1998.
+
+\bibitem{calafiore2005}
+G. Calafiore and M.~C. Campi.
+\newblock Uncertain convex programs: randomized solutions and confidence
+  levels.
+\newblock {\em Mathematical Programming}, 102(1):25--46, 2005.
+
+\bibitem{chretienne2003}
+P. Chr{\'e}tienne and F. Sourd.
+\newblock {PERT scheduling with convex cost functions}.
+\newblock {\em Theoretical Computer Science}, 292(1):145--164, 2003.
+
+\bibitem{coxeter1940regular}
+H. Coxeter.
+\newblock Regular and semi-regular polytopes. i.
+\newblock {\em Mathematische Zeitschrift}, 46(1):380--407, 1940.
+
+\bibitem{creemers2015minimizing}
+S. Creemers.
+\newblock Minimizing the expected makespan of a project with stochastic
+  activity durations under resource constraints.
+\newblock {\em Journal of Scheduling}, 18(3):263--273, 2015.
+
+\bibitem{davenport2014}
+A. Davenport, C. Gefflot, and C. Beck.
+\newblock Slack-based techniques for robust schedules.
+\newblock In {\em Sixth European Conference on Planning}, 2014.
+
+\bibitem{de2014novel}
+F. de~Nijs and T. Klos.
+\newblock {A Novel Priority Rule Heuristic: Learning from Justification}.
+\newblock In {\em ICAPS}, pages 92--100, 2014.
+
+\bibitem{deblaere2011proactive}
+F. Deblaere, E. Demeulemeester, and W. Herroelen.
+\newblock Proactive policies for the stochastic resource-constrained project
+  scheduling problem.
+\newblock {\em European Journal of Operational Research}, 214(2):308--316,
+  2011.
+
+\bibitem{dechter:2003}
+R. Dechter.
+\newblock {\em Constraint processing}.
+\newblock Morgan Kaufmann, 2003.
+
+\bibitem{dechter1991}
+R. Dechter, I. Meiri, and J. Pearl.
+\newblock Temporal constraint networks.
+\newblock {\em Artificial intelligence}, 49(1):61--95, 1991.
+
+\bibitem{floyd:1962}
+R. Floyd.
+\newblock Algorithm 97: Shortest path.
+\newblock {\em Communications of the ACM}, 5(6), 1962.
+
+\bibitem{Fredman:1987}
+M.~L. Fredman and R.~E. Tarjan.
+\newblock Fibonacci heaps and their uses in improved network optimization
+  algorithms.
+\newblock {\em Journal of the ACM}, 34(3):596--615, 1987.
+
+\bibitem{ghallab2004}
+M. Ghallab, D. Nau, and P. Traverso.
+\newblock {\em Automated Planning: theory and practice}.
+\newblock Elsevier, 2004.
+
+\bibitem{godard2005}
+D. Godard, P. Laborie, and W. Nuijten.
+\newblock Randomized large neighborhood search for cumulative scheduling.
+\newblock In {\em ICAPS}, pages 81--89, 2005.
+
+\bibitem{hagstrom1988computational}
+J.~N. Hagstrom.
+\newblock {Computational complexity of PERT problems}.
+\newblock {\em Networks}, 18(2):139--147, 1988.
+
+\bibitem{hagstrom1990}
+J.~N. Hagstrom.
+\newblock {Computing the probability distribution of project duration in a PERT
+  network}.
+\newblock {\em Networks}, 20(2):231--244, 1990.
+
+\bibitem{hartmann2010survey}
+S. Hartmann and D. Briskorn.
+\newblock A survey of variants and extensions of the resource-constrained
+  project scheduling problem.
+\newblock {\em European Journal of Operational Research}, 207(1):1--14, 2010.
+
+\bibitem{herroelen2001note}
+W. Herroelen, E. Demeulemeester, and B. De~Reyck.
+\newblock {A note on the paper “Resource-constrained project scheduling:
+  Notation, classification, models and methods” by Brucker et al.}
+\newblock {\em European Journal of Operational Research}, 128(3):679--688,
+  2001.
+
+\bibitem{herroelen2004construction}
+W. Herroelen and R. Leus.
+\newblock The construction of stable project baseline schedules.
+\newblock {\em European Journal of Operational Research}, 156(3):550--565,
+  2004.
+
+\bibitem{herroelen2004robust}
+W. Herroelen and R. Leus.
+\newblock Robust and reactive project scheduling: a review and classification
+  of procedures.
+\newblock {\em International Journal of Production Research}, 42(8):1599--1620,
+  2004.
+
+\bibitem{herroelen2005}
+W. Herroelen and R. Leus.
+\newblock {Project scheduling under uncertainty: Survey and research
+  potentials}.
+\newblock {\em European Journal of Operational Research}, 165(2):289--306,
+  2005.
+
+\bibitem{huisman2009}
+B. Huisman.
+\newblock Applied research \& development program `rolling stock life cycle
+  logistics' at ns/nedtrain.
+\newblock Technical report, NedTrain, 2009.
+
+\bibitem{hunsberger:2002b}
+L. Hunsberger.
+\newblock Algorithms for a temporal decoupling problem in multi-agent planning.
+\newblock In {\em AAAI}, pages 468--475, 2002.
+
+\bibitem{hunsberger:2002a}
+L. Hunsberger.
+\newblock {\em Group Decision Making and Temporal Reasoning}.
+\newblock PhD thesis, Harvard University, Cambridge, Massachusetts, 2002.
+
+\bibitem{igelmund1983}
+G. Igelmund and F.~J. Radermacher.
+\newblock Preselective strategies for the optimization of stochastic project
+  networks under resource constraints.
+\newblock {\em Networks}, 13(1):1--28, 1983.
+
+\bibitem{kannan1997random}
+R. Kannan, L. Lov{\'a}sz, and M. Simonovits.
+\newblock {Random walks and an $o^*(n^5)$ volume algorithm for convex bodies}.
+\newblock {\em Random structures and algorithms}, 11(1):1--50, 1997.
+
+\bibitem{kleywegt2002}
+A.~J. Kleywegt, A. Shapiro, and T. Homem-de Mello.
+\newblock The sample average approximation method for stochastic discrete
+  optimization.
+\newblock {\em SIAM Journal on Optimization}, 12(2):479--502, 2002.
+
+\bibitem{kolisch2006experimental}
+R. Kolisch and S. Hartmann.
+\newblock Experimental investigation of heuristics for resource-constrained
+  project scheduling: An update.
+\newblock {\em European journal of operational research}, 174(1):23--37, 2006.
+
+\bibitem{kolisch1997psplib}
+R. Kolisch and A. Sprecher.
+\newblock Psplib-a project scheduling problem library: Or software-orsep
+  operations research software exchange program.
+\newblock {\em European Journal of Operational Research}, 96(1):205--216, 1997.
+
+\bibitem{kone2011event}
+O. Kon{\'e}, C. Artigues, P. Lopez, and M. Mongeau.
+\newblock Event-based milp models for resource-constrained project scheduling
+  problems.
+\newblock {\em Computers \& Operations Research}, 38(1):3--13, 2011.
+
+\bibitem{lamas2015}
+P. Lamas and E. Demeulemeester.
+\newblock A purely proactive scheduling procedure for the resource-constrained
+  project scheduling problem with stochastic activity durations.
+\newblock {\em Journal of Scheduling}, 19(4):409--428, 2016.
+
+\bibitem{leus2011resource}
+R. Leus.
+\newblock Resource allocation by means of project networks: dominance results.
+\newblock {\em Networks}, 58(1):50--58, 2011.
+
+\bibitem{leus2004stability}
+R. Leus and W. Herroelen.
+\newblock Stability and resource allocation in project planning.
+\newblock {\em IIE transactions}, 36(7):667--682, 2004.
+
+\bibitem{lombardi2012min}
+M. Lombardi and M. Milano.
+\newblock A min-flow algorithm for minimal critical set detection in resource
+  constrained project scheduling.
+\newblock {\em Artificial Intelligence}, 182:58--67, 2012.
+
+\bibitem{lund2017}
+K. Lund, S. Dietrich, S. Chow, and J.~C. Boerkoel.
+\newblock Robust execution of probabilistic temporal plans.
+\newblock In {\em AAAI}, pages 3597--3604, 2017.
+
+\bibitem{malcolm1959}
+D.~G. Malcolm, J.~H. Roseboom, C.~E. Clark, and W. Fazar.
+\newblock Application of a technique for research and development program
+  evaluation.
+\newblock {\em Operations research}, 7, 1959.
+
+\bibitem{michel2004iterative}
+L. Michel and P. Van~Hentenryck.
+\newblock {Iterative relaxations for Iterative Flattening in cumulative
+  scheduling}.
+\newblock In {\em ICAPS}, pages 200--208, 2004.
+
+\bibitem{mohring1984stochastic}
+R.~H. M{\"o}hring, F.~J. Radermacher, and G. Weiss.
+\newblock Stochastic scheduling problems i -- general strategies.
+\newblock {\em Zeitschrift f{\"u}r Operations Research}, 28(7):193--260, 1984.
+
+\bibitem{mohring1985stochastic}
+R.~H. M{\"o}hring, F.~J. Radermacher, and G. Weiss.
+\newblock Stochastic scheduling problems ii -- set strategies.
+\newblock {\em Zeitschrift f{\"u}r Operations Research}, 29(3):65--104, 1985.
+
+\bibitem{mountakis2013}
+K.~S. Mountakis.
+\newblock {Stochastic Scheduling of Train Maintenance Projects}.
+\newblock Master's thesis, Delft University of Technology, the Netherlands,
+  2013.
+
+\bibitem{mountakis2017dynamic}
+K.~S. Mountakis, T. Klos, and C. Witteveen.
+\newblock Dynamic temporal decoupling.
+\newblock In {\em International Conference on AI and OR Techniques in
+  Constraint Programming for Combinatorial Optimization Problems}, pages
+  328--343. Springer, 2017.
+
+\bibitem{mountakis2017stochastic}
+K.~S. Mountakis, T. Klos, and C. Witteveen.
+\newblock Stochastic task networks.
+\newblock In {\em International Conference on AI and OR Techniques in
+  Constraint Programming for Combinatorial Optimization Problems}, pages
+  302--311. Springer, 2017.
+
+\bibitem{mountakis:2015}
+S. Mountakis, T. Klos, and C. Witteveen.
+\newblock Temporal flexibility revisited: Maximizing flexibility by computing
+  bipartite matchings.
+\newblock In {\em ICAPS}, pages 174--178, 2015.
+
+\bibitem{mountakis2015}
+S. Mountakis, T. Klos, C. Witteveen, and B. Huisman.
+\newblock Exact and heuristic methods for trading-off makespan and stability in
+  stochastic project scheduling.
+\newblock In {\em MISTA}, pages 25--41, 2015.
+
+\bibitem{NS2016}
+{Nederlandse Spoorwegen}.
+\newblock {NS Annual Report}.
+\newblock Technical report, 2016.
+
+\bibitem{oddi2009iterative}
+A. Oddi and R. Rasconi.
+\newblock {Iterative flattening search on RCPSP/max problems: recent
+  developments}.
+\newblock In {\em Recent Advances in Constraints}, pages 99--115, 2009.
+
+\bibitem{pallottino1984}
+S. Pallottino.
+\newblock Shortest-path methods: Complexity, interrelations and new
+  propositions.
+\newblock {\em Networks}, 14(2):257--267, 1984.
+
+\bibitem{papadimitriou:1982}
+C.~H. Papadimitriou and K. Steiglitz.
+\newblock {\em Combinatorial Optimization: Algorithms and Complexity}.
+\newblock Prentice-Hall, Inc., 1982.
+
+\bibitem{planken:2013}
+L. Planken.
+\newblock {\em Algorithms for Simple Temporal Reasoning}.
+\newblock PhD thesis, Delft University of Technology, 2013.
+
+\bibitem{planken:2012}
+L. Planken, M. de~Weerdt, and R. van~der Krogt.
+\newblock Computing all-pairs shortest paths by leveraging low treewidth.
+\newblock {\em Journal of Artificial Intelligence Research}, 43(1):353--388,
+  2012.
+
+\bibitem{plankenEtAl:2010}
+L. Planken, M. de~Weerdt, and C. Witteveen.
+\newblock Optimal temporal decoupling in multiagent systems.
+\newblock In {\em AAMAS}, pages 789--796, 2010.
+
+\bibitem{policella:2007}
+N. Policella, A. Cesta, A. Oddi, and S. Smith.
+\newblock From precedence constraint posting to partial order schedules: A
+  {CSP} approach to robust scheduling.
+\newblock {\em AI Communications}, 20(3):163--180, 2007.
+
+\bibitem{policella:2004}
+N. Policella, S.~F. Smith, A. Cesta, and A. Oddi.
+\newblock Generating robust schedules through temporal flexibility.
+\newblock In {\em ICAPS}, pages 209--218, 2004.
+
+\bibitem{policella2009solve}
+N. Policella, A. Cesta, A. Oddi, and S.~F. Smith.
+\newblock Solve-and-robustify.
+\newblock {\em Journal of Scheduling}, 12(3):299--314, 2009.
+
+\bibitem{policella2004}
+N. Policella, A. Oddi, S.~F. Smith, and A. Cesta.
+\newblock Generating robust partial order schedules.
+\newblock In {\em CP}, pages 496--511, 2004.
+
+\bibitem{pollack:2005}
+M.~E. Pollack and I. Tsamardinos.
+\newblock {Efficiently dispatching plans encoded as Simple Temporal Problems}.
+\newblock {\em Intelligent Techniques for Planning}, pages 296--319, 2005.
+
+\bibitem{potra2000}
+F.~A. Potra and S.~J. Wright.
+\newblock Interior-point methods.
+\newblock {\em Journal of Computational and Applied Mathematics},
+  124(1):281--302, 2000.
+
+\bibitem{parada:2015}
+J.~P. Puig.
+\newblock {\em Serviceability of passenger trains during acquisition projects}.
+\newblock PhD thesis, University of Twente, 2015.
+
+\bibitem{santos1999}
+E. Santos and J.~D. Young.
+\newblock Probabilistic temporal networks: A unified framework for reasoning
+  with time and uncertainty.
+\newblock {\em International Journal of Approximate Reasoning}, 20(3):263--291,
+  1999.
+
+\bibitem{schutt2013solving}
+A. Schutt, T. Feydy, P.~J. Stuckey, and M.~G. Wallace.
+\newblock {Solving RCPSP/max by lazy clause generation}.
+\newblock {\em Journal of Scheduling}, 16(3):273--289, 2013.
+
+\bibitem{shestak2008}
+V. Shestak, J. Smith, A.~A. Maciejewski, and H.~J. Siegel.
+\newblock Stochastic robustness metric and its use for static resource
+  allocations.
+\newblock {\em Journal of Parallel and Distributed Computing},
+  68(8):1157--1173, 2008.
+
+\bibitem{staats2014}
+J. Staats.
+\newblock {Improving PCP algorithms using flexibility metrics: Creating
+  flexible schedules for Technical Maintenance}.
+\newblock Master's thesis, Delft University of Technology, 2014.
+
+\bibitem{stork2000branch}
+F. Stork.
+\newblock Branch-and-bound algorithms for stochastic resource-constrained
+  project scheduling.
+\newblock {\em Technical Report--Berlin Technical University}, pages 702--2000,
+  2000.
+
+\bibitem{stork2005generation}
+F. Stork and M. Uetz.
+\newblock On the generation of circuits and minimal forbidden sets.
+\newblock {\em Mathematical programming}, 102(1):185--203, 2005.
+
+\bibitem{tarjan1976}
+R.~E. Tarjan.
+\newblock Edge-disjoint spanning trees and depth-first search.
+\newblock {\em Acta Informatica}, 6, 1976.
+
+\bibitem{van2007heuristic}
+S. Van~de Vonder, F. Ballestin, E. Demeulemeester, and W. Herroelen.
+\newblock Heuristic procedures for reactive project scheduling.
+\newblock {\em Computers \& Industrial Engineering}, 52(1):11--28, 2007.
+
+\bibitem{van2008}
+S. Van~de Vonder, E. Demeulemeester, and W. Herroelen.
+\newblock Proactive heuristic procedures for robust project scheduling: An
+  experimental analysis.
+\newblock {\em European Journal of Operational Research}, 189(3):723--733,
+  2008.
+
+\bibitem{van2005use}
+S. Van~de Vonder, E. Demeulemeester, W. Herroelen, and R. Leus.
+\newblock The use of buffers in project management: The trade-off between
+  stability and makespan.
+\newblock {\em International Journal of production economics}, 97(2):227--240,
+  2005.
+
+\bibitem{van2006trade}
+S. Van~de Vonder, E. Demeulemeester, W. Herroelen*, and R. Leus.
+\newblock The trade-off between stability and makespan in resource-constrained
+  project scheduling.
+\newblock {\em International Journal of Production Research}, 44(2):215--236,
+  2006.
+
+\bibitem{leeuwen:2009}
+P. van Leeuwen and C. Witteveen.
+\newblock Temporal decoupling and determining resource needs of autonomous
+  agents in the airport turnaround process.
+\newblock In {\em Proceedings of the 2009 IEEE/WIC/ACM International Joint
+  Conference on Web Intelligence and Intelligent Agent Technology}, pages
+  185--192, 2009.
+
+\bibitem{veetil2011}
+V. Veetil, K. Chopra, D. Blaauw, and D. Sylvester.
+\newblock Fast statistical static timing analysis using smart monte carlo
+  techniques.
+\newblock {\em IEEE Transactions on Computer-Aided Design of Integrated
+  Circuits and Systems}, 30, 2011.
+
+\bibitem{visweswariah2006}
+C. Visweswariah, K. Ravindran, K. Kalafala, S.~G. Walker, S. Narayan, D.~K.
+  Beece, J. Piaget, N. Venkateswaran, and J.~G. Hemmett.
+\newblock First-order incremental block-based statistical timing analysis.
+\newblock {\em IEEE Transactions on Computer-Aided Design of Integrated
+  Circuits and Systems}, 25(10):2170--2180, 2006.
+
+\bibitem{wilson:2016}
+M. Wilson.
+\newblock {\em Robust Scheduling in an Uncertain Environment}.
+\newblock PhD thesis, Delft University of Technology, 2016.
+
+\bibitem{wilson:2013}
+M. Wilson, C. Witteveen, T. Klos, and B. Huisman.
+\newblock Enhancing flexibility and robustness in multi-agent task scheduling.
+\newblock In {\em OPTMAS workshop proceedings}, 2013.
+
+\bibitem{wilson:2014}
+M. Wilson, T. Klos, C. Witteveen, and B. Huisman.
+\newblock Flexibility and decoupling in {S}imple {T}emporal {N}etworks.
+\newblock {\em Artificial Intelligence}, 214:26--44, 2014.
+
+\bibitem{wilson2011efficient}
+M. Wilson, N. Roos, B. Huisman, and C. Witteveen.
+\newblock Efficient workplan management in maintenance tasks.
+\newblock In {\em BNAIC}, 2011.
+
+\end{thebibliography}

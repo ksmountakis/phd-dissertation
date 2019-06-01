@@ -1,0 +1,391 @@
+\section{A fast heuristic for updating} \label{section:heuristic}
+Although the dynamic total decoupling problem can be reduced to the static temporal decoupling problem, in practice, the computational complexity involved might be too high. While an initial decoupling might be computed off-line, an update of a decoupling requires an on-line adaptation process. Since the costs of solving such a dynamic matching problem are at  least $O(n^2)$ per update, we would like to alleviate this computational investment. Therefore, in this section we discuss a fast heuristic for the decoupling updating problem.
+Using this heuristic, we show that an updated decoupling can be found in (amortized) $O(n \log n)$ per update step if $O(n)$ updates are assumed to take place.
+
+The following proposition is a simple result we base our heuristic on:
+
+\begin{proposition} \label{prop_locmax} 
+	\label{TD-necessary}
+	If $(l,u)$ is a total decoupling for $S$ with associated weight matrix $D^*$, then, for all $j \in T$,	%\begin{enumerate}
+	%\item $l_j = \max_{k \in T} (u_k - d^*_{jk})$ for all $i \in T$,
+	%	\item $u_i = \min_{k \in T} (l_k + d^*_{ki})$ for all $j \in T$.
+		$l_j = \max_{k \in T} (u_k - d^*_{kj})$ and $u_j = \min_{k \in T} (l_k + d^*_{jk})$.		%\end{enumerate}
+	\end{proposition}
+\begin{proof}
+Since $(l, u)$ is a maximizer of the LP~\ref{DP}, $u_i - l_j \leq d^*_{ij}$, for every $ i, j \in T$. 
+Hence, for each $i,j \in T$, we have $l_j \geq \max_{k \in T}(u_k - d^*_{kj})$ and $u_i \leq \min_{k \in T}(l_k + d^*_{ik})$.
+Now, on the contrary, assume that for some $i \in T$,  $l_i > \min_{k \in T} (u_k - d^*_{ki})$.
+Then the bounds $(l',u)$ where $l' = l$, except for $l'_i = \min_{k \in T} (u_k - d^*_{ki})$, would satisfy 
+the constraints $u_i - l'_j \leq d^*_{ij}$ for every $ i, j \in T$, as well as $l'_j \leq u_j$ for every $j \in T$.
+Hence, $(l', u)$ is a decoupling as well.
+But then $(l', u)$ satisfies the conditions of the LP~\ref{DP} but $\sum _j (u_j -l'_j) > \sum_j (u_j - l_j)$, contradicting the fact that $(l, u)$ is a maximizer of this LP.
+Hence, such an $i \in T$ cannot exist.
+The proof for $u_i < \min_{k \in T}(l_k + d_{ik})$ goes along the same line  and the proposition follows. \blbox
+%By Proposition~\ref{prop.CS}, there exists a permutation $\pi$ such that for all $i \in T$ $u_{\pi_i} = d^*_{i\pi_i}+ l_i$ and 
+%$l_i = u_i_i} - d^*_{i\pi_i}$, showing that for every $u_i$ the lower bound $\min_{k \in T} (l_k + d^*_{kj}) = d^*_{i\pi_i}+ l_i$ and for every $l_j$ the upper bound 
+%$\max_{k \in T}(l_k + d_{ik})$ can be achieved.   
+\end{proof}
+The converse, however, of this proposition is not true: not every solution $(l, u)$ satisfying the two equalities is a maximum decoupling. It can only be shown that in such a case $(l, u)$ is a \emph{maximal} total decoupling. That means, if $(l, u)$ satisfies the equations above, there does not exist a decoupling $(l',u')$ containing $(l, u)$ that has a higher flexibility. 
+
+It turns out that these \emph{maximal total decouplings} and their updates can be computed very efficiently: given a (non-maximal) total decoupling $(l, u)$, and a set $T = T_c \cup T_f$ of committed and free variables, %and an update $[v_{i_0}, w_{i_0}]$ of a temporal variable $i_0 \in T_c \cup T_f$ such that $l_{i_0} \leq v_{i_0} \leq w_{i_0} \leq u_{i_0}$ 
+there exists a very efficient algorithm to compute a new total decoupling 
+$[l', u']$ such that
+\begin{enumerate}
+\item $(l',u')$ preserves the existing commitments: for all $j \in T_c$, $[l'_j, u'_j] =[l_j, u_j]$;
+\item $[l', u']$ respects the existing bounds of the free variables: for all $j  \in T_f$, $[l_j, u_j] \sqsubseteq [ l'_j, u'_j ]$;
+%\item $[l'_{i_0}, u'_{i_0}] = [v_{i_0}, w_{i_0}]$;
+\item $(l', u')$ satisfies the conditions stated in Proposition~\ref{prop_locmax} above w.r.t. the free variables, i.e. $(l', u')$ is a maximal decoupling with respect to variables in $T_f$.
+\end{enumerate}
+
+The following surprisingly simple algorithm finds a maximal flexible total decoupling for a set $T_f \cup T_c$ of free and committed temporal variables that satisfies these conditions.
+The algorithm iteratively updates the existing $(l, u)$-decoupling bounds for the variables in $T_f$ until all free variables satisfy the equations stated in Proposition~\ref{prop_locmax}.
+\begin{algorithm}
+\caption{Finding an update $(l', u')$ of an existing total decoupling $(l, u)$  }  
+\label{alg.1}
+\begin{algorithmic}[1]
+\Require $(l, u)$ is a total decoupling for $S$; $D^* = [d^*_{ij}]$ is the weight matrix; $T = T_f \cup T_c$;
+\State $l' = l$ ; $u' = u$;
+\For{$i\in T_f$}
+\State $\min_i := \max_{k \in T} (u'_k - d^*_{ik})$; 
+\State $\max_i := \min_{k \in T} (l'_k + d^*_{kj}) $;
+\If { $l'_i > \min_i$} 
+\State $l'_i \gets \min_i$ 
+\EndIf
+\If {$u'_i < \max_i $} 
+\State $u'_i \gets \max_i$
+\EndIf
+%{$[  l_i, u_i ]$  \mbox{ is non-maximal interval in $(l, u)$ }}
+%    \State $l_i \gets \max_{j \neq i } \{u_j - d_{i j} \}$;
+%    \State $u_i \gets \min_{j \neq i} \{l_j + d_{j i} \}$;
+%\EndIf
+\EndFor
+\State \Return  $(l', u')$;   
+\end{algorithmic}
+\end{algorithm}
+
+It is easy to see that the algorithm preserves the existing commitments for variables in $T_c$, since only bounds of free variables in $T_f$ are updated. 
+
+It is also easy to see that the existing bounds $[l_j, u_j]$ of  free variables $j \in T_f$ are respected:
+For every $j$ it holds that either $u_j < \max_j$ ($ l'_j > \min_j$, respectively) or $u_j = \max_j$ ($ l'_j > \min_j$, respectively). Hence, $u'_j \geq u_j$ and $l'_j \leq l_j$.
+
+To show that the obtained decoupling $(l', u')$ is maximal with respect to the free variables, we state two key observations: first of all, in every step $i$ it holds that $l'_i \geq \min_i$ and $u'_i \leq \max_i$, because $(l,u)$ is a decoupling and the $(\min_i, \max_i)$ bounds are not violated during updating. 
+Secondly, once the bounds $(l'_i, u'_i)$ for a variable $i \in T_f$ have been updated to $\min_i$ and $\max_i$, $(l'_i, u'_i)$ will never need to be updated again, since
+$\min_i$ depends on values $u'_k$ that might increase or stay the same; hence $\min_i$ cannot decrease in subsequent steps. Likewise, $\max_i$ depends on values $l'_k$ that might decrease or stay the same.
+Therefore, $\max_i$ cannot increase in later steps.
+Therefore, it is sufficient to update the bounds for the variables only once.
+
+As a result, at the end all free variables have been updated and achieved their minimal/maximal bound. 
+Then a maximal total decoupling has been obtained, since all variables in $T_f$ will satisfy the equations stated in Proposition~\ref{prop_locmax}. 
+\begin{example}
+Continuing our example, notice that the weight matrix $D^*$ obtained via the minimum distance matrix $D$ (see Example~\ref{ex.2}) equals
+\begin{equation*}
+D^* = \left[\begin{array}{ccc}
+                  0 & 15 & 19  \\
+                  -5 & 10 & 4  \\
+                  -8 & 2  & 11
+\end{array}  \right]
+\end{equation*}
+Given the decoupling $(l,u) = ( (0, 15 ,13), (0, 15, 19))$ with $T_f = \{t_1, t_2\}$, let agent 2 commit to $t_2=13$.
+We would like to compute a new decoupling maximizing the flexibility for $t_1$. Note that $\min_1 = \max\{ 5, 5, 9\} = 9$ and $\max_1 =
+\min\{15, 25, 15 \} = 15$. Hence, the heuristic finds an updated decoupling  $(l',u') = ( (0, 9 ,13), (0, 15, 13))$.
+\end{example}
+\subsubsection{Complexity of the heuristic}
+As the reader quickly observes, a naive implementation of Algorithm~\ref{alg.1} would require $O(n^2)$-time to obtain an updated decoupling: To update a single variable  $i \in T_f$, we have to compute  $\min_i$ and $\max_i$. This costs $O(n)$ per variable and there may be $n$ variables to update. 
+
+Fortunately, if there are $O(n)$ updating steps, the computational cost per step can be significantly reduced: 
+First compute, for each $i \in T$, a priority queue $Q_{\min(i)}$ of the entries $u_k - d^*_{ik}$, $k \in T$, and a priority queue $Q_{\max(i)}$ of the entries $l_k + d^*_{ki}$, $k \in T$.
+The initialisation of these priority queues will cost $O( n\; .\; n \log n) = O(n^2 .\log n)$.
+
+After a new commitment for a variable $j$, say $[v_j, w_j]$, we have to compute a decoupling update.
+It suffices to update the priority queues $Q_{\min(i)}$ and $Q_{\max(i)}$ for every $i \in T_f$.
+In this case, the element $u_j - d^*_{ij}$ in the queue $Q_{min(i)}$ has to be changed to $w_j - d^*_{ij}$ and  the element $l_j $ in queue $Q_{max(i)}$ has to be changed to $v_j + d^*_{ji}$. Maintaining the priority order in the priority queues will cost $O(\log n)$ per variable. Hence, the total cost for computing a new decoupling are $O(n \log n)$.
+If there are $O(n)$ updates, the total cost of performing these $O(n)$ updates are $O(n^2 .\log n) + O(n) . O(n.\log n) = O(n^2. \log n)$. Hence, the amortized time costs per update are $O(n. \log n)$.\\
+
+In the next section we will verify the quality of such maximal flexible decouplings experimentally, comparing them with maximum flexible total decouplings and a static decoupling.
+
+
+ 
+%\fbox{This has to be improved, make use of amortized complexity }
+%Assume we have available a maximal decoupling $(l, u)$ and we add a new commitment $(v_i, w_i)$.
+%Also assume we have already computed an ordered sequence $(u_k - d_{jk})$ 
+%and an ordered sequence $(l_k + d_{kj})$ for every $j$.
+%To compute a new maximal decoupling $(l', u')$,
+%we have 
+%\begin{enumerate}
+%\item to change $(l'_i, u'_i)$ to $(v_i, w_i)$; 
+%\item to recompute $u'_i+d_{ji}$ and $l'_i +d_{ij}$ for every $j$
+%\item to compare the outcomes with the current maxima in these sequences and reorder them accordingly
+%\item to set $l'_j$ and $u'_j$ to the new maxima
+%\end{enumerate}
+%Obviously, step 1 can be done in $O(1)$ time, step 2 in $O(n)$. Step 3 costs $O(n \log n)$ and step 4 $O(n)$.
+%The total complexity of this algorithm is therefore $O(n \log n)$.
+%
+%
+
+
+%To construct the heuristic, we start with some definitions and preliminary results
+%
+%\begin{definition}
+%An interval schedule  $(l', u')$ for $S$ is said to be better than an interval schedule $(l, u)$ if 
+%\begin{enumerate}
+%\item $ l' \leq l \leq u \leq u'$; that is $(l', u')$ point wise contains $(l, u)$;
+%\item $\exists$ $i$ $[ l'_i < l_i$ or $u_i < u'_i ]$; there is at least one interval of $(l, u)$ strictly contained in $(l', u')$.
+%\end{enumerate}
+%\end{definition}
+%
+%The following proposition shows that we always can construct a better interval schedule from an given arbitrary, non-maximal, interval schedule:
+%\begin{proposition} \label{proposition4}
+%Given an STN $S = (T, C)$. For every non-maximal interval schedule $(l, u)$ for $S$ there exists a better interval schedule $(l', u')$ for $S$ that can be found in $O(n^2)$.
+%\end{proposition}
+%
+%\begin{proof}
+%Let $(l, u)$ be a non-maximal interval schedule  for $S = (T, C)$. By definition, there exists an $k$ such that $l_k < \max_{j \neq k} \{u_j - d_{kj} \}$ or
+%$u_k >  \min_{j \neq k} \{l_j + d_{jk} \}$. 
+%
+%Now define $l'$ by
+%\[ 
+%l'_i= 
+% \begin{cases}
+%      l_i & \text{if } i \neq k \\\
+%      \max_{j \neq k} \{u_j - d_{kj} \} & \text{if } i=k 
+%      \end{cases}
+%\]
+%and define $u'$ by
+%\[
+%u'_i = 
+% \begin{cases}
+%      u_i & \text{if } t \neq k \\
+%      \min_{j \neq k} \{l_j + d_{jk} \} & \text{if } i=k 
+%      \end{cases}
+%\]
+%Clearly, by definition of $(l', u')$  it holds that 
+%\begin{enumerate}
+%\item $  l' \leq l$ and $u \leq u'$, while 
+%\item either $ l'_k < l_k$ or $u_k < u'_k$, or both. 
+%\end{enumerate}
+%Clearly such a $k$ can be found in $O(n^2)$-time. Hence, if we can show that $(l', u')$ is an interval schedule, then $(l', u')$ is a better interval schedule than
+%$(l, u)$ and we are done. 
+%
+%It is very easy to see that indeed $(l', u')$ is an interval schedule: it suffices to prove that for all  $1 \leq j \neq k \leq  n$ it holds that
+%$u'_k - l'_j \leq d_{jk}$.
+%This property obviously holds for all $k, j\neq i$, since $(l, u)$ is an interval schedule and for all $k, j \neq i$, $u'_k = u_k$, $u'_j=u_j$ and $l'_j = l_j$, $l'_k = l_k$.
+%Consider $j=i$. Then $l_i = \max_{h\neq i} \{u_i - d_{ih} \} = \max_{h \neq i} \{u'_i - d_{ih}\}$.
+%Hence, $u'_k - l'_j  \leq  u'_k - (u'_k - d_{ik}) = d_{ik}$. Likewise, for $k=i$, we have
+%$u'_k - l'_i \leq ( l'_k +d_{jk}) - d_{jk} = d_{jk}$. Therefore, $(l', u')$ is an interval schedule. 
+%\end{proof}
+%
+%\begin{example}\label{excont}{\em
+%Let us consider the STN introduced in Example~\ref{ex.1}. Consider the interval schedule $(l, u) = ( [0,0], [2,10], [20,30], [40,48] )$.
+%Clearly, this interval schedule is non-maximal as e.g. 
+%\begin{align*} l'_2 = 2 > & \max_{j \neq 1} \{u'(j) - d_{2j} \} \\
+%= &\max\{ 0 - d_{21}, 30 - d_{23}, 48 - d_{24} \} \\
+%= &0 
+%\end{align*}
+%and
+%\begin{align*}
+% u_2 = 10 < &\ \min_{j \neq 2} \{l'(j) + d_{j2} \} \\
+%                         =\ & \min \{ 0 + d_{12}, 20+ d_{32}, 40 + d_{42} \} \\
+%                         =\ & 20 
+%                         \end{align*}
+%According to  Proposition~\ref{proposition4}, 
+%\[ (l', u') = ( [0,0], [0,20], [20,30], [40,48] ) \]
+%is a better interval schedule.
+%Now again, this schedule is not a maximal schedule as e.g.\ 
+%%\begin{align*} l'(t_2) = 2 > & \max_{t' \neq t_2} \{u'(t') - d_{t_2, t') \} \\
+%%= &\max\{ 0 - d_{t_2,t_0), 20 - d_{t_2, t_1), 48 - d_{t_2, t_3) \} \\
+%%= &0 
+%%\end{align*}
+%\begin{align*}
+% u_3 = 30 < & \min_{j \neq 3} \{l'(j) + d_{j3} \} \\
+%                         = & \min \{ 0 + d_{13}, 20+ d_{23}, 40 + d_{43} \} \\
+%                         = & 40 
+%                         \end{align*}
+%
+%So again to  Proposition~\ref{proposition4}, $(l'', u'') = ( [0,0], [0,20], [20,40], [40,48] )$ is a better interval schedule than $(l', u')$.
+%%But even more important, we do not need to take care for adapting the interval for $t_1$, because this proposition guarantees that this interval remains maximal in all subsequent updates of
+%%a non-maximal interval schedule.
+%}
+%\end{example}
+%Proposition~\ref{proposition4} and the example above suggest an iterative way to improve a current non-maximal interval schedule: whenever such a schedule contains such a non-maximal interval, apply the procedure as given in the proof of this proposition to improve the schedule until we have obtained a maximal schedule. Hence, consider the following algorithm:
+%\begin{algorithm}
+%\caption{maximizing a given interval schedule}
+%\label{alg.max}
+%\begin{algorithmic}[1]
+%\Require $(l, u)$ is interval schedule for $S$; 
+%$D = [d_{ij}]$ is its minimal distance matrix. 
+%\While{$\exists t \neq z \mbox{ s.t.\ } [  l_i, u_i ]  \mbox{ is non-maximal interval in $(l, u)$ }$}
+%    \State $l_i \gets \max_{j \neq i } \{u_j - d_{i j} \}$;
+%    \State $u_i \gets \min_{j \neq i} \{l_j + d_{j i} \}$;
+%\EndWhile
+%\State \Return  $(l, u)$;   
+%\end{algorithmic}
+%\end{algorithm}
+%
+%Clearly, by the proposition above, it immediately follows that if Algorithm~\ref{alg.max} halts, it will deliver a maximal interval schedule that is better than the
+%interval given as input.
+%However, it is not clear how efficient it is and whether it terminates: it might be the case that the same interval $(l_i,u_i)$ is updated over and over again.
+%
+%Therefore, we show an additional property about Algorithm~\ref{alg.max} stating that once a non-maximal interval $[l_i,u_i]$ has been updated and maximised by the algorithm, it will never be selected again by the algorithm. That is, an interval once updated will remain maximal and is not consideresd by the algorithm anymore:
+%\begin{proposition} \label{proposition5}
+%Suppose interval $(l_k, u_k)$ is selected by Algorithm~\ref{alg.max} and updated. Then $(l_k, u_k)$ will be never selected again for updating.
+%\end{proposition}
+%\begin{proof}
+%Suppose, on the contrary, that the same interval $(l_k, u_k)$ is selected at least twice by Algorithm~\ref{alg.max}.
+%Let $(l^m, u^m)$ denote the interval schedule considered by the algorithm at the beginning of the $m$-th update round.
+%
+%By assumption, there exist numbers $r$ and $s$, $r < s$ such that 
+%the algorithm selects $(l^r_k, u^r_k)$ in $(l^r, u^r)$ and $(l^s_k, u^s_k)$ in $(l^s u^s)$ for updating.
+%In the $r$-th update round, it must hold that 
+%$l^r_k > \max_{j \neq k } \{u^k_j - d_{k j} \}$ and/or $u^r_k <  \min_{j \neq k} \{l^k_j + d_{j k} \}$
+%and at the beginning of the $r+1$-update round it holds that
+%\begin{equation} l^r_{k+1} = \max_{j \neq k } \{u^r_j - d_{k j} \}
+%\end{equation}
+%and 
+%\begin{equation}  u^{r+1}_{k} <  \min_{j \neq k} \{l^r_j + d_{j k} \}
+%\end{equation}
+%Since we have $(l^m,u^m) \leq (l^{m+1},u^{m+1})$,
+%it follows that 
+%\begin{equation}
+%l^{r+1}_k \geq l^s_k \geq l^{s+1}_k
+%\end{equation}
+%and
+%\begin{equation}
+% \max_{j \neq k } \{u^k_j - d_{k j}\} \leq \max_{j \neq k } \{u^s_j - d_{k j} \}
+%\end{equation}
+%But that implies that
+%\begin{equation}
+%l^{r+1}_k =  \max_{j \neq k } \{u^k_j - d_{k j}\} \leq \max_{j \neq k } \{u^s_j - d_{k j} \}= l^{s+1}_k
+%\end{equation}
+%Hence, $l^s_k = l^{s+1}_k$. On the other hand, we also have
+%\begin{equation}
+%u^{r+1}_k \leq u^s_k \leq u^{s+1}_k
+%\end{equation}
+%and
+%\begin{equation}
+%\min_{j \neq k} \{l^r_j + d_{j k} \} \geq \min_{j \neq k } \{l^s_j +d_{jk} \}
+%\end{equation}
+%implying that
+%\begin{equation}
+%u^{r+1}_k = \min_{j \neq k} \{l^r_j + d_{j k} \} \geq \min_{j \neq k } \{l^s_j +d_{jk} \} = u^{s+1}_k
+%\end{equation}
+%Hence, $u^{s}_k = u^{s+1}_k$. Therefore, $(u^s_k, l^s_k)$ must be maximal in $(u^s, l^s)$ contradicting our assumption.
+%Therefore, every non-maximal interval is updated exactly once by Algorithm~\ref{alg.max}.
+%\end{proof}
+%Now Proposition~\ref{proposition4} and Proposition~\ref{proposition5} together imply a very simple an efficient procedure for obtaining a maximal interval schedule from a given interval schedule: Consider every interval $[l_i, u_i]$ of an interval schedule $(l, u)$. If it is non-maximal, update it. After at most $n$ updates a maximal interval schedule has been obtained.
+%Hence, we obtain the following refined algorithm:
+%
+%\begin{algorithm}
+%\caption{maximizing a given interval schedule}
+%\label{alg.max2}
+%\begin{algorithmic}[1]
+%\Require $(l, u)$ is interval schedule for $S$; 
+%$D = [d_{ij}]$ is its minimal distance matrix. 
+%\For{i=1 to n}
+%\If{$[  l_i, u_i ]$  \mbox{ is non-maximal interval in $(l, u)$ }}
+%    \State $l_i \gets \max_{j \neq i } \{u_j - d_{i j} \}$;
+%    \State $u_i \gets \min_{j \neq i} \{l_j + d_{j i} \}$;
+%\EndIf
+%\EndFor
+%\State \Return  $(l, u)$;   
+%\end{algorithmic}
+%\end{algorithm}
+%Due to Proposition~\ref{proposition5} we know that Algorithm~\ref{alg.max2} always returns a maximal interval schedule. Moreover, it is not difficult to show that
+%given the dependency upon the $n \times n$ matrix $D_S$ it is a quite efficient algorithm, too:
+%\begin{proposition}
+%A maximal interval schedule from a given interval schedule can be computed in $O(n^2)$ time.
+%\end{proposition}
+%\begin{proof}
+%\noindent
+%\begin{enumerate}
+%\item For $i = 1,\ldots n$, we first compute the maximum $max_i$ of $u_j - d_{i j}$ for $j=1, \ldots, n$ and the minimum $min_i$ of $ l_j + d_{j i}$ for $j=1, \ldots, n$.
+%Total cost $O(n^2)$. 
+%\item For every $i$, if $max_i - u_i >0$ or $l_i - min_i >0$ then 
+%first, set $u_i := max_i$ and $l_i = min_i$. Next, for every $k \neq i$, set $min_k:= \min \{ min_k, u_i - d_{ki} \}$ and set $max_k := \max \{ max_k, \{min_k, l_i +d_{ik}\} \}$;
+%total cost per update: $O(n)$.
+%\end{enumerate}
+%Hence the total cost for computing the new interval schedule are $O(n^2)+ n.O(n) = O(n^2)$.
+% 
+% 
+%\end{proof}
+%
+%
+%\begin{example}
+%\end{example}
+%
+%Using these propositions, it is easy to see that the following proposition holds:
+%\begin{proposition}
+%For every interval schedule $(l, u)$ for $S$ there exists a maximal interval schedule $(l', u')$  such that each interval of $(l, u)$ is contained in the corresponding interval of $(l', u')$.
+%\end{proposition}
+%
+%\begin{example}{\em
+%Continuing Example~\ref{excont} we note that the last interval schedule $(l'', u'') = ( [0,0], [0,20], [20,40], [40,48] )$ obtained is still non-maximal as
+%\begin{align*}
+% u_4 = 48 < & \min_{j \neq 4} \{l'_j + d_{j4} \} \\
+%                         = & \min \{ 0 + d_{14}, 0+ d_{24}, 20 + d_{34} \} \\
+%                         = & 50 
+%\end{align*}
+%After adapting the interval $[ l''_4, u''_4]$ we obtain a maximal interval schedule $( [0,0], [0,20], [20,40], [40,50] )$.
+%Comparing this schedule with the original schedule $(l, u) = ( [0,0], [2,10], [20,30], [40,48] )$  we observe that every interval in the original schedule is contained in the corresponding interval of the final schedule.}
+%\end{example}
+% \subsection{From point schedules to dynamic interval schedules}
+%
+%The algorithm we discussed in the previous section to construct a maximal interval schedule, in particular can be used to construct an interval schedule $(l, u)$ from a point schedule $s$. 
+%Often, this might be wanted, since point schedules are rather brittle: if for any reason, we have to deviate from the planned execution of $t_i$ at time $s_i$, it is not immediately known whether such a deviation would imply a recomputation of the planned execution of subsequent time points or does not have any consequence at all.
+%An interval schedule might alleviate such a problem, since if $l_i \leq s_i \leq u_i$, we can simply continue the interval schedule. 
+%%Given an STN $S$, a point schedule $\sigma$ determines for each $t \in T$ a point in time $\sigma(t)=v$ such that $t$ can be executed at time $v$ without violating any constraint. Point schedules, however, are rather brittle: 
+%Therefore, we would prefer interval schedules above point schedules, because as long as a deviation occurs within a given interval, we know on beforehand that no recomputation is necessary. 
+%%Of course we could rely on a precomputed interval schedule $[ l, u_i]$ to see whether the execution of each time point variable $t$ occurs at a time $v$ such that
+%%$ l_i \leq v  \leq u_i$.
+%Obviously, since a point schedule $s$ is a particular interval schedule $(s, s)$, the propositions above allow us to conclude the following:
+%\begin{proposition}
+%Let $s$ be a point schedule for $S$. Then there exists an $O(n^2)$ algorithm to find a maximal schedule $(l, u)$ containing $s$.
+%\end{proposition}
+% 
+%\begin{example}
+%Consider the STN $S_2$ and a point schedule $\sigma = (0, 2, 12, 35)$. Applying Algorithm~\ref{alg.max2} to $(s,s) = ([0,0],[2,2],[12,12],[35,35])$ of $s$ results in a maximal interval 
+%schedule \[
+%(l, u) = ( [0,0],[2,12],[12,35], [35,50]). \] Notice that for $i$, $s_i \in [l_i, u_i]. $.
+%\end{example}
+%\subsection{Dynamic scheduling}
+%
+%Algorithm~\ref{alg.max2} also can be used if a given schedule $s$ is in execution.
+%So assume that at some point in time a time point variable might be dispatched, giving it a definite value.
+%In such a case we would like to know what the flexibility is of the remaining part of the schedule, i.e. the possible execution times of time point variables not yet dispatched.
+%The consequences of the dispatching of the $i$-th time point variable in a current interval schedule can be easily accounted for:
+%\begin{enumerate}
+%\item Let the current interval schedule before the dispatching be $(l, u)$
+%\item Suppose the $i$-th variable is given the value $v$. \\
+%Update $(l, u)$ by assigning $(l_i, u_i) = (v, v)$
+%\item Send the updated interval schedule to Algorithm~\ref{alg.max2} and update all time point variables except the $i$-th variable.
+%\end{enumerate}
+%
+%Now it is not difficult to see that the following proposition holds:
+%\begin{proposition}
+%Let $(l, u)$ be an interval schedule where the $i$-th variable has been executed and let $(l', u')$ be the 
+%updated schedule after the dispatching. Then, for every $1 \leq j \leq n$, $[l_i, u_i]$ is contained in $[l'_i, u'_i]$.
+%\end{proposition} 
+%This implies that after dispatching, the flexibility of the remaining variables cannot decrease. Intuitively, this is justified since after execution of a temporal variable we know more w.r.t the possible
+%execution times in the current interval schedule than before.  
+%
+%%%The disadvantage of such a computation scheme, however, is that we do not take into account the actual flexibility of a time point variable
+%%%given the fact that some other time point variables already have been executed. 
+%%
+%%We apply our method to interval interval schedules that have to be adapted whenever we dispatch some $t$, assigning a definite value $\sigma(t)=v$ to it.
+%%If such a $t$ is dispatched, the resulting interval schedule $(l, u_i)$ updated with $l_i = u_i$ is non-maximal. Applying the updating method described above, results in an interval schedule which is maximal for $S' = (T', C_{T'})$ where $T' = T - \{t\}$. Moreover, every new interval for such a $t'$ contains the original interval for $t$.
+%
+%%\section{Application to flex-monotonic STNs}
+%%
+%%We call an STN flex monotonic if for every strict subset $T'$ of $T$ the following holds: Any partial interval schedule for $S_{T'}$ always can be extended to an interval schedule for $S$.
+%%We know that not every STN is interval schedule monotonic.
+%%
+%%Hypothesis: for STNs which are flex non-monotonic maximisation of point schedules will produce maximal but not maximum flexible interval schedules. 
+%% 
+%%We end with a discussion about the computational investments
+%                  
+%%Informal proof: To prove this proposition, let's consider a non-maximal interval schedule $(l, u_i)$. In particular, then there exists some $t$ such that $l_i < \max_{t' \neq t} \{u_i(t') - D(t, t') \}$
+%%or  $u_i >  \min_{t' \neq t} \{l(t') + D(t', t) \}$. For such a $t$, change both $l_i$ and $u_i$ to  $l_i = \max_{t' \neq t} \{u_i(t') - D(t, t') \}$ and  $u_i =  \min_{t' \neq t} \{l(t') + D(t', t) \}$ respectively. We call such an interval for $t$ maximal. It can be easily shown that this locally modified interval schedule is An interval schedule. (proof detail needed) Iterate this procedure until for every $t$ we have $l_i = \max_{t' \neq t} \{u_i(t') - D(t, t') \}$ and  $u_i =  \min_{t' \neq t} \{l(t') + D(t', t) \}$. Finiteness follows since whenever an interval for $t$ is or has been made maximal it stays maximal in the updated interval schedule, also when other intervals are maximized (needs more careful proof using fixpoint theory).
+%
+%%In particular, we have the following fact:
+%%
+%%\begin{observation} Whenever $\sigma$ is a fixed schedule for $S$, there exists a maximal interval schedule $(l, u_i)$ for $S$ such that $l_i \leq \sigma(t) \leq u_i$.
+%%\end{observation}

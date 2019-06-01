@@ -1,0 +1,48 @@
+-- wednesday 22 feb 2017
+overview of the most important problems in scheduling
+the most important is that the chapters that follow will answer some of the
+questions that we address in the introduction
+have to seduce readers to make them believe that the questions i'm discussing
+in the introduction are quite important and have a realationship with the
+chapters that follow
+
+cees: basically: raised research questions that can be mapped to the chapters and
+give a preview of how they're addressed in the chapters
+
+tomas: must be embedded in the literature
+
+separate chapter for state of the art or embedded in introduction?
+cees: bottom up approach: identify main research questions - make as concrete
+as possible and tightly coupled to chapters - then build up a framework to see
+what needs to be written in the introduction such that people understand the
+questions are important and 
+
+state of the art - target research questions
+
+bottom up again: first research questions & setting up the SOA such that
+they're leading to identifying these questions as main gaps in the literature
+and whenever we have identified these questions then we have a decent intro to my thesis.
+
+finally about the intro
+description of research field - state of the art 
+then research questions - conclusions of me stating that these questions are open problems addressed here
+then thesis structure - how we answer them
+
+series of lectures and have to present the red line between these chapters to provide an intro to your lecture
+
+-- fri 24 feb 2017
+
+The goal is to convince the reader that flexible decoupled dispatching is an outstanding problem.
+I will summarize problems around STPs that *have* been addressed in the literature in a way that makes decoupling seem intuitively missing. 
+To make this happen I must emphasize the idea of finding a solution in a distributed environment where individual variables or clusters of variables are controlled by respective actors. 
+So, I need to be convincing that such situations do exist.
+If other people have tried to addressed this problem (e.g. Boerkoel, the thesis about AGH) then I can borrow some of their arguments and add to them.
+
+Based on this analysis, the outline would look as follows:
+- the modelling of temporal constraints in various AI-related problems has
+  been addressed by the proposal of STPs
+- the challenges w.r.t. dispatching STPs in a centralized manner (efficiency
+  and flexibility) and related work that addresses those challenges
+- the need for decentralized dispatching in a flexible manner
+
+Based on this analysis, the next step is to read the arguments for why decentralized dispatching of STPs is relevant, made by Boerkoel, Cees, the airport thesis.

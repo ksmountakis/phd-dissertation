@@ -1,0 +1,145 @@
+\annotate{planning and scheduling are important}
+	Planning and scheduling are remarkably useful, if not indispensable,
+	for orchestrating operations and resources that synthesize complex processes in the modern world,
+	such as carrying-out construction projects, the automated production of goods, or space missions.
+	Owing to the applicability of planning and scheduling in the industry,
+	existing literature comprises a vast landscape of different problems, 
+	trying to capture the particulars of a wide variety of operational contexts.%
+	\footnote{
+	Indicatively, \emph{Google Scholar} returns over eight thousand articles and books
+	with the word \emph{scheduling} in the title, published within the year 2016 alone.
+	}
+	The great number of existing scheduling problems span various complexity classes
+	and inspire the development of solution techniques ranging from (meta-)heuristics to 
+	mathematical programming and exact search methods.%
+	\footnote{
+	In line with Computer Science literature,
+	in this thesis we adopt a clear distinction between the terms planning and scheduling.
+	Glossing over the techical details,
+	planning amounts to breaking-down a large process into a \emph{plan} that comprises small units of work, 
+	often known as \emph{activities}, \emph{actions}, or \emph{tasks}.
+	Scheduling, on the other hand, amounts to finding \emph{dispatching times} for the tasks of a given plan, or in other words forming a \emph{schedule},
+	subject to \emph{temporal} and other types of constraints.%
+
+	%\footnote{The schedule must typically satisfy \emph{temporal constraints} between pairs of tasks, restricting the allowed temporal distance between their dispatching times.
+	%Depending on the problem model, 
+	%the schedule might need to satisfy additional constraints such as \emph{resource constraints}, 
+	%in order to prevent tasks from oversubscribing to resources.}
+	}
+	To avoid potential confusion, 
+	it should be noted that this thesis focuses on a collection of scheduling problems,
+	in each case assuming that a suitable plan is given.
+
+\annotate{we draw motivation from a real world application}
+	As is the case with a large body of scheduling literature,
+	our research is also motivated by a real-world application.
+	More specifically, we draw inspiration from the challenges involved
+	in scheduling and dispatching maintance operations for the train-fleet of 
+	\emph{Nederlandse Spoorwegen} (NS)\footnote{\texttt{http://www.ns.nl}}, 
+	the primary railway operator in the Netherlands. 
+	These maintenance operations are carried-out by \emph{NedTrain}\footnote{\texttt{http://www.nedtrain.nl}}, a sub-contractor of NS.
+	In fact, this particular Ph.D project\footnote{\texttt{http://www.alg.ewi.tudelft.nl/research-topics/scheduling-maintenance-operations/}} 
+	is part of \emph{NedTrain}'s \emph{Rolling Stock Life Cycle Logistics} applied research and development programme.
+
+\annotate{tasks with temporal, resource constraints and deadlines}
+	The scheduling process at NedTrain involves a set of trains,
+	each of which is expected to arrive at the maintenance depot at a certain date.
+	During its stay at the depot, a set of inspection and repair tasks 
+	(the composition of which depends on the particular train) must be executed, 
+	subject to temporal and resource constraints.
+	Temporal constraints restrict the temporal distance at which pairs of tasks may be dispatched;
+	e.g. starting a certain paint-job task must wait until all inspection and repair tasks have finished.
+	With each task requiring the participation of certain resources such as equipment, platforms and actors (e.g., foremen, engineers),
+	resource constraints limit the combinations of tasks that may overlap at any point in time,
+	according to the limited availability of resources at the depot.
+	Finally, each train is associated with a due-date at which it must be ready for departure from the depot.
+
+\annotate{scheduling under uncertainty}
+	Existing literature includes a rich collection of methods for preparing schedules satisfying such temporal, resource and due-date constraints.
+	However, in this particular application (and perhaps in most real-world applications),
+	one of the great challenges from a scheduling point-of-view is dealing with uncertainty in the environment.
+
+	In every operational context,
+	certain characteristics of the environment are encoded by the parameters of a scheduling problem,
+	which can be solved to obtain a schedule that is feasible.
+	But if the environment is continuously evolving through time, in effect the scheduling problem at hand evolves.
+	Therefore, whatever schedule has been prepared might have to continuously undergo adaptations in order to remain feasible.
+	To quote Smith in \cite{smith:2003}:
+	\begin{quote}
+		\begin{small}
+	If the goal of scheduling is to orchestrate an optimized behavior of some resource-limited system or organization over time, then the value of a
+	schedule will be a function of its continuing relevance to the current environmental state.
+		\end{small}
+	\end{quote}
+
+\annotate{nedtrain: natural uncertainty}
+	It is not difficult to summarize the most prominent sources of uncertainty in the scheduling process at NedTrain:
+	Trains might arrive unexpectedly late at the depot, 
+	or tasks might end-up requiring more time than what was allocated in the schedule.
+	Tasks might start (i.e. get dispatched) later, or take longer that what is prescribed in the schedule,
+	either because resources and personel became unexpectedly unavailable, or simply because the time needed was underestimated.
+	In effect, then, final dispatching decisions are often unavoidably postponed into the future.
+
+\annotate{nedtrain: agent decision uncertainty}
+	But in addition to unavoidable, it is often even desirable to postpone dispatching decisions.
+	In the NedTrain depot, for example, but also in other operational contexts (e.g. \cite{leeuwen:2009}),
+	actors involved in dispatching the tasks may not favor committing to strict dispatching times from the beginning.
+	Instead they might prefer having a certain degree of freedom in deciding, when the time comes, the exact moment to dispatch a task.
+	This would enable them to optimize certain individual preference criteria they might have.
+	In this case, uncertainty sources from not knowing the mechanism according to actors will choose dispatching times.
+
+\section{Research Questions}
+	As discussed so far, a schedule defines a set of dispatching times that might have to be modified in response to uncertain events,
+	so either by choice and/or unavoidably, final dispatching times are postponed into the future.
+	Naturally, one might wonder why not to simply find a new schedule by solving an updated scheduling problem 
+	whenever the current schedule gets invalidated due to changes in the environment.
+	But as we show in the following, in workshops like the NedTrain maintenance depot,
+	such a plain approach may be as inadequate as an alternative extreme,
+	namely a purely dynamic approach according to which no schedule is generated at all
+	and dispatching decisions are taken on-the-fly by observing the environment and consulting some set of rules.
+
+
+	The main reason such approaches are inadequate is that they make it impossible to predict,
+	at least with a certain degree of certainty, the final dispatching times of the tasks.
+	Preparing a schedule is functionally equivalent to making a prediction of how the task execution process is (expected to) unfold.
+	If such a prediction is not offered or if the prediction is completely unreliable (i.e. finding a new schedule from scratch),
+	then involved actors cannot plan ahead.
+	To be able to respond to the unpredictable dispatching demands of such a scheduling process,
+	actors and resources should be completely agile, i.e. continuously available in the workshop,
+	which usually translates into excessive costs.
+
+	\begin{quote}
+	\textbf{Research Question 1.}
+	How to ensure that tasks will get dispatched in the vicinity of certain time-windows,
+	so as to avoid relying on the continuous availability of actors and other resources at the workshop?
+	\end{quote}
+
+	to deutero provlima pou prokalei ena entelws aprovleptos tropos dispatching,
+	einai oti gia na diasfalistei oti to schedule pou tha ginei realized tha einai feasible simfwna me ta domain constraints,
+	epivaletai to close cooperation metaksy twn involved actors.
+	Prepei diladi oi actors diarkws na paratiroun ta dispatching decisions pou lamvanontai
+	outws wste na lavoun antistoixa ta dika tous dispatching decisions.
+	Omws opws se diafores periptwseis, etsi kai stin periptwsh ths NedTrain, mia tetoiou eidous synchronous epikoinwnias den einai epithumith.
+	Stin periptwsh tis NedTrain, gia paradeigma, oi actors pou diekpairewnoun ta tasks
+	xwrizontai se omades, kathe mia apo tis opoies kathodigeitai apo enan antistoixo foreman.
+	Autes oi omades tha protimousan na paramenoun aneksartites apo ta decisions and/or the delays of other teams in the workshop.
+
+	\begin{quote}
+	\textbf{Research Question 2.}
+	How to eliminate or at least limit the need for synchronous communication in order to satisfy domain constraints during dispatching?
+	\end{quote}
+
+	telos einai simantiko na shmeiwthei oti to rescheduling twn dispatching times prepei na ginetai me arketa efficient tropo,
+	wste o xronos pou dapanatai na min apotelei alli mia pigi kathusterishs.
+	epilysh resource constraints
+	opws afta pou uparxoun sto depot
+	perilamvanei tin epilush enos hard scheduling problem
+	gia tin ekseuresh kalhs lyshs mporei na xreiastei na dapanithei arketos xronos.
+	ws ek toutou, den mporoume na kanoume afford mia tetoia epilysh resource constraints kathe fora pou 
+	ta krinetai aparaitito na parthei ena dispatching decision,
+	i kathe fora pou prepei ta mellontika dispatching decisions na ginoun rescheduled.
+
+	\begin{quote}
+	\textbf{Research Question 3.}
+	How to ensure that rescheduling future dispatching times can efficient in order to keep pace with task execution?
+	\end{quote}

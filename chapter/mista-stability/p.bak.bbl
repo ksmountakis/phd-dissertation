@@ -1,0 +1,142 @@
+\begin{thebibliography}{10}
+
+\bibitem{artigues2003insertion}
+Christian Artigues, Philippe Michelon, and St{\'e}phane Reusser.
+\newblock Insertion techniques for static and dynamic resource-constrained
+  project scheduling.
+\newblock {\em European Journal of Operational Research}, 149(2):249--267,
+  2003.
+
+\bibitem{ashtiani2011new}
+Behzad Ashtiani, Roel Leus, and Mir-Bahador Aryanezhad.
+\newblock New competitive results for the stochastic resource-constrained
+  project scheduling problem: exploring the benefits of pre-processing.
+\newblock {\em Journal of Scheduling}, 14(2):157--171, 2011.
+
+\bibitem{ballestin2007worthwhile}
+Francisco Ballest{\'\i}n.
+\newblock When it is worthwhile to work with the stochastic rcpsp?
+\newblock {\em Journal of Scheduling}, 10(3):153--166, 2007.
+
+\bibitem{ballestin2009resource}
+Francisco Ballestin and Roel Leus.
+\newblock Resource-constrained project scheduling for timely project completion
+  with stochastic activity durations.
+\newblock {\em Production and Operations Management}, 18(4):459--474, 2009.
+
+\bibitem{bartels2009scheduling}
+J-H Bartels and J{\"u}rgen Zimmermann.
+\newblock Scheduling tests in automotive r\&d projects.
+\newblock {\em European Journal of Operational Research}, 193(3):805--819,
+  2009.
+
+\bibitem{bomsdorf2008model}
+Felix Bomsdorf and Ulrich Derigs.
+\newblock A model, heuristic procedure and decision support system for solving
+  the movie shoot scheduling problem.
+\newblock {\em Or Spectrum}, 30(4):751--772, 2008.
+
+\bibitem{braeckmans2005proactive}
+Kristof Braeckmans, Erik Demeulemeester, Willy Herroelen, and Roel Leus.
+\newblock Proactive resource allocation heuristics for robust project
+  scheduling.
+\newblock {\em DTEW Research Report 0567}, pages 1--22, 2005.
+
+\bibitem{deblaere2011proactive}
+Filip Deblaere, Erik Demeulemeester, and Willy Herroelen.
+\newblock Proactive policies for the stochastic resource-constrained project
+  scheduling problem.
+\newblock {\em European Journal of Operational Research}, 214(2):308--316,
+  2011.
+
+\bibitem{hartmann2010survey}
+S{\"o}nke Hartmann and Dirk Briskorn.
+\newblock A survey of variants and extensions of the resource-constrained
+  project scheduling problem.
+\newblock {\em European Journal of Operational Research}, 207(1):1--14, 2010.
+
+\bibitem{herroelen2004robust}
+Willy Herroelen and Roel Leus.
+\newblock Robust and reactive project scheduling: a review and classification
+  of procedures.
+\newblock {\em International Journal of Production Research}, 42(8):1599--1620,
+  2004.
+
+\bibitem{kolisch1997psplib}
+Rainer Kolisch and Arno Sprecher.
+\newblock Psplib-a project scheduling problem library: Or software-orsep
+  operations research software exchange program.
+\newblock {\em European Journal of Operational Research}, 96(1):205--216, 1997.
+
+\bibitem{lamas2014purely}
+Patricio Lamas~Vilches and Erik Demeulemeester.
+\newblock A purely proactive scheduling procedure for the resource-constrained
+  project scheduling problem with stochastic activity durations.
+\newblock {\em Available at SSRN 2464056}, 2014.
+
+\bibitem{leus2011resource}
+Roel Leus.
+\newblock Resource allocation by means of project networks: dominance results.
+\newblock {\em Networks}, 58(1):50--58, 2011.
+
+\bibitem{leus2011robust}
+Roel Leus, Christian Artigues, and Fabrice~Talla Nobibon.
+\newblock Robust optimization for resource-constrained project scheduling with
+  uncertain activity durations.
+\newblock In {\em Industrial Engineering and Engineering Management (IEEM),
+  2011 IEEE International Conference on}, pages 101--105. IEEE, 2011.
+
+\bibitem{leus2004stability}
+Roel Leus and Willy Herroelen.
+\newblock Stability and resource allocation in project planning.
+\newblock {\em IIE transactions}, 36(7):667--682, 2004.
+
+\bibitem{mohring1984stochastic}
+Rolf~H M{\"o}hring, Franz~Josef Radermacher, and Gideon Weiss.
+\newblock Stochastic scheduling problems i -- general strategies.
+\newblock {\em Zeitschrift f{\"u}r Operations Research}, 28(7):193--260, 1984.
+
+\bibitem{mohring1985stochastic}
+Rolf~H M{\"o}hring, Franz~Josef Radermacher, and Gideon Weiss.
+\newblock Stochastic scheduling problems ii -- set strategies.
+\newblock {\em Zeitschrift f{\"u}r Operations Research}, 29(3):65--104, 1985.
+
+\bibitem{oddi2009iterative}
+Angelo Oddi and Riccardo Rasconi.
+\newblock Iterative flattening search on rcpsp/max problems: Recent
+  developments.
+\newblock In {\em Recent Advances in Constraints}, pages 99--115. Springer,
+  2009.
+
+\bibitem{steele1975nervous}
+Daniel~C Steele.
+\newblock The nervous mrp system: how to do battle.
+\newblock {\em Production and Inventory Management}, 16(4):83--89, 1975.
+
+\bibitem{stork2000branch}
+Frederik Stork.
+\newblock Branch-and-bound algorithms for stochastic resource-constrained
+  project scheduling.
+\newblock {\em Technical rep}, pages 702--2000, 2000.
+
+\bibitem{van2007heuristic}
+Stijn Van~de Vonder, Francisco Ballestin, Erik Demeulemeester, and Willy
+  Herroelen.
+\newblock Heuristic procedures for reactive project scheduling.
+\newblock {\em Computers \& Industrial Engineering}, 52(1):11--28, 2007.
+
+\bibitem{van2008proactive}
+Stijn Van~de Vonder, Erik Demeulemeester, and Willy Herroelen.
+\newblock Proactive heuristic procedures for robust project scheduling: An
+  experimental analysis.
+\newblock {\em European Journal of Operational Research}, 189(3):723--733,
+  2008.
+
+\bibitem{van2006trade}
+Stijn Van~de Vonder, Erik Demeulemeester, Willy Herroelen*, and Roel Leus.
+\newblock The trade-off between stability and makespan in resource-constrained
+  project scheduling.
+\newblock {\em International Journal of Production Research}, 44(2):215--236,
+  2006.
+
+\end{thebibliography}

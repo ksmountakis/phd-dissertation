@@ -1,0 +1,6 @@
+Temporal decoupling is a method to distribute a temporal constraint problem over a number of actors, such that each actor can solve its own part of the problem. It then ensures that the partial solutions provided  can be always merged to obtain a complete solution. 
+This paper discusses static and dynamic decoupling methods offering maximal flexibility in solving the partial problems.
+Extending previous work, we present an exact $O(n^3)$ flexibility-maximizing static decoupling method.
+Then we discuss an exact $O(n^3)$ method for updating a given decoupling, whenever an actor communicates a commitment to a particular set of choices for some temporal variable.
+This updating method ensures that: (i) the flexibility of the decoupling never decreases and (ii) every commitment once made is respected in the updated decoupling.
+To ensure an efficient updating process, we introduce a fast heuristic to construct a new decoupling given an existing decoupling in nearly linear time. We present some experimental results showing that, in most cases, updating an existing decoupling in case new commitments for variables have been made, significantly increases the flexibility of making commitments for the remaining variables.

@@ -1,0 +1,102 @@
+\section{Heuristic LP-based approach}
+\label{sec-lp}
+ 	
+ 	This section presents a polynomial-time heuristic for PS-RCPSP which consists of two steps:
+ 	\begin{enumerate}
+ 		\item
+ 		using mean activity durations,
+ 		the deterministic RCPSP $(n,m,\xq,\xb,E,\mathbb{E}[\xD])$ is solved to obtain a good schedule $\xs$ and 
+ 		a feasible es-policy $\xE$ (i.e. satisfying (\ref{eq-psrcpsp-1}),(\ref{eq-psrcpsp-2}) and (\ref{eq-psrcpsp-3}))
+ 		is derived from the structure of $\xs$ in polynomial time 
+ 		(this procedure is described in \cite{artigues2003insertion}),
+ 		
+ 		\item
+ 		by solving a linear program presented below,
+ 		we find a proactive schedule $\xt$ that is optimally combined with $\xE$ (which is kept fixed)
+ 		so as to minimize an approximation of (\ref{eq-psrcpsp-obj}).
+ 	\end{enumerate}
+  
+ 	After $\xE$ has been obtained in the first step,
+ 	finding $\xt$ which minimizes (an approximation of) the PS-RCPSP objective 
+ 	is achieved by solving the LP model presented below.	
+ 	
+  	\begin{align}
+ 		\min \qquad & \left[ 
+ 			\alpha  \left( \frac{1}{|\xSC|} \sum_{\xsc \in \xSC} s^{\xsc}_n \right) +
+ 			(1-\alpha)  \left( \frac{1}{|\xSC|} \sum_{i=1}^{n}  \sum_{\xsc \in \xSC} (s^{\xsc}_i - t_i) \right)
+  			\right] \label{eq-lp-obj} \\
+ 		\textrm{s.t.} \qquad & s^{\xsc}_j \geq s^{\xsc}_i + d^{\xsc}_i \qquad \forall (i,j) \in \xE, \xsc \in \xSC \\
+ 							 & s^{\xsc}_i \geq t_i \qquad \forall i=1,\ldots,n \\
+ 							 & \xt \geq 0
+ 	\end{align}
+  	
+ 	Here, (\ref{eq-lp-obj}) approximates the objective (\ref{eq-psrcpsp-obj}) based on
+ 	$\Gamma \subseteq \mathbb{R}^n$:
+    an adequately-sized sample of stochastic vector $\xD$.
+  	The realization of activity durations under sample scenario $\xsc \in \Gamma$ 
+ 	is represented by vector $\xd^{\xsc} = (d^{\xsc}_1, \ldots, d^{\xsc}_n)$.
+ 	The corresponding realized schedule is 
+ 	$\textit{earliest-start}((\xE,\xt),\xd^{\xsc}) = (s^{\xsc}_1, \ldots, s^{\xsc}_n)$,
+ 	as computed by the model constraints.
+ 	The solution is a proactive schedule $\xt=(t_1,\ldots,t_n)$ that optimizes the tradeoff between
+ 	expected makespan and instability for the given es-policy $\xE$. 
+ 	This LP model has $n(|\Gamma|+1)$ linear variables 
+ 	($n$ variables $t_i$ and $n |\Gamma|$ variables $s^{\xsc}_i$).
+ 	
+
+ \subsection{Related work}
+\paragraph{Van de Vonder et al. \cite{van2008}} 
+
+	propose several heuristics, 
+  	of which the most competitive is the Starting Time Criticality (STC) 
+ 	heuristic and we shall therefore restrict our attention to it.
+  	Our LP-based heuristic bears similarities with STC.
+ 	In fact, the first step of our heuristic is identical to that of STC:
+ 	an es-policy $\xE$ is extracted by the structure of an initial schedule $\xs$.
+ 	The second step of STC involves transforming the "unstable" schedule $\xs$
+ 	into a "stable" schedule $\xt$ with an iterative procedure, while keeping $\xE$ fixed.
+ 	In each iteration a one-unit time buffer is added at the start of that activity that "needs it the most" 
+ 	(as determined by a proposed "starting time criticality" measure)
+ 	until adding more buffer time would not further reduce the instability of $\xt$,
+ 	which is measured by
+ 	\begin{align}
+ 		\mathbb{E} \left[ \sum_{i=1}^n w_i ([\xS((\xE,\xt),\xD)]_i - t_i) \right] \label{eq-vonder-stb}
+ 	\end{align}
+ 	Here, $w_i$ is a cost associated with the instability of activity $i$.
+ 	Furthermore, $t_n$ is kept fixed to a project deadline and therefore $w_n$
+ 	represents the marginal cost of deviating from this project deadline.
+ 	Note that by replacing $\alpha$ in (\ref{eq-psrcpsp-obj}) 
+ 	with individual weights $w_i$ and choosing a fixed project deadline,
+ 	it is straightforward to adapt our approach to 
+ 	the instability objective considered by van de Vonder et al.
+ 	However, we felt that the choice of (\ref{eq-psrcpsp-obj}) as an objective is advantageous,
+ 	as it underlines the tradeoff between expected makespan and instability more clearly
+ 	and simplifies discussion by not involving a weight per individual activity and
+ 	not requiring the choice of a project deadline.
+ 	
+	Note that $\xt$ is not guaranteed to be 
+	(precedence and resource) feasible with respect to mean activity durations
+	(as required in the work of van de Vonder \cite{van2008}).
+	Enforcing $\xt$ to hold this property in our approach can be accomplished by
+	including the following constraint in the LP model:
+	\[
+		t_j \geq t_i + \mathbb{E}[D_i] \qquad \forall (i,j) \in \xE
+	\]
+	However, this property only adds to the organizational value of $\xt$
+	when mean values are reasonable estimates of activity durations.
+	
+	Let us note that both our heuristic and STC have 
+	polynomial worst-case complexity (in the number of activities).
+ 	However, in contrast with STC, our approach guarantees that $\xt$ 
+ 	is chosen optimally when $\xE$ is kept fixed
+ 	and assuming the distribution of $\xD$ is approximated with a sample.
+ 	Therefore, if efficiency considerations enable us to choose a large-enough sample $\Gamma$
+ 	(which is mostly the case due to the efficiency of existing LP solvers),
+ 	our heuristic is expected to perform at least as well as STC.
+ 	Finally, note that our heuristic is simpler to implement,
+ 	requiring only the description of the presented LP model.
+
+\paragraph{Leus et al. \cite{leus2004stability}}
+assume as input a proactive schedule $\xt$ (e.g. one that has been produced by STC).
+They propose a branch-and-bound search which returns the es-policy $\xE$ which fits $\xt$ optimally
+in minimizing an expression of expected instability similar to (\ref{eq-vonder-stb}).

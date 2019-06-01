@@ -1,0 +1,78 @@
+
+NedTrain has the ambition to be a first class European rolling stock maintenance company. 
+To support their ambition, NedTrain intiated the `Rolling Stock Life Cycle Logistics' (RSLCL) 
+applied research and development program, in cooperation with several Dutch universities.
+
+The main question to be addressed by the RSLCL program can be formulated as follows:
+\begin{quote}
+	How to obtain and maintain the best combination of rolling stock, maintenance
+	operations and supply chain, within the context of railway operations, to enable
+	our customers to deliver competitive high quality services to their passengers? 
+\end{quote}
+
+Focusing on the question stated above,
+research conducted within this program is concerned with optimizing
+the following Key Performance Indicators (KPIs) regarding the fleet:
+\begin{enumerate}
+	\item total Cost of Ownership (or Life Cycle Cost) of the fleet;
+	\item availability of sufficient transport capacity;
+	\item reliability of transport;
+	\item quality of transport.
+\end{enumerate}
+
+The research scope of the RSLCL program is too wide to be undertaken as a single study.
+As such, the program has been divided into three different levels:
+the strategic, tactical and operational level,
+each associated with a different time-scale of planning and control.
+A summary of each level of RSLCL is included below.
+
+\begin{description}
+
+\item[strategic]
+Decisions to buy rolling stock involve considerable expenses and tie up resources for years,
+Since rolling stock has an average life time of approximately three to four decades. 
+The cost for the procurement of rolling stock reflects less than 40% of the life cycle cost.
+Although the percentage depends on the scope of the service and operation costs taken
+into account, it is fair to say that most money is spend during the years that rolling stock is in service.
+It is also true that this amount of money is largely determined and allocated
+during the procurement of the rolling stock and the design of the logistic and maintenance
+support. Decisions made in this stage have significant and long lasting impact on the life
+cycle cost.
+
+\item[tactical]
+Given that the rolling stock itself and the maintenance infrastructure are frozen on the intermediate timescale, 
+next questions are how to allocate spare parts, 
+human resources and maintenance tasks and how to manage the physical flows within a time frame of 1 to 5 years.
+The maintenance program can be considered as a set
+of knowledge rules to be applied to the condition of a system to deduce the jobs needed to
+maintain or to restore its functionality. 
+This monitoring function delivers the information to
+schedule transportation of train sets to maintenance facilities, execution of jobs and supplies.
+
+\item[operational]
+maintenance plans take into account the expected degradation of the condition of trains. A
+first quess follows on what is know about general fleet behaviour. For specific trains the
+quess can be improved by taking into account its indivudual configuration, use and
+maintenance history. Even the actual condition might be measured by sensors and sent to a
+health and usage monitoring system
+The predictability of required maintenance and the controllability of 
+individual jobs correlate strongly with the availability of the fleet.
+To reduce the total cost of ownership the fleet availability should increase 
+and the level of stocks decrease by better operational planning.
+The first one is to reduce uncertainty of maintenance jobs by having a 
+continuous image of the technical condition of each specific train on track and its required maintenance, 
+based on the implementation of advanced ICT.
+The second one is to implement state of the art operational planning and scheduling tools
+to deal with process dynamics and to facilitate planned pit stop maintenance.
+\end{description}
+ 
+The study for each of the three levels of the research program is undertaken
+as a separate project by a corresponding PhD student. 
+
+Since all three projects are interrelated, 
+the overall research effort is monitored and directed at regular Steering Group meetings
+that take place at most four times a year, involving a representative for each of the stakeholders.
+
+%2 Supportability Analysis Twente 01-01-2009 01-01-2013
+%3 Tactical Planning Eindhoven 01-01-2009 01-01-2013
+%4 Operational Planning Delft 01-05-2009 01-05-2013 

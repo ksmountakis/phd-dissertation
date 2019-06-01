@@ -1,0 +1,646 @@
+	As discussed in Chapter~1, in the NedTrain workshop we would like to allow human resources (or actors) 
+	to decide when to dispatch (or start) their tasks ``just in time'' as needed, 
+	instead of asking them to commit to a fixed schedule from the start.
+	%Unfortunately, doing so introduces a source of uncertainty since 
+	%the mechanism by which dispatching decisions will be taken is non-deterministic.
+	The scheduling system in place must guarantee the formation of a feasible schedule
+	by dispatching decisions taken in a non-deterministic manner and
+	without asking different teams in the workshop to coordinate their decisions.
+	Our approach for enabling such a flexible scheduling process relies on
+	representing constraints in the workshop as a Simple Temporal Problem (STP) \cite{dechter1991}.
+	The framework of STP-based techniques was developed with exactly this type of flexible scheduling process in mind.
+	This chapter prepares the reader for Chapters 3 and 4, where our results are presented.
+	In this chapter we offer a summary of important STP-related concepts,
+	with an emphasis on earlier work by Wilson et al. who originally considered STPs as 
+	modelling devices for the NedTrain scheduling process \cite{wilson2011efficient, wilson:2014, wilson:2016}.
+	Through the prism of an STP-centered approach,
+	we break-down Research Problem I into fine-grained Research Questions,
+	answers to which we seek for in Chapters 3 and 4.	
+
+\section{Simple Temporal Problems}	
+
+	A STP is a type of Temporal Constraint Satisfaction Problem (TCSP) \cite{dechter1991,ghallab2004} that
+	restricts the possible temporal distances between a set of $n$ instantaneous events.
+	Each event is associated with a respective \emph{time variable} 
+	and each constraint bounds, from above and below, the distance between a pair of time variables.
+	A solution to a STP is a \emph{schedule}: an assignment of dispatching times to the time variables satisfying all pair-wise constraints.
+	
+	Mathematically, a STP $S$ over $n$ events is specified as a tuple $S = (T,C)$.
+	Here, $T = \{t_0 , t_1 , \ldots , t_n \}$ is a set of temporal variables (events) 
+	and $C$ is a finite set of binary difference constraints $t_j - t_i \leq c_{ij}$, for some real number $c_{ij}$. 
+	A solution (or schedule) is a sequence $(s_0, s_1 , s_2 , \ldots, s_n)$ of values such that, if each $t_i \in T$ takes the value $s_i$,
+	then all constraints in $C$ are satisfied. 
+	If such a solution exists, we say that the STP is \emph{consistent}. 
+	In order to express absolute time constraints, variable $t_0 \in T$, often also denoted by $z$, is used. 
+	It represents a fixed reference point on the timeline, and is always assigned the value $0$ (i.e. we always assume $s_0 = 0$).
+
+	The term Simple Temporal Network (STN) is often used as a synonym for STP,
+	since algorithms for manipulating STPs typically use a network representation of the constraints, known as the \emph{distance graph}.
+	In the distance graph, each time variable is represented as a node and each minimum/maximum pair-wise distance constraint as a weighted arc.
+
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}
+			\tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+			\tikzset{edge/.style = {->,> = latex'}}
+
+			\node[vertex] (z) at (0,0)	{\small $z$};
+			\node[vertex] (i) at (2,0)	{\small $t_i$};
+			\node[vertex] (j) at (4,0)	{\small $t_j$};
+
+			\draw[edge] (z) to[bend left] node[midway,above] {\small 10} (j);
+			\draw[edge] (i) to[] node[midway,above] {\small 0} (z);
+			\draw[edge] (j) to[] node[midway,above] {\small -5} (i);
+
+		\end{tikzpicture}
+		\caption{Simple STP with three variables.}
+		\label{chapter:prelim-1:example-1}
+	\end{figure}
+	
+	\begin{example}
+		Figure~\ref{chapter:prelim-1:example-1} illustrates the distance graph of an example 
+		$S=(T,C)$ with $T=\{z, t_i, t_j\}$ and $C=\{z - t_i  \leq 0, t_i - t_j  \leq -5, t_j - z \leq 10\}$.
+		Each constraint of the form $t_j - t_i \leq c_{ij}$ is an arc from $t_i$ to $t_j$ with a weight of $c_{ij}$.
+		Assuming $z = 0$, the first constraint in $C$ asks that $t_i$ is non-negative while
+		the second constraint asks $t_j$ to be at least 5 units larger than $t_i$.
+		As such, the constraint $t_j \geq 5$ is implied by the first two constraints.
+		Finally, the third constraint in $C$ asks $t_j$ to be at most 10 units greater than $z$.
+		This, in turn, implies that $t_i \leq 5$.
+	\end{example}
+
+	As shown in the seminal paper by Dechter et al. \cite{dechter1991}, a given STN implies,
+	for each pair of variables $t_i$ and $t_j$,
+	the constraint $t_j - t_i \leq d_{ij}$ where $d_{ij}$ is the shortest path from node $t_i$ to node $t_j$ in the distance graph.
+	Moreover, this is the tightest upper bound for the distance $t_j - t_i$ implied by the network.
+	As such, we can obtain the tightest constraints implied by a given STP by computing the
+	all-pairs-shortest-path (APSP) matrix, typically denoted by $D=[d_{ij}]_{n\times n}$.
+	Note that $D$ can be obtained in $O(n^3)$ with an algorithm such as Floyd-Warshall \cite{floyd:1962}.
+	
+	\begin{example}
+		Referring to the earlier example,
+		the resulting APSP matrix is shown below:
+		\begin{center}
+		\begin{tabular}{l|	c c c}
+					&	$z$	&	$t_i$	&	$t_j$	\\ \hline
+			$z$	&	0		&	5		&	10	\\ 
+			$t_i$ &	0		&	0		&	10	\\ 
+			$t_j$	&	-5	&	-5		&	0
+		\end{tabular}
+		\end{center}
+		Note that implied constraints $t_j \geq 5$ and $t_i \leq 5$ can be easily obtained by $D$.
+		More specifically, the shortest path from $t_j$ to $z$ is -5,
+		meaning that $z - t_j \leq -5 \Rightarrow t_j \geq 5$ is implied.
+		Similarly, $t_i -z \leq 5 \Rightarrow t_i \leq 5$ can be obtained by observing the shortest path from $z$ to $t_i$.
+	\end{example}
+
+	We have insofar considered STNs as modelling devices for instantaneous events subject to temporal distance constraints.
+	STPs, however, can easily model temporal constraints between non-instantaneous events, e.g. tasks with known durations.
+	As demonstrated in the following example, a time variable for the dispatching time (or start time) of each task is needed and 
+	task durations are represented by means of pair-wise temporal distance constraints. 
+	Moreover, release-/due-date constraints on groups of tasks 
+	(e.g. when groups of tasks refer to the maintance work associated with a train) are also modelled easily.
+	\footnote{In fact, as discussed further down the line, there are STP-related techniques allowing us to 
+	handle resource constraints by transforming them in a preprocessing phase into temporal constraints.
+	By doing so, we only having to ``worry'' about temporal constraints during dispatching.}
+
+	% -- ADDED
+	\begin{example}
+		Figure~\ref{chapter:prelim-1:example-2} presents an example STP for three 
+		tasks with known durations that must be dispatched subject to precedence constraints and a due-date constraint.
+		The dispatching times of tasks 1,2 and 3 are associated with time variables $t_1,t_2$ and $t_3$.
+		Again, variable $z$ is fixed to zero and denotes the beginning of time, 
+		e.g. the beginning of the week on Monday at 8:00 am.
+		Constraints of the form $z - t_i \leq 0$ ask that no task may be dispatched before the beginning of the week.
+		We assume that time, in this example, is measured in hours. 
+		Task 1 has a duration of 2 hours, while tasks 2 and 3 have a duration of 3 hours.
+		In addition, precedence constraints ask that task 3 cannot be dispatched unless tasks 1 and 2 have finished.
+		This is reflected by constraints $t_1 - t_3 \leq -2$ and $t_2 - t_3 \leq -3$.
+		Effectively these imply $t_3 \geq \max\{t_1 + 2, t_2 + 3\}$,
+		meaning that task 3 may only start after both tasks 1 and 2 have finished
+		(since the finish time of a task equals its dispatching time plus its duration).
+		Variable $f$ and constraint $f - z \leq 10$ enable us to model a due-date constraint 
+		by asking that the finish time of task 3 (3 hours past its start) cannot be later than 8 hours since the beginning.
+		Effectively, then, all tasks must have finished by Monday 4:00 pm.
+	\end{example}
+
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}
+			\tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+			\tikzset{edge/.style = {->,> = latex'}}
+
+			\node[vertex] (z) at (0,0)	{\small $z$};
+			\node[vertex] (1) at (2,0)	{\small $t_1$};
+			\node[vertex] (2) at (2,-1){\small $t_2$};
+			\node[vertex] (3) at (4,0){\small $t_3$};
+			\node[vertex] (f) at (6,0){\small $f$};
+
+			\draw[edge] (z) to[bend left] node[midway,above] {\small 8} (f);
+			\draw[edge] (1) to[] node[midway,above] {\small 0} (z);
+			\draw[edge] (2) to[] node[midway,above] {\small 0} (z);
+			\draw[edge] (3) to[] node[midway,above] {\small -2} (1);
+			\draw[edge] (3) to[] node[midway,above] {\small -3} (2);
+			\draw[edge] (f) to[] node[midway,above] {\small -3} (3);
+		\end{tikzpicture}
+		\caption{STP with three tasks and a due-date.}
+		\label{chapter:prelim-1:example-2}
+	\end{figure}
+
+	\subsection{Forming a feasible solution}
+
+	As we see now, shortest paths from and to special-purpose variable $z$ are of particular interest.
+	The first row and column of $D$ hold the so-called \emph{earliest start time} and the \emph{latest start time} for each variable,
+	which constitute tight lower and upper bounds, respectively.
+	More in particular, assuming $z = 0$ and using $d_{0i}$ and $d_{i0}$ to denote the shortest path from $z$ to a variable $t_i$ and vice-versa,
+	it has been shown in \cite{dechter1991} that a solution is not feasible if the condition 
+	$t_i \in [-d_{0i}, d_{i0}]$ is not satisfied for some variable $t_i$.
+	In addition, there always exists a feasible schedule such that $t_i = v$ for every value $v \in [-d_{0i}, d_{i0}]$ and every variable $t_i$.
+
+	That is, the first column and row of $D$ provide time-windows from which we can pick suitable times for dispatching our variables.
+	Moreover, the so-called \emph{earliest start schedule} can be formed by setting each variable to 
+	its earliest start time (i.e. letting $t_i = -d_{0i}$) and this schedule is always feasible. 
+	Similarly, the so-called \emph{latest start schedule} can be formed by letting $t_i = d_{i0}$ and is also always feasible. 
+	In effect, then, two feasible solutions become immediately available by computing matrix $D$.
+
+	\begin{example}
+		Shortest path calculations to and from $z$ in the network of Figure~\ref{chapter:prelim-1:example-2}
+		reveal suitable dispatching time-windows for our tasks.
+		For instance, the shortest path length from $z$ to $t_3$ equals 5 while the shortest path from $t_3$ to $z$ equals -3.
+		This yields a time-window of $[3, 5]$ within which task 3 must be dispatched.
+		More specifically, if task 3 starts later than 5 hours after Monday 8:00 am, then there is no way to meet the due-date.
+		In addition, task 3 cannot start earlier than 3 hours past Monday 8:00 am without violating a precedence constraint.
+		According to further shortest path calculations, 
+		violating any of the following conditions will prevent us from forming a feasible schedule:
+		\begin{align*}
+			t_1 & \in [0, 3] \\
+			t_2 & \in [0, 2] \\
+			t_3 & \in [3, 5] \\
+			f & \in [6, 8] \\
+		\end{align*}
+
+	We note that condition $f \in [6,8]$ means there exists at least one feasible 
+	solution in which all tasks finish 2 hours before the due-date, i.e. in which $f = 6$.
+	In fact, such a solution can be formed by taking the earliest start schedule, i.e. by letting $t_1 = 0, t_2 = 0, t_3 = 3, f = 6$.
+	\end{example}
+
+	Apart from the marginal cases of the earliest and latest start schedule, however,
+	picking an arbitrary combination of values from the time-windows given by 
+	the first column and row of matrix $D$ is generally not guaranteed to result in a feasible solution.
+	After fixing a particular time-variable to a specific value,
+	one must generally recalculate matrix $D$ (to obtain new time-windows) for a modified version of the STP 
+	with constraints that fix the variable to the chosen value. 
+	That is, say variable $t_i$ is fixed to value $v \in [-d_{0i}, d_{i0}]$.
+	The STP must now be updated such that $t_i$ is now connected to $z$ with constraints $z - t_i \leq -v$ and $t_i - z \leq v$, implying $t_i = v$.
+	A new matrix $D'$ can now be computed and a value $v' \in [-d'_{0j}, d'_{j0}]$ can now be chosen for another variable $t_j$.
+
+	In effect, then, dispatching the events of a given STP at feasible temporal distances 
+	amounts to issuing a sequence of queries of the following form: 
+	Given that some events have been dispatched (i.e. given a feasible partial schedule),
+	within which time-window shall we dispatch each of the remaining events in order to guarantee we will not run out of feasible options later?
+
+\section{Flexibility metrics}
+
+	Effectively, the STP/STN machinery enables us to maintain a compact encoding of all potentially realizable schedules 
+	and decide on-the-fly how to extend the partial schedule.
+	It is this freedom during dispatching, as opposed to commiting to a fixed schedule,
+	that makes STPs attractive for scheduling in a dynamic environment such as the NedTrain workshop.
+	Intuitively, the larger the solution-space (i.e. the number of feasible schedules), 
+	the greater the amount of freedom in choosing preferable yet feasible dispatching timepoints.
+	For this reason, an important concept often encountered in the literature is the \emph{flexibility} of a given STP,
+	which is intuitively proportional to the size of its solution-space.
+
+	The main challenge in defining a flexibility metric for STPs is ensuring it is efficient to compute yet accurate.
+	The most widely accepted flexibility metric, namely the \emph{naive flexibility metric}, 
+	essentially measures the perimeter of the bounding box of the solution-space (thus providing a sort of outer approximation).
+	An attractive property of this metric is that it can be computed efficiently.
+	More in particular, the amount of naive flexibility in a given STP equals the total width of the time-windows $[-d_{0i}, d_{i0}]$ 
+	defined by the earliest and latest start times in APSP matrix $D$.
+
+	\begin{example}
+		Adding the widths of time-windows $[0,0], [0,5], [5,10]$ we get a measurement of $10$ 
+		for the naive flexibility of the STP in Figure~\ref{chapter:prelim-1:example-1}.
+		Similarly, we get a measurement of 9 for the naive flexibility of the STP in Figure~\ref{chapter:prelim-1:example-1}.
+	\end{example}
+	
+	However, as pointed out by Wilson et al. in \cite{wilson:2014}, a main downside of this naive metric is that it can
+	give counter-intuitive results by seriously over-estimating the actual amount of freedom in dispatching the events.
+	In response to this disadvantage, in \cite{wilson:2014} Wilson et al. 
+	managed to define a more accurate metric, namely \emph{concurrent flexibility}.
+	The concept of concurrent flexibility lies at the center of the work presented in later Chapters 3 and 4.
+	For this reason, and without getting into too many technical details,
+	we shall hereby attempt to explain the basic idea behind it.
+
+	The main idea behind concurrent flexibility is that of inscribing a $n$-dimensional box within the solution-space of a given STP.
+	For all practical purposes, we may only consider STPs the variables of which have bounded latest start times.
+	As such, we may assume the solution-space of a STP to be a polytope,
+	i.e.  a finite region of $n$-dimensional space enclosed by a finite number of hyperplanes \cite{coxeter1940regular}.
+
+	Consider a collection of $n$ (non-empty) time-windows $[l_i, u_i]$, one per time variable $t_i$,
+	chosen such that every schedule within $$[l_1, u_1] \times [l_2, u_2] \times \ldots \times [l_n, u_n]$$ is a feasible solution.
+	Clearly, the product of those time-windows constitutes such an inscribed $n$-dimensional hyperrectangle, or box.
+	Wilson et al. defined concurrent flexibility in terms of the following problem:
+	Find a collection of time-windows the product of which defines a \emph{maximum perimeter} axis-aligned box, inscribed within the solution-space.
+	Such a collection of time-windows is an \emph{interval schedule} and the amount of concurrent flexibility it provides
+	equals the perimeter of the box it defines, i.e. the sum of the widths of the time-windows.
+
+	\begin{example}
+		An interval schedule of maximum concurrent flexibility for the STP in Figure~\ref{chapter:prelim-1:example-2} is given below:
+		\begin{align*}
+			t_1 & \in [0,3] \\
+			t_2 & \in [0,2] \\
+			t_3 & \in [5,5] \\ 
+			f & \in [8,8]
+		\end{align*}
+		Adding the widths of those time-windows, we get a measurement of $5$ for the amount of concurrent flexibility.
+		First, we note that each interval schedule time-window $[l_i, u_i]$ for variable $t_i$
+		fits within the corresponding earliest/latest start time interval $[-d_{0i}, d_{i0}]$.
+		Moreover, in contrast with naive flexibility, the concurrent metric does not account for infeasible schedules;
+		every combination of values within the product of the time-windows above constitutes a feasible schedule.
+	\end{example}
+
+	%
+	Unfortunately, however, this metric has been defined as the solution to a linear program (LP) 
+	with $2 n$ variables and $|C|$ constraints, where $C$ is the set of pair-wise temporal distance constraints.
+	Note that solving a LP with modern interior-point methods has a worst-case complexity of $O(N^3 L)$ with 
+	$N$ the number of variables and $L$ the bit-wise length of the problem description \cite{potra2000}.
+	In computing concurrent flexibility, $N=2n$ and $L$ is bounded from above by $|C|$, in turn bounded from above by $n^2$.
+	As such, computing concurrent flexibility with the LP-based method of Wilson et al. has a worst-case complexity of $O(n^5)$, 
+	which is substantially higher than the cost of shortest path computations required for naive flexibility.
+
+\section{Temporal decoupling}
+
+	In several domains like the NedTrain workshop, 
+	events are associated with actors that control their dispatching.
+	If dispatching times are determined during the dispatching process,
+	instead of commiting to a fixed schedule from the start,
+	then clearly, dispatching two events controlled by different actors at a feasible distance requires some form of communication between the actors.
+	Such coordination based on synchronous communication, however, is often undesired or even impossible.
+	Moreover, it limits actor autonomy during dispatching,
+	it can make the overall process highly inefficient,
+	and/or might violate privacy concerns as actors will have to share information about their plans.
+	Focusing back on the NedTrain workshop, 
+	recall that actors are organized into teams, 
+	each responsible for dispatching a certain subset of events.
+	Each team would like to have the freedom to choose a schedule for their part of the problem,
+	i.e. only involving time variables controlled by the team,
+	without having to negotiate with or be affected by the choices of other teams. 
+
+	To facilitate dispatching without actors having to negotiating over the dispatching times of their events,
+	a certain body literature focuses on the problem of \emph{temporal decoupling}.
+	This problem asks to \emph{decouple} a given STP by partitioning it into smaller subproblems 
+	the partial schedules for which can always be merged into a feasible schedule for the whole STP.
+	Finding a decoupling effectively amounts to tightening some constraints such that 
+	constraints between variables controlled by different actors become redundant,
+	i.e. are already implied by other constraints.
+	In effect, then, the solution-space of the resulting decoupled STP is only a part of the original STP's solution-space.
+	And since flexibility is highly valuable for dispatching,
+	the objective in finding a decoupling is to retain as much of the original flexibility as possible.
+
+	In \cite{hunsberger:2002b} Hunsberger first formally defined the decoupling problem and proposed heuristics for 
+	the problem of maximizing the retained naive flexibility.
+	In \cite{plankenEtAl:2010} Planken et al. showed that finding an optimal temporal decoupling with respect to a general objective is NP-hard,
+	but a decoupling that optimizes a linear function of the time variables (unlike the objective used by Hunsberger) can be formulated as a LP. 
+	In contrast with both these centralized approaches, 
+	Boerkoel and Durfee \cite{boerkoel:2011} proposed a distributed algorithm for finding a decoupling. 
+	Their approach deals with possible privacy concerns among different actors
+	since it does not require a central process with access to the whole STP.
+
+	The methods discussed above aim at maximizing the amount of retained naive flexibility. 
+	Wilson et al., on the other hand, focused on decoupling while retaining concurrent flexibility \cite{wilson:2014}.
+	Interestingly, they found that their LP-based method for computing the concurrent flexibility of a STP actually gives, 
+	as a by-product, an optimal \emph{total decoupling}, retaining the maximum amount of concurrent flexibility.
+	In contrast with a decoupling in the broad sense,
+	a total decoupling enables dispatching each time variable in isolation from every other variable.
+	It can be used in the edge case with as many agents as there are events, each agent controlling a single event.
+	A total decoupling is specified as a so-called \emph{interval schedule}:
+	a time-window per event within which the controlling agent can dispatch it without having to coordinate with other agents.
+	An interval schedule allows for a particularly efficient dispatching process,
+	since dispatching an event amounts to just picking a suitable time from a time-window, in constant time.
+	Moreover, it facilitates an optimally flexible dispatching process,
+	as far as concurrent flexibility is concerned.
+
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}
+			\tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+			\tikzset{edge/.style = {->,> = latex'}}
+
+			\node[vertex] (z) at (0,0)	{\small $z$};
+			\node[vertex,fill=pink!40] (1) at (2,0)	{\small $t_1$};
+			\node[vertex,fill=pink!40] (2) at (2,-1.8) {\small $t_2$};
+			\node[vertex,fill=blue!40] (3) at (4,0){\small $t_3$};
+			\node[vertex,fill=blue!40] (f) at (6,0){\small $f$};
+
+			\draw[edge] (z) to[bend left=45] node[midway,above] {\small 8} (f);
+			\draw[edge] (f) to[bend left=45] node[midway,below] {\small -8} (z);
+
+			\draw[edge] (1) to[bend right=5] node[midway,above] {\small 0} (z);
+			\draw[edge] (z) to[bend right=5] node[midway,below] {\small 3} (1);
+
+			\draw[edge] (2) to[bend right=-25] node[pos=0.4,above] {\small 0} (z);
+			\draw[edge] (z) to[bend right=35] node[pos=0.5,below] {\small 2} (2);
+
+			\draw[edge] (3) to[bend right] node[pos=0.5,above] {\small 5} (z);
+			\draw[edge] (z) to[bend right] node[pos=0.5,below] {\small -5} (3);
+
+			\draw[edge] (f) to[] node[midway,above] {\small -3} (3);
+
+			%\draw[gray, dashed, very thick, rotate=0] (3.1,2) -- (3.1,-3);
+
+		\end{tikzpicture}
+		\caption{STP with three tasks and a due-date, partitioned into two independent sub-problems.}
+		\label{chapter:prelim-1:example-3}
+	\end{figure}
+	
+
+	\begin{example}
+		Consider again the STP shown in Figure~\ref{chapter:prelim-1:example-2} and
+		assume time variables are distributed over two parties such that one party is responsible for time variables $t_1$ and $t_2$ and the other party is responsible for $t_3$ and $f$.
+		%
+		The interval schedule computed in the earlier example can be used to derive a decoupled STP, as shown in Figure~\ref{chapter:prelim-1:example-3},
+		in which variables of the same color belong to the same party.
+		%
+		With appropriate constraints between $z$ (fixed to zero) and every other variable,
+		in this STP we simply enforce that each variable takes its value from within the time window specified by the interval schedule.
+		Doing so ensures that every solution for the resulting STP is also feasible for the original STP of Figure~\ref{chapter:prelim-1:example-2}.
+		%
+		Note that inter-party constraints, i.e. between variables belonging to different parties, are no longer necessary.
+		In fact intra-party constraints are also unnecessary, but included in our example for illustrative purposes,
+		i.e. to illustrate a partitioning of the original STP in two.
+		%
+		In effect, given such a decoupled STP, only the two constraints between a variable and special-purpose variable $z$
+		need to be taken into account for picking a feasible dispatching time for that variable. 
+	\end{example}
+
+	% previous example
+		%	\begin{figure}
+		%		\centering
+		%		\begin{tikzpicture}
+		%			\tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+		%			\tikzset{edge/.style = {->,> = latex'}}
+		%
+		%
+		%			\node[vertex] (z) at (3.0,0)	{\small $z$};
+		%			\node[vertex] (1) at (0.0,0)	{\small $t_1$};
+		%			\node[vertex] (2) at (0.0,-1.5){\small $t_2$};
+		%			\node[vertex] (3) at (6,0){\small $t_3$};
+		%			\node[vertex] (f) at (7.5,0){\small $f$};
+		%
+		%			\draw[edge] (z) to[bend left=40] node[midway,above] {\small 8} (f);
+		%			\draw[edge] (f) to[bend left=40] node[midway,above] {\small -8} (z);
+		%
+		%			\draw[edge] (1) to[bend left] node[midway,above] {\small 0} (z);
+		%			\draw[edge] (z) to[] node[midway,above] {\small 3} (1);
+		%
+		%			\draw[edge] (2) to[bend right] node[midway,above] {\small 0} (z);
+		%			\draw[edge] (z) to[] node[midway,above] {\small 2} (2);
+		%
+		%			\draw[edge] (3) to[] node[midway,above] {\small -5} (z);
+		%			\draw[edge] (z) to[bend right] node[midway,above] {\small 5} (3);
+		%
+		%			%\draw[edge] (3) to[] node[midway,above] {\small -2} (1);
+		%			%\draw[edge] (3) to[] node[midway,above] {\small -3} (2);
+		%
+		%			\draw[edge] (f) to[] node[midway,above] {\small -3} (3);
+		%
+		%
+		%
+		%			\draw[gray, dashed, very thick, rotate=0] (3,2) -- (3,-2);
+		%		\end{tikzpicture}
+		%		\label{prelim-1/example-3}
+		%		\caption{STP with three tasks and a due-date, partitioned into two independent sub-problems.}
+		%	\end{figure}
+	
+\section{Resource constraints}
+\label{chapter:prelim-1:resource-constraints}
+
+	% forbidden sets
+	So far in our discussion we have ignored that in many applications of scheduling,
+	tasks occupy certain amounts of one or more resources during their execution.
+	Such is also the case with NedTrain's maintenance workshop,
+	where resources correspond to people and equipment.
+	Depending on their outcome dispatching times and durations,
+	two or more tasks which are not precedence-related may overlap during a certain time interval.
+	A combination of precedence-unrelated tasks the total resource demands of 
+	which would exceed resource capacities in case they overlapped is often known as a \emph{forbidden set}.
+
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}
+			\tikzset{vertex/.style = {shape=circle,draw,minimum size=1.5em}}
+			\tikzset{edge/.style = {->,> = latex'}}
+
+			\node[vertex] (z) at (0,0)	{\small $z$};
+			\node[vertex] (1) at (2,2)	{\small $t_1$};
+			\node[vertex] (2) at (2,0) {\small $t_2$};
+			\node[vertex] (3) at (2,-2){\small $t_3$};
+			\node[vertex] (4) at (4,0){\small $t_4$};
+			\node[vertex] (f) at (6,0){\small $f$};
+
+			\draw[edge] (1) to[] node[pos=0.5,above] {\small 0} (z);
+			\draw[edge] (2) to[] node[pos=0.5,above] {\small 0} (z);
+			\draw[edge] (3) to[] node[pos=0.5,above] {\small 0} (z);
+
+			\draw[edge] (4) to[] node[pos=0.5,above] {\small $-2$} (2);
+			\draw[edge] (f) to[] node[pos=0.5,above] {\small $-2$} (1);
+			\draw[edge] (f) to[] node[pos=0.5,above] {\small $-5$} (3);
+			\draw[edge] (f) to[] node[pos=0.5,above] {\small $-3$} (4);
+
+			\draw[edge] (z) to[bend left] node[pos=0.5,above] {\small $6$} (f);
+		\end{tikzpicture}
+		\caption{STP with four tasks and a due-date. Tasks 1, 3 and 4 form a forbidden set.}
+		\label{chapter:prelim-1:example-4}
+	\end{figure}
+
+	\begin{example}
+		We shall use the example STP shown in Figure~\ref{chapter:prelim-1:example-4} to clarify the concept of a forbidden set.
+		In this example, tasks 1, 2 and 3 (with durations 2, 2 and 5) can start in parallel but task 4 (with duration 2) has to wait for the completion of task 2.
+		Note that due to the precedence constraint, task 4 will never overlap with task 2.
+		However, it might overlap with tasks 1 and 3 depending on the chosen dispatching times.
+		Assume that tasks 1, 3 and 4 involve the participation of 3,3 and 2 engineers respectively.
+		In addition, assume there are only 6 engineers available in the workshop at any point in time.
+		Due to resource limitations, then, tasks 1, 3 and 4 constitute a forbidden set, as they cannot all execute in parallel at a point in time.
+	\end{example}
+
+	The resource demands of certain tasks and the resource capacities of the environment 
+	are often known together as \emph{resource constraints}.%
+	\footnote{Resource demands and capacities constitute a compact encoding of the collection of forbidden sets.
+		Enumerating forbidden sets directly instead would lead to an inefficient problem formulation since there can by as many forbidden sets 
+		as there are members in the power-set of the given set of tasks.}
+	Given a STP along with resource constraints,
+	an emerging problem not addressed by the dispatching strategies discussed so far
+	is that of ensuring a realized schedule satisfying both temporal and resource constraints.
+
+	Existing literature related to this problem can be divided in two categories.
+	On one hand, there are techniques for finding a fixed schedule satisfying both STP and resource constraints.%
+	\footnote{It should be noted that answering whether such a schedule exists is a hard problem,
+	in contrast with doing so only subject to STP constraints.}
+
+	% a short tour of scheduling problems
+	The problem of finding a feasible schedule with the smallest makespan subject to STP and 
+	resource constraints is known as RCPSP/max \cite{schutt2013solving, oddi2009iterative}, 
+	Effectively, it is an extension of the simpler resource-constraint project scheduling problem (RCPSP) \cite{hartmann2010survey},
+	which also asks to find a feasible schedule of minimum makespan.
+	In contrast with the RCPSP/max, however, RCPSP assumes a simple form of STP constraints.
+	Specifically, only precedence constraints are allowed between pairs of tasks and and no maximum distance constraints between pairs of tasks are allowed;
+	hence the suffix ``/max'' since RCPSP/max does allow for such maximum distance constraints.
+	Depending on the complexity of temporal and resource constraints one may encounter several other variants.
+	For instance, as with the RCPSP, the so-called cumulative scheduling problem (CSP) \cite{michel2004iterative} also only allows precedence constraints 
+	but also assumes a simpler form of resource constraints, with only a single type of resource available.
+	One of the most well-known optimization problems, the so-called Job Shop Scheduling Problem (JSSP) \cite{adams1988shifting}, 
+	assumes even simpler temporal and resource constraints than the CSP.
+	Beyond only allowing a single resource, the JSSP assumes that each task (or job) may wait 
+	(with a single precedence constraint) for (at most) one other task and requires exactly one unit of the available resource.
+	Existing literature offers a variety of solution approaches for the rich ecosystem of different problem models,
+	including mathematical optimization approaches \cite{kone2011event}, branch-and-bound procedures \cite{brucker1998branch}, constraint programming \cite{schutt2013solving}, 
+	(meta-)heuristics \cite{kolisch2006experimental} and so on.
+
+	% precedence constraint posting
+	Instead of finding a single feasible schedule, the other category of techniques deal with resource constraints as follows.
+	The given STP is transformed into a so-called \emph{partial order schedule} (also a STP) 
+	by addding (or ``posting'') additional precedence constraints that eliminate forbidden sets.
+	As such, every feasible schedule for the resulting partial order schedule (or POS) will always satisfy the given resource constraints.
+	In effect, then, a whole space of feasible schedules is produced by the solution process, in the form of a STP.
+	An illustration of this technique is given in the following example.
+
+	\begin{example}
+		Referring to the previous example, we had identified $\{1,2,3\}$ as a forbidden set.
+		To eliminate it, it suffices to post a precedence constraint between any pair of its members.
+		This would produce a POS the solution space of which has no schedules with tasks 1 2 and 3 executing in parallel.
+		Using notation $(i,j)$ to signify a precedence constraint $t_j \geq t_i + d_i$ meaning task $j$ cannot start unless task $i$ has finished,
+		following is the list of precedence constraints any of which can be added to the given STP in order to produce a POS:
+		\begin{enumerate}
+			\item (1,2), yielding a makespan of 7
+			\item (2,1), yielding a makespan of 5
+			\item (1,3), yielding a makespan of 7
+			\item (3,1), yielding a makespan of 7
+			\item (2,3), yielding a makespan of 7
+			\item (3,2), yielding a makespan of 10
+		\end{enumerate}
+		Along with each constraint, we list here the resulting makespan, 
+		i.e. the earliest achievable completion time for all tasks, in a feasible schedule for the resulting POS.
+		As constraint $f - z \leq 6$ imposes a maximum completion time for all tasks within 6 time units,
+		all other options besides option 2 would produce a POS which is inconsistent, 
+		i.e. has no feasible schedule, or in other words, an empty solution space.
+	\end{example}
+
+	Note that even for a small example, 
+	the number of different ways to eliminate forbidden sets and produce a POS can be quite high.
+	In fact, as mentioned before, the number of forbidden sets may grow exponentially with the number of tasks.
+	In turn, the number of different combinations of precedence constraints that resolve forbidden sets, also grows exponentially with the number of tasks.
+	Different efficient methods for enumerating forbidden sets (also known as critical sets) have been investigated \cite{stork2005generation,lombardi2012min}.
+	Without having to explicitly enumerate all forbidden sets in a given problem,
+	existing work focuses either on finding a POS of minimum makespan \cite{oddi2009iterative} or on finding a POS 
+	that preserves as much of the original STP's flexibility as possible \cite{policella2009solve,policella:2007}.
+	It should be noted that no work, to our knowledge, focuses on preserving \emph{concurrent} flexibility while finding a POS.
+
+	Since we have rejected the idea of scheduling according to a fixed schedule,
+	techniques falling in the first category are not within the scope of our approach.
+	Methods for finding partial order schedules, on the other hand, are perfectly suitable.
+	They enable us to deal with resource constraints in an offline, preprocessing phase
+	and then dispatch the partial order schedule as a regular STP,
+	with a focus on \emph{decoupling} and \emph{flexibility} as explained earlier.
+
+\section{Research Questions}
+\label{chapter:prelim-1:research-questions}
+	After summarizing important concepts from the literature,
+	in this section we examine to which extent existing approaches allow us to address Research Problem I, originally stated in Chapter~1.
+	Any gaps in existing literature that prevent us from adequately addressing this problem will be mapped to 
+	corresponding Research Questions that will be addressed in subsequent chapters.
+
+	% motivation for RQ 1.1
+	According to Research Problem I, 
+	we would like to compute flexible schedules for independent work-teams that can be easily adapted to changes in the environment.
+	A flexible schedule should provide, during dispatching,
+	access to a range of potential dispatching times, per task, from which we can quickly choose on-the-fly.
+	In addition, a flexible schedule should enable each team to consider alternative dispatching times 
+	for their tasks without worrying about conflicts with the decisions of other teams.
+
+	In the tradition of earlier work by Wilson et al., 
+	we also propose the use of STPs for modelling temporal constraints within the NedTrain workshop.
+	The framework of techniques on concurrent flexibility and interval schedules developed by Wilson et al. 
+	enables us to deal, in part, with Research Problem I.
+	%representing temporal constraints between pairs of tasks and also due-date constraints in the workshop.
+	This is because an interval schedule is functionally equivalent to a flexible schedule.
+	More in particular, an interval schedule allows us to maintain, for each task, 
+	a range of potential dispatching times from which we can choose in constant time.
+	%That is, interval schedules enable us to maintain a space of schedules satisfying temporal constraints during dispatching, as required by RP X. 
+	Moreover, an interval schedule represents a total decoupling of the STP, 
+	enabling us to dispatch a task within its prescribed interval regardless of the 
+	dispatching times chosen for other tasks, always guaranteeing feasibility.
+	In effect, then, 
+	interval schedules offer both team independence and the freedom to consider suitable dispatching times on-the-fly.
+
+	The problem with the approach of Wilson et al., however, 
+	is its relatively high computational cost. 
+	The LP used for computing an interval schedule of maximum concurrent flexibility
+	can have as many as $n^2$ constraints and the cost of solving it is bounded by $O(n^5)$, as seen earlier.
+	STP instances of the NedTrain workshop can contain several hundreds or even thousands of variables.
+	As such, the existing LP approach is expected to hit performance barriers in practical applications.
+	This problem is exaggerated by considering that resource constraints must also be addressed in the NedTrain workshop.
+	As we saw in Section~\ref{chapter:prelim-1:resource-constraints}, 
+	resource constraints can in fact be translated into temporal constraints, in a pre-processing phase.
+	More in particular, a search procedure enumerates candidate partial order schedules (POSs),
+	each corresponding to a potential transformation of resource constraints into additional temporal constraints that eliminate forbidden sets. 
+	In the end, that candidate POS with the highest amount of concurrent flexibility will be chosen. 
+	As dealing with resource constraints involves computing the maximum achievable amount of concurrent flexibility in each enumerated POS,
+	a highly efficient metric for measuring the amount of concurrent flexibility in a given STP is needed.
+	Note that computing an actual interval schedule is not necessary,
+	i.e. only computing the maximum achievable amount flexibility would suffice for enumerating candidate POSs.
+
+	\begin{rquest}
+	\label{rquest-1-1}
+	
+	How to efficiently compute concurrent flexibility in a given STP, in low-order polynomial time?
+	\end{rquest}
+
+
+	% motivation for RQ 1.2
+	Another challenge in addressing Research Problem I relates to the dynamic nature of the dispatching process.
+	According to the existing concurrent flexibility framework, 
+	an interval schedule is computed once and remains fixed until all tasks are completed.
+	In practice, however, the number of dispatching times that remain undecided gradually diminishes as task execution unfolds.
+	Referring back to Research Problem I, we would like to be able to use any new information about already dispatched tasks, 
+	in order to potentially enhance flexibility. 
+	Indeed, there is an opportunity to continuously improve the flexibility of the dispatching process by adapting the interval schedule to new information. 
+	Consider that an actor commits to dispatching a certain task at a certain time-point in the (near) future. 
+	From that point on, the flexibility available for determining the dispatching time of that event is no longer needed. 
+	We can therefore update the interval schedule by narrowing the time-window of that task to a point and 
+	redistributing unused flexibility over the time-windows of tasks with undecided dispatching times. 
+	By doing so, we expect to observe the available flexibility per yet-undispatched event to continuously increase as task execution unfolds.
+
+	In other words, we would like to extend the existing ``static'' flexibility framework into a ``dynamic'' framework 
+	that allows us to keep track of new information regarding already dispatched tasks and update the interval schedule accordingly.
+	Note that simply recomputing an interval schedule from scratch when new information becomes available is not an adequate approach, 
+	as care should be taken to ensure that continuously adapting the interval schedule during dispatching does not cause disruptions. 
+	If, for example, time-windows are radically re-arranged every time the interval schedule is updated, we would compromise the predictability, 
+	or the visibility into the future, offered to actors by the dispatching process. 
+	Updating the current interval schedule should be done incrementally, 
+	i.e. without invalidating any planning-ahead permitted by the current interval schedule. 
+	As such, we are interested in answering the following question:
+
+	\begin{rquest}
+	\label{rquest-1-2}
+	How to incrementally recompute a concurrent flexibility interval schedule during dispatching?
+	\end{rquest}
+
+	Moreover, updating the interval schedule should not be computationally expensive,
+	or we might end up amplifying the effects of uncertainty by introducing disruptive delays.
+	Recomputing an interval schedule from scratch with the LP method of Wilson et al. 
+	can have a prohibitive computational cost as a real-time rescheduling operation in the NedTrain workshop.
+	As such, we would also like to address the following question:
+
+	\begin{rquest}
+	\label{rquest-1-3}
+	How to redistribute concurrent flexibility as fast as possible (using heuristic methods if necessary)?
+	\end{rquest}
+
+	Research question~\ref{rquest-1-1} is answered in Chapter~3,
+	where we manage to lower the complexity of computing the amount of concurrent flexibility in a given STP from $O(n^5)$ to $O(n^3)$.
+	Effectively, then, we show that concurrent flexibility can be computed with the same cost as naive flexibility.
+	Research question~\ref{rquest-1-2} is answered in the first part of Chapter~4, 
+	where we extend the approach of Chapter~3 to enable the computation of interval schedules of maximum concurrent flexibility as well, 
+	with the same complexity.
+	Research question~\ref{rquest-1-3} is answered in the second part of Chapter~4,
+	where we propose an efficient heuristic that allows us to update the interval schedule by redistributing unused flexibility in near-linear time
+	and with almost no loss of optimality. 

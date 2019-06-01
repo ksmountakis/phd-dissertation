@@ -1,0 +1,149 @@
+Het onderzoek dat gepresenteerd wordt in dit proefschrift is onderdeel van Rolling Stock Life Cycle Logistics (Rollend Materieel Levenscycluslogistiek), 
+een toegepast onderzoeks en ontwikkelingsprogramma, uitgevoerd door NedTrain. 
+Nedtrain is een bedrijf dat behoort tot de Nederlandse Spoorwegen (NS, het voornaamste spoorwegbedrijf in Nederland) 
+en biedt onderhoudsdiensten aan de treinvloot van de NS. 
+Het doel van dit programma is om het concurrentievermogen van NedTrain te verbeteren als leverancier onderhoud service voor rollend materieel. 
+Ons werk richt zich op het operationele aspect van dit R\&D-programma, 
+gemotiveerd door de uitdaging van het plannen van taken (of werkzaamheden) in een onderhouds\-werkplaats van NedTrain, 
+zodat treinen op tijd worden afgeleverd voor circulatie in het spoorwegnet. 
+De meeste taken die in de werkplaats plaatsvinden hebben een onzekerheid in de duur (of verwerkingstijden), 
+hetgeen het plannings\-proces bemoeilijkt.
+
+Na de introductie van NedTrain als bedrijf, 
+worden in Hoofdstuk 1 de belangrijkste problemen geïdentificeerd met betrekking tot plannen in de werkplaats. 
+Het punt wordt gemaakt dat plannen onder onzekerheid niet zozeer gaat om het vinden van een goede (of tijdige) planning, 
+maar om het voortdurend aanpassen van de planning aan de resulterende looptijden van de taken zonder de gestelde beperkingen 
+in de planning te overtreden en zonder afbreuk te doen aan tijdigheid. 
+De planning van de werkplaats herhaaldelijk wijzigen is geen optie omdat dat personeel zou verwarren en desorganiseren, 
+en daarmee de prestaties belemmeren. Als zodanig beschouwen we twee mogelijkheden waar het management heeft om met de onzekerheid om te gaan: 
+i) in plaats van een planning te gebruiken die vaak verandert, mensen de flexibiliteit te geven om zichzelf te (her)plannen naar believen; 
+ii) voldoende speling in de planning toe te voegen om frequente wijzigingen tijdens de uitvoering van de taak te voorkomen. 
+Elke bovenstaande optie is toegewezen aan een overeenkomstig onderzoeksprobleem dat hieronder is weer\-gegeven: 
+
+\begin{enumerate}[(I)]
+\item{Hoe flexibele plannen te berekenen voor onafhankelijke werkteams, plannen die gemakkelijk kunnen worden aangepast aan de veranderingen in de omgeving?}
+\item{Hoe robuuste en stabiele planningen te berekenen voor werkteams om te kunnen omgaan met onzekerheid in de duur van onderhoudstaken?}
+\end{enumerate}
+
+Bij het nastreven van optie I hierboven, 
+is het doel om zoveel mogelijk flexibiliteit te bieden aan onafhankelijke besluitvormende partijen in een werkplaats. 
+De grootste moeilijkheid is ervoor te zorgen dat beperkingen op de planning 
+(d.w.z. voorrang tussen taken, opleveringsdata, beperkingen op de beschikbaarheid van hulpbronnen) 
+voldaan worden door een plan dat geleidelijk is gevormd door besli\-ssingen die onafhankelijk van elkaar worden genomen door verschillende partijen. 
+Het doel van het nastreven van optie II, aan de andere kant, 
+is om zoveel stabiliteit te bieden (d.w.z. een plan die naar verwachting niet zal veranderen) als mogelijk zonder afbreuk te doen aan prestaties (d.w.z. tijdige levering van treinen). 
+De moeilijkheid in het nastreven van optie II is het bepalen van de hoeveelheid speling om in te voegen en op welke momenten deze in te voegen in het plan, 
+afhankelijk van hoe onzekerheid accumuleert op de verschillende delen van het plan.
+
+Onderzoeksprobleem I wordt behandeld in Deel I van het proefschrift. 
+In de traditie van het vroegere werk in het kader van RSLCL, 
+bekijken we op het onderzoeksgebied van Simple Temporal Problem (STP) beperkingen. 
+Het belangrijkste idee achter onze aanpak is het modelleren van de situatie in een NedTrain-werkplaats (d.w.z. temporele beperkingen en beperkingen op de hulpbronnen) als een STP. 
+Dit STP is toegewezen aan een intervalplan. 
+In tegenstelling tot een regulier plan (dat een verzendtijd per taak voorschrijft), 
+schrijft een intervalplan een tijdsinterval per taak voor. Zolang elke taak binnen zijn tijdsinterval wordt verzonden, 
+is de voldoening aan de beperkingen in de werkplaats gegarandeerd.
+
+Deel I is toegewijd aan argoritmen die een intervalplan van maximale flexibiliteit vinden (ze voorstellen zo breed mogelijk tijdsintervallen) 
+en die dit plan bijwerken met de nieuwe informatie over de al verzonden taken naarmate deze informatie beschikbaar wordt tijdens uitvoering. 
+Hoofdstuk 2 is een soort voorspel voor Deel I. 
+Het hoofdstuk begins met een samenvatting van belangrijke concepten van de de STP-gerelateerde literatuur. 
+Daarna richt het zich op het identificeren van de literetuugaten die ons niet toestaan om Onderzoeksprobleem I aan te pakken. 
+Eindelijk formuleren we een reeks onderzoeksvragen die met de gaten te maken hebben, 
+en we bekijken deze vragen in Hoofdstukken 3 en 4. 
+De gaten in de bestaande literatuur komen in wezen voort uit de effictiviteit en dynamicity opzichten die niet bestudeerd werden in het vorige werk door Wilson et al. 
+Hier stellen wij de volgende onderzoeksvragen:
+\begin{enumerate}
+	\item{Hoe kan men gelijktijdige flexibiliteit effeciënt berekenen in een gegeven STP, binnen een lage-orde polynomische tijd?}
+	\item{Hoe kan men stapsgewijs een intervalplan van gelijktijdige flexibiliteit herberekenen tijdens het verzenden?}
+	\item{Hoe kan men de gelijktijdige flexibiliteit zo snel mogelijk opnieuw verzenden (door middel van heuristieken, indien nodig)?}
+\end{enumerate}
+
+Wilson et al. hebben een methode bedacht om de interval plannen van maximum gelijktijdige flexibiliteit te berekenen, 
+en deze methode neemt $O(n^5)$ tijd, waar n is het aantal taken. 
+In het gevan van NedTrein, kan n in de orde van duizenden zijn, 
+en daarom gaat de eerste vraag erboven over de ontwikkeling van een meer efficiënte intervalplannenmethode. 
+Onderzoeksvragen 2 en 3, aan de andere kant, gaan over de toevoeging van een dynamische dimensie tot het statische gelijktijdige flexibiliteitskader, 
+dat oorsproonkelijk door Wilson et al. geontwikkeld is. 
+Deze vragen dus bekijken op de ontwikkeling van methoden voor het bijwerken van het intervalplan naarmate de nieuwe informatie over de al verzonden taken bekend wordt.
+
+Hoofdstuk 3 en het eerste deel van Hoofdstuk 4 bestuderen de eerste vraag. 
+Door middel van een geometrische interpretatie van flexibiliteit en met behulp van de dualiteitstheorie, 
+demonstreren we dat de berekening van flexibiliteit kan worden geworpen als het vinden van een min-kost koppeling in een gewogen bipartiete graaf. 
+Dit geeft ons de mogelijkheid om de flexibiliteit te berekenen binnen $O(n^3)$ door gebruik van een min-kost koppelingsalgoritme (bijvoorbeeld, de Hongaarse methode). 
+Dat verbetert de $O(n^5)$ grens van de aanpak die gebaseerd is op Lineair Programmeren (LP), een aanpak die oorsproonkelijk Wilson et al. hebben voorgesteld.
+
+Hoofdstuk 4 dan gaat door en nadert vragen 2 en 3. 
+Wat vraag 2 betreft, er wordt laten zien hoe, gegeven een intervalplan, een nieuw intervalplan berekend kan worden elke keer dat een taak verzonden wordt op een punt binnen het betreffende tijdsinterval. 
+De flexibiliteit beschickbaar in het tijdsinterval is niet meer nodig nadat de taak verzonden wordt. 
+Daarom, bestuderen we het probleem van herverdeling van de niet verbruikte flexibiliteit naar de nog-niet-verzonden taken. 
+Dit laat ons de flexibiliteit per-taak voortdurend verhogen, 
+terwijl de taaksuitvoering zich ontvouwt. Om geen verwarring te veroorzaken door het voortdurend veranderende intervalplan, 
+is elke verzendoptie die beschikbaar is in een gegeven plan ook in het bijgewerkte plan beschikbaar. 
+Dat wilt zeggen, bevatten de tijdsintervallen van het bijgewerkte plan de tijdsintervallen van het gegeven plan. 
+Het opnieuw verdelen van flexibiliteit (of het plan bijwerken) is eigenlijk een herplanningsoperatie, 
+en daarom zou het berekenbaar zo efficiënt mogelijk zijn, 
+om gelijke tred te houden met de uitvoering. 
+Het laatste deel van Hoofdstuk 4 gaat over de ontwikkeling van een zeer efficiënte heuristiek.
+
+Onderzoeksprobleem II wordt behandeld in Deel II van het proefschrift. 
+Hier is het belangrijkste idee de situatie in de werkplaats modelleren (d.w.z. de temporale en hulpbronbeperkingen) als een stochastische taaknetwerk, 
+d.w.z. een netwerk van voorrangrelaties tussen de taken met randomise duurtijden. 
+Onze belangrijkste aanname is dat we de kansverdeling van elke taaksduur kunnen inschatten door middel van historische data van de onderhoudssessies van het verleden. 
+Met gebruik van dit precieze beeld van onzekerheid in de werkplaats, 
+wordt het taaksnetwerk toegewezen aan een voorspellend (of stabiel) plan. 
+De mensen in de werkplaats worden gevraagd om de taken eenvoudig te verzenden op de verzendtijden die in dat plan staan. 
+Het voorspellende plan wordt gemaakt met gebruik van de juiste hoeveelheid speling op de juiste plekken, 
+zodat dat grotendeels hetzelfde blijft gedurende de uitvoering van de taken.
+
+Deel II is gewijd aan algoritmen die zo’n stabiel voorspellend plan vinden zonder afbreuk te doen aan robuustheid (d.w.z. de kans van op tijd zijn met de treinaf\-leveringsdata) 
+en (optioneel) die dat bijwerken naarmate nieuwe informatie komt gedurende de uitvoering van een taak.  
+Hoofdstuk 5 speelt de rol van een voorspel voor Deel II. 
+Het begint met een samenvatting van de belangrijke concepten van de literatuur over Stochastische TaakNetwerken (Stochastic Task Networks). 
+We identificeren de gaten in de literatuur die het bekijken van Onderzoeksprobleem II onmogelijk maken, 
+en dat brengt ons tot het formuleren van een reeks onderzoeksvragen die met deze gaten te maken hebben. 
+Deze vragen zijn bestudeerd in Hoofdstukken 6 en 7. Hier stellen we de volgende twee onderzoeksvragen:
+\begin{enumerate}
+	\item{Hoe kan men een plannigsbeleid en een voorspellend plan samen optimaliseren als een paar?}
+	\item{Hoe kan men het voorspellende plan bijwerken door op de resulterende looptijden te reageren binnen lage-orde polynomische tijd, terwijl we gelijke tred met de uitvoering houden.}
+\end{enumerate}
+Zelfs als het voorspellende plan beschermd is door het invoegen van speling, 
+kan het gebeuren da een taak langer duurt dan gepland. 
+Een verzameling regels die bepalen hoe het plan veranderd moet worden (als het moet) in zulke gevallen is bekend als een planningsbeleid. 
+Eigenlijk, wordt het proces van taakuitvoeren geleid door het voorspellende plan samen met het planningsbeleid. 
+De vooraan\-staande aanpakken in de literatuur werken afzondelijk aan het optimeseren van het beleid en het plan. 
+In het nastreven van mogelijk betere resultaten door te optimeseren in een oplossingsruimte van een hogere dimensie, 
+gaat de eerste vraag over hoe het plan en het beleid samen geoptimaliseerd kunnen worden, als een oplossing. 
+Als we al hebben gemerkt, kunnen de tijden van het resultaatsverzenden afwijken van degenen in het voorspellende plan. 
+Als dit het geval is, kan het volgende nuttig zijn: 
+de spelingstoewijzing aanpassen volgens de verzendtijden van het resultaat en de looptijden van de taken. 
+De tweede vraag gaat over het voorspellende plan bijwerkend houden naarmate zo’n nieuwe informatie beschikbaar wordt  tijdens de uitvoering. 
+Omdat dit een herplanningsoperatie is, concentreren we op deze zo efficiënt mogelijk uit te voeren.
+
+De eerste vraag hierboven wordt in Hoofdstuk 6 behandeld, 
+waar we een aanpak van twee stappen (het plan en het beleid afzondelijk optimaliseren, in twee stappen) 
+en een geïntegreerde aanpak (het beleid en het plan samen optimaliseren) ontwikkelen. 
+Dat doen we door een stochastische extensie van de bestaande MILP formuleringen te ontwikkelen voor het (deterministische) 
+Resource Constrained Project Scheduling Problem (RCPSP). 
+Zoals verwacht, levert de geïntegreerde aanpak betere resultaten. 
+Helaas, is het te rekenkundig duur voor problemen van praktische grootte. 
+Aan de andere kant, lijkt onze twee stappen aanpak beiden efficient en heel effectief te zijn in het optimaliseren van het voorspellende plan voor een gegeven planningsbeleid; 
+deze aanpak oplevert betere resultaten dan de state of the art.
+
+De tweede vraag hierboven wordt in Hoofdstuk 7 behandeld. 
+We stellen eerst een LP voor voor het opbouwen van een voorspellend plan, 
+gebaseerd op een steekproef van randomise taaklooptijden. 
+Dit LP is rekenkundig duur om op te lossen, met een complexiteit van $O(n^5 m^4)$, 
+waar n het aantal taken betekend en m de grootte van de steekproef van de looptijden is. 
+Met het oog op een bepaald deel van de oplossingsruimte, 
+definiëren wij het erbij horende Simple Temporal Problem (STP) 
+en we laten zien dat het optimale voorspellende plan gemaakt kan worden van de vroegste-begin-tijd oplossing van het STP. 
+Door gebruik te maken van de speciale STP structuur, 
+presenteren wij onze belangrijkste resultaat, 
+een dynamisch programmeren algoritme dat een optimaal voorspellend plan vindt, 
+een plan dat $O(n^2 m)$ kost, en dat aanzienlijke efficiëntiewinsten oplevert.
+
+Hoofdstuk 8 rondt het proefschrift af. 
+We beoordelen eerst onze antwoorden op de onderzoeksvragen. 
+We gebruiken onze antwoorden om door te gaan en de mate van een geschikte behandeling van Onderzoeksproblemen I en II te discusseren. 
+We sluiten het hoofdstuk af met een lijst aanbevelingen voor toekomstig werk.

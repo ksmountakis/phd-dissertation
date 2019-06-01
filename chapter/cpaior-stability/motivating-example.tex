@@ -1,0 +1,97 @@
+
+\subsection{A motivating example}
+
+Consider the task network in Fig.~\ref{fig-house} describing the plan of an example house construction project.
+As in most (if not all) real-world projects, task durations are uncertain,
+in our example we assume that each task duration will fall within a lower and an upper bound, according to the uniform distribution.
+Using an earliest-start execution of the tasks,
+the whole construction project will take between 12 and 20 days with an expected makespan of a little over 16 days.
+
+%But given the uncertain nature of task durations, is this expected makespan actually achievable?
+Suppose that task 7 (paint interior) is to be carried out by a painting crew that charge \$100 per day
+and assume that we are willing to hire them for at least 4 days (the maximum number of days they will need) and for at most 6 days;
+i.e. we have a maximum budget of \$600 for painting.
+A consequence of following an earliest-start execution strategy is that
+task 7  may start within 8 to 15 days from the begining date of the project.
+A challenge that arises in this situation is deciding when to hire the painting crew.
+To allow for the expected makespan of a little over 16 days we must hire the painting crew from the 8-th day and until the 19-th day, 
+at the excessive cost of \$1100.
+% ... est requires an agile availability of resources that might be too costly
+
+Alternatively, suppose that we associate task 7 with a stable release-date $t_7$ before which it may not start,
+even if the tasks of installing plumbing and electricity are finished earlier than $t_7$.
+If we choose that task 7 may not start earlier than $t_7 = 15$ days from the project start,
+we ensure that it will, in fact, start on the 15-th day, regardless of the realized durations of its predecessors.
+This enables us to hire the painting crew on the 15-th day until the 19-th, at the cost of \$400.
+However, our choice incurs a penalty on performance, as the expected makespan now becomes 18 days.
+Since \$400 is below our available painting budget,
+we may instead choose $t_7 = 13$ which means that we hire the painting crew on the 13-th day until the 19-th day, 
+for a cost of \$600 and an expected makespan of a little over 17 days.
+
+Suppose now that after assessing our budget carefully,
+we have decided a maximum number of days $w_i$ that each task $i$ can deviate from its respective stable release-time $t_i$.
+The arising problem addressed in this paper is:
+given a stochastic task network, how can we determine stable release-times that 
+enforce the desired stability constraints while minimizing the incurred expected makespan/tardiness increase?
+
+%Choosing this release-date sufficiently far from the completion-dates of preceeding tasks 6 and 4,
+%the start-date of task 7 will become more predictable, as in most cases it will be equal to $t_7$.
+%Suppose that we decide task 7 cannot start earlier than $t_7 = 15$ days after the project starts.
+%That is, we now follow a different earliest-start execution strategy which takes into account 
+%not only precedence-constraints but also associated release-dates.
+
+\begin{figure}[!t]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\begin{tikzpicture}
+			\begin{scope}[every node/.style={circle,thin,draw}]
+ 				\node (1) at (0,+0)	{\scriptsize 1};
+				\node (2) at (1.2,-1)	{\scriptsize 2};
+				\node (3) at (1.2,+1)	{\scriptsize 3};
+				\node (4) at (2.4,-1)	{\scriptsize 4};
+				\node (5) at (3.5,+1)	{\scriptsize 5};
+				\node (6) at (2.4,-0)	{\scriptsize 6};
+				\node (7) at (3.5,-1)	{\scriptsize 7};
+				\node (8) at (4.5,+0)	{\scriptsize 8};
+			\end{scope}
+
+			\begin{scope}[>={Stealth[black]},
+				every node/.style={fill=white,circle},
+				every edge/.style={draw=black,thin}]
+				\path [->] (1) edge (2);				
+				\path [->] (1) edge (3);				
+				\path [->] (2) edge (4);				
+				\path [->] (3) edge (5);				
+				\path [->] (3) edge (6);				
+				\path [->] (4) edge (7);				
+				\path [->] (5) edge (8);				
+				\path [->] (6) edge (7);				
+				\path [->] (7) edge (8);				
+ 			\end{scope}
+		\end{tikzpicture}
+		\subcaption{Example construction plan.}
+		\label{fig-house-a}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.4\textwidth}
+		\begin{center}
+		    \begin{tabular}{ l l c }
+			    & Tasks & Durations (days) \\ \hline
+			    1. & Erect walls & 2-4  \\ 
+			    2. & Finish walls & 3-5 \\ 
+			    3. & Finish roof & 2-6 \\
+			    4. & Install plumbing & 3-5 \\
+			    5. & Finish exterior & 6-8 \\
+			    6. & Install electricity & 3-5 \\
+			    7. & Paint interior & 2-4 \\
+			    8. & Finishing touches & 1-1 \\
+		    \hline
+		    \end{tabular}
+		\end{center}
+	\subcaption{Estimated task durations.}
+	\label{fig-house-b}
+	\end{subfigure}
+	\caption{Example task network representing a construction plan.}
+	\label{fig-house}
+\end{figure}
+

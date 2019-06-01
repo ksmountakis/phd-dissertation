@@ -1,0 +1,249 @@
+@inproceedings{terekhov2012,
+	  title={Long-Run Stability in Dynamic Scheduling.},
+	    author={Terekhov, Daria and Tran, Tony T and Down, Douglas G and Beck, J Christopher},
+	      booktitle={ICAPS},
+	        year={2012}
+}
+@article{cohen2015,
+  title={Estimating the probability of meeting a deadline in hierarchical plans},
+  author={Cohen, Liat and Shimony, Solomon Eyal and Weiss, Gera},
+  journal={arXiv preprint arXiv:1503.01327},
+  year={2015}
+}
+@inproceedings{godard2005,
+  title={Randomized Large Neighborhood Search for Cumulative Scheduling.},
+  author={Godard, Daniel and Laborie, Philippe and Nuijten, Wim},
+  booktitle={ICAPS},
+  volume={5},
+  year={2005}
+}
+@inproceedings{policella2004,
+  title={Generating robust partial order schedules},
+  author={Policella, Nicola and Oddi, Angelo and Smith, Stephen F and Cesta, Amedeo},
+  booktitle={International Conference on Principles and Practice of Constraint Programming},
+  year={2004},
+  organization={Springer}
+}
+@inproceedings{bonfietti2014,
+  title={Disregarding Duration Uncertainty in Partial Order Schedules? {Y}es, we can!},
+  author={Bonfietti, Alessio and Lombardi, Michele and Milano, Michela},
+  booktitle={CPAIOR 2014},
+  year={2014},
+  organization={Springer}
+}
+@article{artigues2003,
+  title={Insertion techniques for static and dynamic resource-constrained project scheduling},
+  author={Artigues, Christian and Michelon, Philippe and Reusser, St{\'e}phane},
+  journal={EJOR},
+  volume={149},
+  year={2003},
+  publisher={Elsevier}
+}
+@article{bidot2009,
+  title={A theoretic and practical framework for scheduling in a stochastic environment},
+  author={Bidot, Julien and Vidal, Thierry and Laborie, Philippe and Beck, J Christopher},
+  journal={J. of Scheduling},
+  volume={12},
+  year={2009},
+  publisher={Springer}
+}
+@article{chretienne2003,
+  title={PERT scheduling with convex cost functions},
+  author={Chr{\'e}tienne, Philippe and Sourd, Francis},
+  journal={Theoretical Computer Science},
+  volume={292},
+  year={2003},
+  publisher={Elsevier}
+}
+@inproceedings{davenport2014,
+  title={Slack-based techniques for robust schedules},
+  author={Davenport, Andrew and Gefflot, Christophe and Beck, Chris},
+  booktitle={Sixth European Conference on Planning},
+  year={2014}
+}
+@article{herroelen2005,
+  title={Project scheduling under uncertainty: Survey and research potentials},
+  author={Herroelen, Willy and Leus, Roel},
+  journal={EJOR},
+  volume={165},
+  year={2005},
+  publisher={Elsevier}
+}
+@misc{beck2002,
+  title = {A survey of techniques for scheduling with uncertainty},
+  author={Beck, C. and Davenport, A.J.}, 
+  year = {2002}
+}
+@article{igelmund1983,
+  title={Preselective strategies for the optimization of stochastic project networks under resource constraints},
+  author={Igelmund, G and Radermacher, Franz Josef},
+  journal={Networks},
+  volume={13},
+  year={1983},
+  publisher={Wiley Online Library}
+}
+@article{roy1964,
+  title={Les problemes d’ordonnancement avec contraintes disjonctives},
+  author={Roy, Bernard and Sussmann, B},
+  journal={Note ds},
+  volume={9},
+  year={1964},
+  publisher={SEMA Montrouge}
+}
+@article{kleywegt2002,
+  title={The sample average approximation method for stochastic discrete optimization},
+  author={Kleywegt, Anton J and Shapiro, Alexander and Homem-de-Mello, Tito},
+  journal={SIAM J. on Optimization},
+  volume={12},
+  year={2002},
+  publisher={SIAM}
+}
+@article{van2008,
+  title={Proactive heuristic procedures for robust project scheduling: An experimental analysis},
+  author={Van de Vonder, Stijn and Demeulemeester, Erik and Herroelen, Willy},
+  journal={EJOR},
+  volume={189},
+  year={2008},
+  publisher={Elsevier}
+}
+@article{lamas2015,
+  title={A purely proactive scheduling procedure for the resource-constrained project scheduling problem with stochastic activity durations},
+  author={Lamas, Patricio and Demeulemeester, Erik},
+  journal={J. of Scheduling},
+  year={2015},
+  publisher={Springer}
+}
+@inproceedings{mountakis2015,
+  title={Exact and heuristic methods for trading-off makespan and stability in stochastic project scheduling},
+  author={Mountakis, Simon and Klos, Tomas and Witteveen, Cees and Huisman, Bob},
+  booktitle={MISTA},
+  year={2015}
+}
+@article{malcolm1959,
+  title={Application of a technique for research and development program evaluation},
+  author={Malcolm, Donald G and Roseboom, John H and Clark, Charles E and Fazar, Willard},
+  journal={Operations research},
+  volume={7},
+  year={1959},
+  publisher={INFORMS}
+}
+@article{veetil2011,
+  title={Fast statistical static timing analysis using smart Monte Carlo techniques},
+  author={Veetil, Vineeth and Chopra, Kaviraj and Blaauw, David and Sylvester, Dennis},
+  journal={IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems},
+  volume={30},
+  year={2011},
+  publisher={IEEE}
+}
+
+@article{adlakha1989,
+  title={A classified bibliography of research on stochastic PERT networks: 1966-1987},
+  author={Adlakha, VG and Kulkarni, Vidyadhar G},
+  journal={INFOR},
+  volume={27},
+  year={1989},
+  publisher={Taylor \& Francis}
+}
+
+@article{hagstrom1990,
+  title={Computing the probability distribution of project duration in a PERT network},
+  author={Hagstrom, Jane N},
+  journal={Networks},
+  volume={20},
+  year={1990},
+  publisher={Wiley Online Library}
+}
+
+@article{pallottino1984,
+  title={Shortest-path methods: Complexity, interrelations and new propositions},
+  author={Pallottino, Stefano},
+  journal={Networks},
+  volume={14},
+  year={1984},
+  publisher={Wiley Online Library}
+}
+
+@article{potra2000,
+  title={Interior-point methods},
+  author={Potra, Florian A and Wright, Stephen J},
+  journal={J. of Computational and Applied Mathematics},
+  volume={124},
+  year={2000},
+  publisher={Elsevier}
+}
+
+@article{blaauw2008,
+  title={Statistical timing analysis: From basic principles to state of the art},
+  author={Blaauw, David and Chopra, Kaviraj and Srivastava, Ashish and Scheffer, Lou},
+  journal={IEEE transactions on computer-aided design of integrated circuits and systems},
+  volume={27},
+  year={2008},
+  publisher={IEEE}
+}
+@article{shestak2008,
+  title={Stochastic robustness metric and its use for static resource allocations},
+  author={Shestak, Vladimir and Smith, Jay and Maciejewski, Anthony A and Siegel, Howard Jay},
+  journal={J. of Parallel and Distributed Computing},
+  volume={68},
+  year={2008},
+  publisher={Elsevier}
+}
+
+@article{leus2011,
+  title={Resource allocation by means of project networks: dominance results},
+  author={Leus, Roel},
+  journal={Networks},
+  volume={58},
+  year={2011},
+  publisher={Wiley Online Library}
+}
+
+@article{bell1989,
+  title={Maintaining project networks in automated artificial intelligence planning},
+  author={Bell, Colin E},
+  journal={Management Science},
+  volume={35},
+  year={1989},
+  publisher={INFORMS}
+}
+
+@article{tarjan1976,
+  title={Edge-disjoint spanning trees and depth-first search},
+  author={Tarjan, Robert Endre},
+  journal={Acta Informatica},
+  volume={6},
+  year={1976},
+  publisher={Springer}
+}
+@article{kim2007,
+  title={A heuristic for optimizing stochastic activity networks with applications to statistical digital circuit sizing},
+  author={Kim, Seung-Jean and Boyd, Stephen P and Yun, Sunghee and Patil, Dinesh D and Horowitz, Mark A},
+  journal={Optimization and Engineering},
+  volume={8},
+  year={2007},
+  publisher={Springer}
+}
+@article{calafiore2005,
+  title={Uncertain convex programs: randomized solutions and confidence levels},
+  author={Calafiore, Giuseppe and Campi, Marco C},
+  journal={Mathematical Programming},
+  volume={102},
+  year={2005},
+  publisher={Springer}
+}
+@article{floyd1962,
+  title={Algorithm 97: shortest path},
+  author={Floyd, Robert W},
+  journal={Communications of the ACM},
+  volume={5},
+  year={1962},
+  publisher={ACM}
+}
+@article{dechter1991,
+title={Temporal constraint networks},
+author={Dechter, Rina and Meiri, Itay and Pearl, Judea},
+journal={Artificial intelligence},
+volume={49},
+year={1991},
+publisher={Elsevier}
+}

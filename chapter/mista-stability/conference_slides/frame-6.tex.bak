@@ -1,0 +1,42 @@
+\begin{frame}{Our Approach}
+
+\onslide<1->{
+Approximate $\x{D}$ with sample 
+$\Gamma = \{(d^{\gamma}_1,\ldots,d^{\gamma}_n): \gamma = 1,\ldots,|\Gamma|\}$
+}
+
+\medskip
+
+\onslide<2->{
+LP-based heuristic
+\begin{enumerate}
+\item use $\mathbb{E}[\x{D}]$ and obtain $\x{s}$
+\item use $\x{s}$ to obtain $\z{E}$ from \emph{resource-flow} (Artigues et al. 2003)
+\item use LP model to find optimal $\x{t}$ w.r.t. fixed $\z{E}$ and $\Gamma$
+\end{enumerate}
+}
+
+\medskip
+
+\onslide<3->{
+"Exact" MILP model
+\begin{enumerate}
+\item add $n^2$ binary variables $z_{ij}$ to LP, representing $\z{E}$
+\item use $\Gamma$ to find optimal $(\z{E}, \x{t})$
+\item similar idea for different problem (Leus et al. 2011)
+\end{enumerate}
+}
+
+\medskip
+
+\onslide<4->{
+MILP-based heuristic
+\begin{enumerate}
+\item initialize $z_{ij}$ from fixed $\z{E}^0$
+\item keep some $z_{ij}$ fixed and re-solve
+\item adaptation of \emph{iterative flattening} (Oddi and Rasconi 2009)
+\end{enumerate}
+}
+
+\end{frame}
+

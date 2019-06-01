@@ -1,0 +1,42 @@
+\section{Conclusions and future work}
+\label{sec-conclusion}
+
+This paper proposes the PS-RCPSP problem model which,
+assuming stochastic activity durations,
+asks to find a so-called earliest-start (es) policy and
+a proactive schedule that together minimize the weighted 
+sum of expected project makespan and expected instability.
+Extending an existing MILP model for the RCPSP,
+a MILP model for PS-RCPSP is presented, which allows us to 
+find optimal (es-policy, proactive schedule) pairs.
+Solving this problem to optimality might require an impractical amount of time,
+even for instances with few activities (e.g. 30).
+Therefore, we propose a LP-based and a MILP-based heuristic for the PS-RCPSP.
+Our LP-based heuristic optimizes the proactive schedule by keeping the es-policy part of the  solution fixed.
+Our MILP-based heuristic optimizes the structure of the policy together with the proactive schedule.
+The LP-based heuristic, which is rather efficient, seems to be more effective compared to the state-of-art
+(i.e. achieves smaller expected makespan for a certain level of expected instability) especially
+when the aim is to achieve close to zero instability.
+The MILP-based heuristic is rather effective when the aim is to
+achieve low expected makespan at the cost of moderate or high instability.
+In contrast to existing state-of-art approaches such as
+CCP \cite{lamas2015} and STC \cite{van2008},
+our heuristics rely on the idea of optimizing 
+the proactive schedule together with the scheduling policy.
+This difference might in part explain observed performance differences.
+
+Future work involves a thorough experimental analysis of the proposed heuristics,
+not for the purpose of comparing them to the state-of-art,
+but for a deeper understanding of their behavior and its
+dependence on problem characteristics.
+Furthermore, most existing stochastic project scheduling works are evaluated on instances where
+the deterministic RCPSP counterpart instance 
+(formed by mean activity durations) serves as a good approximation of the stochastic instance.
+This is exploited by our heuristics and other heuristics such as STC.
+However, in certain practical domains (e.g. maintenance scheduling),
+the duration of some activities is known a-priori with accuracy,
+while the duration of other activities follows a distribution with very high variance.
+In maintenance scheduling, for example, "inspection" activities have known durations
+but "repair" activities might be (un)necessary with certain probabilities. 
+We would like to investigate performance on such instances 
+which cannot be approximated well by their determinitic counterpart.

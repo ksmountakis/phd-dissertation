@@ -1,0 +1,42 @@
+
+Paper structure
+
+ 	Let us split the content in two segments: existing material and contributions.
+	
+ 	Existing material is presented in sections:
+ 	1) Introduction,
+ 	2) Preliminaries.
+ 	
+ 	Contributions are presented in sections:
+ 	3) The Proactive Stochastic RCPSP,
+ 	4) LP heuristic,
+ 	5) Exact mixed integer LP model,
+ 	6) Iterative flattening heuristic,
+ 	7) Experiments with PSPLIB,
+ 	8) Conclusions and future work.
+ 	
+ 	
+Ti prepei na ginei apopse.
+
+	To paper exei kapoia morfi.
+	Exei introduction, exei preliminaries, exei kai contributions.
+	Den exei experimental set-up, interpretation of results, conclusions & future work.
+	Tha ksekinisoume apo auta pou leipoun wste na kataliksoume se kati pou moiazei oloklirwmeno.
+	H strathgikh mou einai h ekshs:
+	Kapoia merh tha grafoun nwritera kai alla tin teleutaia stigmh.
+	Auta pou tha grafoun nwritera tha exw thn eukairia na ta kanw revise perissoteres fores.
+	Opote tha dwsw priority se auta gia ta opoia eimai perissotero anasfalhs.
+
+Topics pou leipoun.
+
+	Pws sxetizetai to PR-RCPSP me ta problem models twn vandevonder kai vilches?
+		- omoiotites, diafores, pleonektimata, meionektimata
+	
+	Pws sxetizetai h lp-heuristic me ti douleia tou vandevonder?
+		- omoiotites, diafores, pleonektimata, meionektimata
+	
+	Pws sxetizetai h mip-heuristic me tin lp-heuristic?
+		- omoiotites, diafores, pleonektimata, meionektimata
+	
+	H lp-based heuristic lynei to idio provlima me tou vandevonder mono pou to lynei optimally.
+	

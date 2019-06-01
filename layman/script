@@ -1,0 +1,71 @@
+:: introduction
+
+	scheduling of operations, or tasks, or activities, under uncertainty
+
+	inspired by a real-world problem, as experienced by NedTrain.
+
+	NedTrain is that part of NS that deals with the maintenance of the train-fleet
+
+	Maintenance takes place in workshops distributed through NL
+	each week, a large number of maintenance tasks (in the order of thousands) must be performed on a number of trains within each workshop
+
+	the execution of these maintenance tasks involves resources such as people and equipment
+
+	trains must be delivered on-time, according to set deadlines
+
+	main purpose is to schedule tasks such that available resources (people & equipment) are used efficiently and every train is delivered on time
+
+	uncertainty in the workshop complicates the scheduling of tasks
+	- we cannot be sure about the time needed (duration) to execute each tasks
+	- we don't know which repair tasks are necessary until inspection work finishes
+
+	human resources are organized into teams 
+	members within each team can communicate with each other
+	but teams do not want to communicate / synchronize their work with other teams; they want autonomy
+
+:: our contributions
+
+	people hate to be directed by a schedule that changes repeatedly 
+	this causes confussion also known as workshop nervousness
+
+	in this dissertation we develop two scheduling techniques,
+	offer management two alternatives for dealing with the aforementioned scheduling challenges
+
+	first: let people reschedule themselves at will,
+	but ensure there will be no conflict in their autonomous decision-making
+
+	second: do create a schedule that directs people,
+	but ensure the schedule will remain unchanged during execution 
+
+:: first approach
+
+	instead of a regular schedule we assign each ask with a window in time 
+	such an assignment of time-windows to tasks, we call a flexible schedule and it facilitates a temporal decoupling
+
+	teams can freely choose within the provided time-windows without having to worry about the choices of other teams
+	we ensure scheduling constraints will be satisfied so long as tasks are executed within their appointed time-windows
+
+	we maximize the flexibility offered (i.e. width of those time-windows)
+
+
+:: second approach
+
+	disadvantage of the first approach is that we don't make use of an interesting fact:
+	tasks appear periodically; each type of task appears repeatedly through different maintenance weeks and different trains
+
+	durations are uncertain but not completely unpredictable
+
+	the second approach is based on the idea of using data from pas sessions to represent the 
+	duration of an uncertain task a random variable with a distribution
+
+	based on this stochastic modelling uncertainty in the workshop
+	generate a schedule, this time a regular schedule, that is stable and robust 
+
+	stable means it won't change much
+	robust means trains will most likely be delivered on time
+
+	leverage our precise representation of uncertainty
+	allocate the right amount of time per task in the schedule
+
+
+

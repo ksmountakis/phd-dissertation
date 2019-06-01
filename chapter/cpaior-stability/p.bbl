@@ -1,0 +1,110 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem{adlakha1989}
+Adlakha, V., Kulkarni, V.G.: A classified bibliography of research on
+  stochastic pert networks: 1966-1987. INFOR  27 (1989)
+
+\bibitem{beck2002}
+Beck, C., Davenport, A.: A survey of techniques for scheduling with uncertainty
+  (2002)
+
+\bibitem{bidot2009}
+Bidot, J., Vidal, T., Laborie, P., Beck, J.C.: A theoretic and practical
+  framework for scheduling in a stochastic environment. J. Scheduling  12
+  (2009)
+
+\bibitem{blaauw2008}
+Blaauw, D., Chopra, K., Srivastava, A., Scheffer, L.: Statistical timing
+  analysis: From basic principles to state of the art. IEEE transactions on
+  computer-aided design of integrated circuits and systems  27 (2008)
+
+\bibitem{bonfietti2014}
+Bonfietti, A., Lombardi, M., Milano, M.: Disregarding duration uncertainty in
+  partial order schedules? {Y}es, we can! In: CPAIOR (2014)
+
+\bibitem{calafiore2005}
+Calafiore, G., Campi, M.C.: Uncertain convex programs: randomized solutions and
+  confidence levels. Mathematical Programming  102 (2005)
+
+\bibitem{chretienne2003}
+Chr{\'e}tienne, P., Sourd, F.: Pert scheduling with convex cost functions.
+  Theoretical Computer Science  292 (2003)
+
+\bibitem{davenport2014}
+Davenport, A., Gefflot, C., Beck, C.: Slack-based techniques for robust
+  schedules. In: Sixth European Conference on Planning (2014)
+
+\bibitem{dechter1991}
+Dechter, R., Meiri, I., Pearl, J.: Temporal constraint networks. Artificial
+  intelligence  49 (1991)
+
+\bibitem{godard2005}
+Godard, D., Laborie, P., Nuijten, W.: Randomized large neighborhood search for
+  cumulative scheduling. In: ICAPS. vol.~5 (2005)
+
+\bibitem{hagstrom1990}
+Hagstrom, J.N.: Computing the probability distribution of project duration in a
+  pert network. Networks  20 (1990)
+
+\bibitem{herroelen2005}
+Herroelen, W., Leus, R.: Project scheduling under uncertainty: Survey and
+  research potentials. EJOR  165 (2005)
+
+\bibitem{igelmund1983}
+Igelmund, G., Radermacher, F.J.: Preselective strategies for the optimization
+  of stochastic project networks under resource constraints. Networks  13
+  (1983)
+
+\bibitem{kleywegt2002}
+Kleywegt, A.J., Shapiro, A., Homem-de Mello, T.: The sample average
+  approximation method for stochastic discrete optimization. SIAM J.
+  Optimization  12 (2002)
+
+\bibitem{lamas2015}
+Lamas, P., Demeulemeester, E.: A purely proactive scheduling procedure for the
+  resource-constrained project scheduling problem with stochastic activity
+  durations. J. Scheduling  (2015)
+
+\bibitem{leus2011}
+Leus, R.: Resource allocation by means of project networks: dominance results.
+  Networks  58 (2011)
+
+\bibitem{malcolm1959}
+Malcolm, D.G., Roseboom, J.H., Clark, C.E., Fazar, W.: Application of a
+  technique for research and development program evaluation. Operations
+  research  7 (1959)
+
+\bibitem{mountakis2015}
+Mountakis, S., Klos, T., Witteveen, C., Huisman, B.: Exact and heuristic
+  methods for trading-off makespan and stability in stochastic project
+  scheduling. In: MISTA (2015)
+
+\bibitem{pallottino1984}
+Pallottino, S.: Shortest-path methods: Complexity, interrelations and new
+  propositions. Networks  14 (1984)
+
+\bibitem{policella2004}
+Policella, N., Oddi, A., Smith, S.F., Cesta, A.: Generating robust partial
+  order schedules. In: CP (2004)
+
+\bibitem{potra2000}
+Potra, F.A., Wright, S.J.: Interior-point methods. J. Computational and Applied
+  Mathematics  124 (2000)
+
+\bibitem{shestak2008}
+Shestak, V., Smith, J., Maciejewski, A.A., Siegel, H.J.: Stochastic robustness
+  metric and its use for static resource allocations. J. Parallel and
+  Distributed Computing  68 (2008)
+
+\bibitem{tarjan1976}
+Tarjan, R.E.: Edge-disjoint spanning trees and depth-first search. Acta
+  Informatica  6 (1976)
+
+\bibitem{van2008}
+Van~de Vonder, S., Demeulemeester, E., Herroelen, W.: Proactive heuristic
+  procedures for robust project scheduling: An experimental analysis. EJOR  189
+  (2008)
+
+\end{thebibliography}

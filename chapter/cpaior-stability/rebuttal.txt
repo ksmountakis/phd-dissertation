@@ -1,0 +1,55 @@
+
+++REVIEW 1++
+Thank you for your constructive criticism. 
+
+[Chretienne & Sourd]
+We agree that the algorithm presented in this journal paper is structurally similar to ours: 
+subproblems are solved by visiting tasks in topological order. 
+To our understanding, however, our problem cannot be cast as an instance of problem PERTCONVG addressed in that paper. 
+Even trying to somehow represent the constraint (s[i]-t[i]<=w) in a schedule "cost" function as they do, 
+it becomes clear that it would not be a separable convex function, as assumed in their problem statement. 
+In this sense, we fail to see how their method could be viewed as more general than ours.
+We agree, however, that citing this work as potentially relevant to ours would add to the value of our paper. 
+A discussion of how their analysis can be extended to address our problem could be part of future work.
+
+[lack of empirical results]
+As discussed above, the work of Chretienne & Sourd seems not directly comparable. 
+Our short paper presents work in progress and gathering empirical results by using our method to tackle problems that 
+*have* been addressed in the literature is something to do in follow-up work, as outlined in the conclusion.
+
+[minor remark]
+Removing equality s[jp]=max{k[jp],t[j]} where k[jp]=max{s[ip]+d[ip]:(i,j) in E} allows us to formulate the LP.
+Lemma 1 introduces equality t[j]=max{s[jp]: p in P} - w. 
+First of all, these are two different relations. 
+Please note that the first equality does not imply the second:
+It is perfectly well possible to have a feasible (s,t) for (P) with t[j] > max{s[jp]: p in P}-w. 
+Therefore, we fail to see how one equality implies the other or how our analysis is unnecessarily complicated.
+
+[other literature]
+
+Papers such as "Slack-Based Techniques for Robust Schedules" or even "Robust Scheduling of Task Graphs under Execution Time Uncertainty" (Review 3) focus on resource constraints under uncertainty. Our method is not directly related, but could potentially be extended to deal with such problems in future work. We agree however to cite this work as potentially relevant.
+
+
+++REVIEW 2++
+Thanks for the positive comments and constructive feedback.
+
+We agree that the leap from our motivating example to the problem statement could have been implemented more clearly. 
+Note that the concept of "booking" an external actor is not part of the problem statement; it is merely used in an example application of our problem. 
+We agree that explicitly defining stability would enhance the readability of our paper and we will do our best to address this.
+Regarding the lack of empirical results, please refer to our response to review 1 and also to the general remarks below.
+
+++REVIEW 3++
+Thanks for the positive and useful remarks.
+
+Regarding the lack of citations to some related literature,
+instead of citing the surveys of Davenport & Beck and Herroelen & Leus,
+we cite works [15] and [7] which are closely related to the problem that we study.
+Please also read our remarks regarding missing literature in Review 1 and in the following section.
+A more extensive review of relevant literature accompanied with empirical data could be part of future work.
+
+++SUMMARIZING++
+The purpose of this short paper is to present work in progress.
+Using AI-related techniques to solve a problem with at least one concrete application in OR (see conclusion). 
+We are willing to cite some of the potentially relevant work you pointed out in order to improve our positioning in existing literature. 
+Please note that there is a large body of literature on task networks.
+It would be fair to point-out that different reviewers have identified completely different works in existing literature as potentially relevant but not cited.

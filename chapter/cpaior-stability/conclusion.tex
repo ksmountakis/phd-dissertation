@@ -1,0 +1,37 @@
+\section{Conclusions and Discussion}
+
+%Given a stochastic task network with $n$ tasks we examined dispatching the tasks as early as possible but not earlier than respective planned release-times.
+%Assuming a sample with $m$ realizations of the random task durations vector is given,
+%we examined the problem of finding planned release-times that minimize the performance penalty of reaching a desired level of stability.
+
+Given a stochastic task network with $n$ tasks we consider dispatching the tasks as early as possible, subject to (planned) release-times.
+Assuming a sample with $m$ realizations of the stochastic durations vector is drawn, we defined an LP for finding 
+optimal release-times; i.e. that minimize the performance penalty of reaching a desired level of stability.
+%which can be solved at an estimated cost of $O(n^5 m^4)$
+%Modern LP solvers can find the optimal with an estimated complexity of $O(n^5 m^4)$, which might be daunting for instances of practical size.
+The resulting LP is costly to solve, so
+pursuing a more efficient solution method we managed to show that optimal release-times can be expressed 
+as a function of the earliest start time solution of an associated Simple Temporal Problem. 
+Exploiting the structure of this STP, we were able to define a dynamic programming algorithm 
+for finding optimal release-times with considerable efficiency, in time $O(n^2 m)$.
+
+\subsubsection*{Future work}
+Since we optimize according to a manageable sample $\z{P}$,
+there is a (potentially non-zero) probability $\mathbb{P}_v$ that the realized start-time 
+of a task deviates further than $w$ time-units from its planned release-time.
+The question of how $\mathbb{P}_v$ (or $\mathbb{E}[\mathbb{P}_v]$ as in \cite{calafiore2005})
+depends on $m$ (the size of $\z{P}$) should be addressed in future work.
+%
+Furthermore, in an earlier paper \cite{mountakis2015}, an LP similar to $(P)$ was used it in a two-step heuristic
+for a flavor of the \emph{stochastic resource constrained project scheduling problem} (stochastic RCPSP) \cite{van2008,lamas2015}.
+Given a resource allocation determined in a first step, in a second step a LP was used to find planned release-times 
+that minimize the total expected deviation of the realized schedule from those release-times.
+This heuristic was found to outperform the state-of-the-art in the area of \emph{proactive project scheduling}.
+In future work, we shall investigate using the algorithm presented here in order to stabilize the given resource-allocation,
+expecting gains in both efficiency and effectiveness.
+%
+Finally, a potentially related problem, namely PERTCONVG, is studied by Chr{\'e}tienne and Sourd in \cite{chretienne2003},
+which involves finding start-times for a task network so as to minimize the sum of convex cost functions.
+In fact, their algorithm bears structural similiarities to ours, since subproblems are solved in a topological order.
+It would be worth investigating if their analysis can be extended in order to enable
+casting the problem studied here as an instance of that problem.

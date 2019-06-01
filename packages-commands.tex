@@ -1,0 +1,80 @@
+% chapter/cpaior-decoupling
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\newcommand{\DP}{\textbf{\textsc{DP}}}
+\newcommand{\TD}{\textbf{\textsc{TD}}}
+\newcommand{\DU}{\textbf{\textsc{DU}}}
+\newcommand{\OD}{\textbf{\textsc{OD}}}
+\newcommand{\DTD}{\textbf{\textsc{DTD}}}
+\newcommand{\BBox}{\rule{5pt}{6pt}}
+\newcommand{\blbox}{ \hfill \BBox}
+\newcommand{\var}[1]{\mathit{#1}}
+
+\usepackage{mdframed}
+%\newtheorem{mdexample}{Example}
+%\newenvironment{example}%
+%  {\begin{mdframed}[backgroundcolor=lightgray]\begin{mdexample}}%
+%  {\end{mdexample}\end{mdframed}}
+\newtheorem{example}{Example}[chapter]
+\newtheorem{rquest}{Research Question}[part]
+
+
+\newtheorem{observation}{Observation}[chapter]
+\newtheorem{corollary}{Corollary}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+
+% chapter/cpaior-stability
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+\usetikzlibrary{arrows.meta}
+%\usetikzlibrary{external}
+%\tikzexternalize
+
+\newcommand{\z}[1]{\mathcal{#1}}
+\newtheorem{lemm}{Lemma}[chapter]
+\newtheorem{exmp}{Example}[chapter]
+\newtheorem{defn}{Definition}[chapter]
+\newtheorem{obsv}{Observation}[chapter]
+
+% chapter/mista-stability
+\newcommand{\xsc}{\gamma}
+\newcommand{\xSC}{\Gamma}
+
+\newcommand{\xs}{\boldsymbol{s}}
+\newcommand{\xd}{\boldsymbol{d}}
+\newcommand{\xq}{\boldsymbol{q}}
+\newcommand{\xb}{\boldsymbol{b}}
+\newcommand{\xl}{\boldsymbol{l}}
+\newcommand{\xf}{\boldsymbol{f}}
+\newcommand{\xD}{\boldsymbol{D}}
+\newcommand{\xt}{\boldsymbol{t}}
+
+\newcommand{\xE}{\mathcal{E}}
+\newcommand{\xS}{\boldsymbol{S}}
+\newcommand{\xX}{\boldsymbol{X}}
+\newcommand{\xP}{\boldsymbol{\Pi}}
+
+% icaps flexibility
+\newcommand{\est}{\ensuremath{\mathit{est}}}
+\newcommand{\lst}{\ensuremath{\mathit{lst}}}
+\newcommand{\flex}{\ensuremath{\mathit{flex}}}
+
+
+% annotations
+\usepackage{etoolbox}
+\newtoggle{annotate}
+\newcommand{\annotate}[1]{\iftoggle{annotate}{\subsection*{\textcolor{gray}{#1}}}\ }
+\togglefalse{annotate}
+%\toggletrue{annotate}
+
+\usepackage{microtype}
+%\usepackage{setspace} \spacing{1.15}
+\usepackage{pgfgantt}
+\usepackage{eurosym}
+\usepackage{enumerate}

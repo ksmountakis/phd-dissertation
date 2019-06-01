@@ -1,0 +1,264 @@
+\section{Preliminaries}
+	\label{sec-prelim}
+ 	
+ 	The purpose of this section is to introduce the research area of
+ 	proactive-reactive (stochastic) project scheduling,
+ 	which is where the contributions of this paper belong to.
+  	To establish autonomy and to facilitate discussion in further sections,
+  	we use convenient notation (which sometimes departs from standard notation)
+  	and begin with summarizing existing concepts from 
+  	deterministic and (purely) reactive project scheduling.
+  	For a comprehensive survey of deterministic,
+  	reactive and proactive-reactive project scheduling,
+  	the reader may refer to \cite{herroelen2004robust}.
+   	 	
+ 	\subsection{Deterministic project scheduling}
+ 	 	
+	A project is usually represented as a directed acyclic graph $G(N,E)$,
+	with nodes $N=\{1,\ldots,n\}$ corresponding to the set of $n$ project activities.
+	Each directed arc $(i,j)$ in $E \subseteq \{(i,j) \in N^2\}$ defines a direct
+	temporal constraint between activities $i$ and $j$,
+	meaning that $j$ may not start unless activity $i$ has finished.
+ 	In effect, $E$ defines a binary, irreflexive and transitive relation:
+ 	if there is a path from activity $i$ to activity 
+ 	$j$ in $G(N,E)$ then $j$ cannot start unless $i$ has finished.
+	Let us $T(E) \supseteq E$ denote the transitive closure of $E$, 
+	defined as 
+	\[
+		T(E) := \{(i,j) \in N^2 : \exists 
+		\textrm{ a path from } i \textrm{ to } j \textrm { in } G(N,E)\}
+	\]
+	We shall name a \emph{temporally independent set} each
+	subset of activities $X \subseteq N$ which are mutually 
+	independent with respect to temporal constraints.
+	That is, if $X$ is a temporally independent set, then $X^2 \cap T(E) = \emptyset$.
+	Obviously, if only temporal constraints are taken into account, 
+	the activities of a temporally independent set may overlap in time in a schedule.
+	
+	We assume as input a set $R := \{1,\ldots,m\}$ of $m$ resources which must be shared among activities.
+	Each resource $r \in R$ is associated with known capacity $b_r \in \mathbb{N}_0$.
+	Furthermore, each activity $i \in N$ requires a known amount 
+	$q_{ir} \leq b_r$ of resource $r$ while it executes.
+	Vector $\xb \in \mathbb{N}^m_0$ and matrix $\xq \in \mathbb{N}^{n \times m}_0$
+	define the problem's resource constraints.
+	Every independent set $X$ for which $\sum_{i\in X} q_{ir} > b_r$ 
+	for some $r\in R$ is called a \emph{forbidden} set.
+	Even though it is allowed by the temporal constraints $E$, 
+	all activities in $X$ may not overlap at some timepoint $t$ because
+	resource $r$ will be used beyond its capacity, which is not possible.
+	
+	Let $H \subseteq N^2$ denote a set of temporal constraints.
+	Below we give the definition of a function $\Phi$ which returns the set of all forbidden sets
+	w.r.t. temporal constraints $H$ and the problem's resource constraints $(\xq,\xb)$.
+	\begin{align}
+		\Phi(H) := \{X \subseteq N: 
+		X^2 \cap T(H)=\emptyset, 
+		\sum_{i\in X} q_{ir} > b_r \textrm{ for some } r \in R\}
+	\end{align}
+	
+	In addition to the parameters mentioned so far,
+	we assume as input a vector $\xd \in \mathbb{N}^n_0$ such that $d_i$ defines the duration of activity $i$.
+	Overall, a tuple $(N,R,E,\xd,\xq,\xb)$ specifies an instance of the RCPSP.
+	A schedule $\xs \in \mathbb{N}^n_0$ 
+	such that $s_i$ defines the start time of activity $i$,
+	is a feasible solution when it satisfies the temporal and resource constraints,
+	meaning that
+	\begin{align}
+		s_j \geq s_i + d_i \qquad & \forall (i,j) \in E \label{eq-precon} \\
+		a(\xs, t) \notin \Phi(E)	\label{eq-rescon} & \qquad \forall t \geq 0
+	\end{align}
+ 
+	Here, $a(\xs,t) := \{i \in N : t \in [s_i, s_i+d_i)\}$ is the set of
+	activities executing at timepoint $t$ according to $\xs$ and $\Phi$ as defined earlier.
+	Thus, (\ref{eq-rescon}) ensures there is no timepoint $t$ at which the
+	activities of a forbidden set overlap concurrently.
+	
+	\paragraph{Project source-sink convention.}
+	RCPSP asks to find a feasible schedule of minimum makespan
+	$C_{\max}(\xs) := \max \{ s_i + d_i : i \in N\}$.
+	Most RCPSP-related works assume that the last activity, $n$, 
+	is a dummy activity with zero duration (i.e. $d_n = 0$) and that
+	it must wait for the completion of every other activity (i.e. $(i,n) \in T(E)$ for every $i \in N-\{n\}$).
+	This dummy activity is often known as the project "sink" and it holds that $C_{\max}(\xs) = s_n$.
+	Another convention of most RCPSP-related works is that the first activity, 1,
+	often known as the project "source" must be waited on by every other activity
+	(i.e. $(1,j) \in T(E)$ for every $j \in N-\{1\}$).
+	
+ 	We shall hereafter assume activities 1 and $n$ correspond to the project source and sink, respectively.
+ 	The RCPSP can now be formally stated as:
+	\begin{align}
+		\xs^* := \arg \min \{s_n:  (\ref{eq-precon}), (\ref{eq-rescon}), \xs \geq 0 \}
+	\end{align}
+	
+	\subsection{Reactive project scheduling}
+ 	
+	In the research area of stochastic project scheduling,
+	the activity durations vector $\xd$ is replaced with a stochastic vector $\xD$ such that $D_i$
+	is the stochastic variable representing the uncertain duration of activity $i$,
+	with a known probability distribution $\mathbb{P}[D_i = t]$.
+	In line with recent works on S-RCPSP,
+	we shall denote (elements of) stochastic vectors with a capital symbol.
+			
+	S-RCPSP is a purely reactive extension of RCPSP.
+	The solution sought for is no longer a schedule, but a reactive scheduling policy. 
+	A policy is a combinatorial object $\pi$ which parameterizes the mapping  from stochatic vector $\xD$
+	to a corresponding realized schedule $\xS(\pi,\xD)$.
+	Note that $\xS$ denotes a function which returns a vector of activity start times (of length $n$).
+	Furthermore, if a realization $\xd$ of $\xD$ is passed as an argument, 
+	then $\xS(\pi,\xd)$ denotes a deterministic vector.
+	if $\xD$ is passed as an argument, $\xS(\pi,\xD)$ denotes a stochatic vector.
+	
+	Different classes of policies have been proposed in the literature
+	\cite{mohring1984stochastic,mohring1985stochastic,stork2000branch,ashtiani2011new}.
+ 	One condition that all policy classes are expected to satisfy is that function
+ 	$\xS$ complies with the \emph{non-anticipativity constraint}:
+	the decision to start activity $i$ at time $[\xS(\pi,\xD)]_i$ cannot rely on information from the feature:
+	the value of $[\xS(\pi,\xD)]_i$ must be determined by time $t \leq [\xS(\pi,\xD)]_i$.
+	Other features such as the structure of $\pi$ and 
+	the definition of function $\xS$ depend on the class under study.
+	
+ 	\paragraph{List-based policies.}
+	
+	Two classes of policies which are prominent in the literature
+	are \emph{resource-based} (rb) policies and \emph{activity-based} (ab) policies,
+	also known collectively as \emph{list-based policies}.
+	A list-based policy is a priority vector $\xl \in \mathbb{R}^n$ assigning priority $l_i$ to activity $i$.
+	Realized schedule $\xS(\xl, \xD)$ is computed by a 
+	variant of the well-known parallel schedule-generation-scheme (SGS)
+	complying with the non-anticipativity constraint \cite{ballestin2009resource};
+	with the SGS definition being slightly different between rb-policies and ab-policies.
+%	At $t=0$ and at each subsequent activity completion $t > 0$
+%	one starts as many activities as allowed by temporal and resource constraints.
+%	A similar class is that of \emph{activity-based} (ab) policies;
+%	an ab-policy is again a priority vector.
+%	But the behavior of $p$ is now slightly different:
+%	a activity may not start at $t$ 
+%	(even if temporal and resource constraints allow this) unless 
+%	all activities of lower priority have finished by $t$.
+%	Note that every realized schedule $\xS(\xl,\xD)$ is feasible, 
+% 	since function $\xS$ forces the problem's precedence and resource constraints
+% 	regardless of the choice of $\xl$.
+ 	As far as list-based policies are concerned, S-RCPSP asks to find a vector 
+	$\xl \in \mathbb{R}^n$ that minimizes $\mathbb{E}[[\xS(\xl,\xD)]_n]$.
+	%
+	Stork \cite{stork2000branch} proposes exact branch-and-bound algorithms for both rb and ab-policies.
+	Ballest{\'\i}n \cite{ballestin2007worthwhile} proposes
+	an efficient genetic algorithm for ab-policies,
+ 	providing the first computational experience on larger S-RCPSP instances.
+	Ballest{\'\i}n and Leus \cite{ballestin2009resource} manage 
+	to obtain better results with a 
+	Greedy Randomized Adaptive Search Procedure (GRASP), 
+	again for the class of ab-policies.
+	The best performance (w.r.t. expected makespan minimization)
+	has so far been obtained with the more recent work of
+	Ashtiani et al. \cite{ashtiani2011new} who propose a GRASP
+	for a new class, namely \emph{pre-processing} (pp) policies--%
+	a hybrid between rb-policies and es-policies.
+
+ 	\paragraph{Earliest-start policies.}
+ 	
+   	An es-policy is a set of temporal constraints $\xE \subseteq N^2$ chosen such that
+ 	\begin{align}
+ 		T(\xE) \supseteq E, \label{es-1} \\
+ 		\Phi(\xE) = \emptyset \label{es-2}, \\
+ 		G(N,\xE) \textrm{ is acyclic} \label{es-3}
+ 	\end{align}
+ 	Condition (\ref{es-1}) ensures that a schedule $\xs$ satisfying
+ 	$s_j \geq s_i + d_i$ for each $(i,j)\in \xE$ 
+ 	(here $\xd$ can be any arbitrary choice of activity durations)
+ 	is feasible with respect to the problem's precedence constraints $E$.
+  	Condition (\ref{es-2}) ensures that
+  	$\xs$ satisfying $\xE$ implies that it also satisfies resource constraints 
+  	prescribed by availabilities $\xb$ and requirements $\xq$ (as described earlier).
+ 	Condition (\ref{es-3}) ensures that the set of schedules satisfying $\xE$ 
+ 	(for any arbitrary choice of activity durations $\xd$) is non-empty.
+ 	
+ 	When a project is executed according to an es-policy $\xE$,
+ 	the schedule that is realized, $\xS(\xE,\xD)$, 
+ 	is what is often known as the \emph{earliest-start} schedule specified by $\xE$.
+ 	The earliest-start schedule of $\xE$ can be defined as:
+ 	\begin{align}
+ 		[\xS(\xE,\xD)]_j := \max \{ [\xS(\xE,\xD)]_i + D_i : (i,j) \in \xE\}
+ 	\end{align}
+ 	To put it simply, an activity $j$ starts immediatelly 
+ 	when all its predecessors in $G(N,\xE)$ have finished.
+  	This time quantity (the latest finish time of $j$'s predecessors)
+  	is often known as the length of the \emph{critical path} from project source $1$ to activity $j$.
+  	As far as es-policies are concerned, the S-RCPSP asks to find some $\xE^*$ which
+  	minimizes $[\xS(\xE,\xD)]_n$ (the length of the critical path to the project sink) by expectation:
+ 	\begin{align}
+ 		\xE^* := \arg \min \{\mathbb{E}[[\xS(\xE,\xD)]_n] : (\ref{es-1} - \ref{es-3}), \xE \in N^2\}
+ 		\label{eq-s-rcpsp}
+ 	\end{align}
+  	Constraints $(\ref{es-1} - \ref{es-3})$ enforce the feasibility of any realized schedule
+  	with both the precedence and the resource constraints of the problem.
+  	
+	Stork \cite{stork2000branch} proposed an exact branch-and-bound search for problem (\ref{eq-s-rcpsp}).
+	His algorithm considers each \emph{minimal} forbidden set $X$
+	(subset-minimal forbidden set) in some order and branches
+	on each of $|\{(i,j) \in X^2\}|$ arcs which can be included in $\xE$
+	in order to eliminate $X$ from $\Phi(\xE)$.
+	Without obtaining new computational results,
+	in \cite{leus2011resource} Leus gives a formal treatment of
+	es-policies as resource-flow networks
+	(flow networks which can represent feasible RCPSP schedules) and
+	proposes a refined version of the branch \& bound algorithm of Stork.
+	Exploiting the relation between resource-flows and es-policies,
+	Artigues et al. \cite{leus2011robust} propose a 
+	robust optimization model for es-policies,
+	for when a stochastic characterization of uncertainty is not available.
+	
+\subsection{Proactive-reactive project scheduling}
+	
+	Reactive project scheduling allows one to pick activity start times dynamically
+	during the project, under conditions of uncertainty.
+	A main drawback of this approach 
+	(e.g. \cite{herroelen2004construction,herroelen2004robust,braeckmans2005proactive})
+	is that prior to (and during) project execution there is no 
+	schedule prescribing activity start times that can more or less be trusted.
+	Such a "proactive" schedule can serve important organizational purposes;
+	in fact, the deviation of the realized schedule from this proactive schedule
+	is expected to induce organizational costs.
+	
+	Attempts to overcome this drawback gave rise to the research area of
+	proactive-reactive project scheduling,
+	which is the research area that this paper belongs to.
+	The main idea behind the proactive-reactive approach is to execute the project by using
+	a proactive schedule together with a scheduling policy.
+	Under uncertainty, some activities may not start at their proactive start times,
+	because activities they have to wait for are not yet finished and/or
+	resources they require are not yet released.
+	In such cases, the scheduling policy determines which activities to start at their
+	prescribed start times and which to postpone.
+	It should be noted that most works assume \emph{railway-mode scheduling},
+	meaning that an activity may not start earlier than its proactive start time,
+	which strengthens the "stability" of the project execution.
+	Clearly, the realized schedule is a function of the policy and the proactive schedule.	
+	Achieving low instability (deviation of the realized from the proactive schedule)
+	requires "spreading" proactive activity start times far appart, 
+	in effect increasing the expected makespan.
+	The general aim is to optimize some tradeoff between expected makespan and expected instability.
+	
+	Van de Vonder et al. \cite{van2006trade,van2008,van2007heuristic} propose and
+	evaluate experimentally various proactive-reactive heuristics.
+	The proposed heuristics assume as input an instance of S-RCPSP along with an initial schedule.
+	The best performing heuristic is the so-called Starting Time Criticality (STC) heuristic.
+	An es-policy is extracted from the structure of this initial schedule and used to
+	iteratively transform the initial schedule into a 
+	proactive schedule by inserting time-buffers betwen activities.
+	%
+	Deblaere et al. \cite{deblaere2011proactive} propose 
+	an approach which integrates the proactive step (forming a proactive schedule) 
+	and the reactive step (forming the adjoining policy).
+	Their approach is only possible to compare with ours and others that assume railway-mode scheduling,
+	by choosing sufficiently high penalties for earliness (w.r.t. the proactive schedule).%
+	\footnote{We are grateful to one of our anonymous reviewers for this remark.}
+ 	%
+	More recently, Vilches and Demeulemeester  \cite{lamas2015}
+	propose a Chance-Constrained Programming model (CCP) for the RCPSP
+	which asks to find a minimum makespan schedule
+	subject to probabilistic temporal and resource constraints.
+	They propose a Mixed Integer LP model, 
+	the solution to which is a proactive schedule that will most likely remain 
+	feasible under stochastic duration variability,
+	without presumption on the policy that will be used during project execution.

@@ -1,0 +1,42 @@
+	\begin{tikzpicture}[->, auto, node distance=1.5cm, scale=0.8, transform shape]
+		\tikzstyle{every state}=[fill=Red4,draw=none,text=white,inner sep=2.5pt, minimum size=0pt]
+		\node[state] (t0l) {$t_0$};
+		\node[state] (t1l) [below of=t0l] {$t_1$};
+		\node[state] (t2l) [below of=t1l] {$t_2$};
+		\node[state] (t3l) [below of=t2l] {$t_3$};
+
+		\node[state] (t0r) [right =2cm of t0l] {$t_0$};
+		\node[state] (t1r) [right =2cm of t1l] {$t_1$};
+		\node[state] (t2r) [right =2cm of t2l] {$t_2$};
+		\node[state] (t3r) [right =2cm of t3l] {$t_3$};
+			
+		\path (t1l) edge [draw=black!15] node { } (t0r);
+		\path (t1l) edge [draw=black!15] node { } (t1r);
+		\path (t1l) edge [draw=black!15] node { } (t2r);
+		\path (t1l) edge [draw=black!15] node { } (t3r);
+		
+		\path (t2l) edge [draw=black!15] node { } (t0r);
+		\path (t2l) edge [draw=black!15] node { } (t1r);
+		\path (t2l) edge [draw=black!15] node { } (t2r);
+		\path (t2l) edge [draw=black!15] node { } (t3r);
+		
+		
+		\path (t3l) edge [draw=black!15] node { } (t0r);
+		\path (t3l) edge [draw=black!15] node { } (t1r);
+		\path (t3l) edge [draw=black!15] node { } (t2r);
+		\path (t3l) edge [draw=black!15] node { } (t3r);
+						
+		
+		\path (t0l) edge [sloped, anchor=center, above] node {\small{$d^*(0,0)$}} (t0r);
+		\path (t0l) edge [sloped, anchor=center, above] node {\small{$d^*(0,1)$}} (t1r);
+		\path (t0l) edge [sloped, anchor=center, above] node {\small{$d^*(0,2)$}} (t2r);
+		\path (t0l) edge [sloped, anchor=center, above] node {\small{$d^*(0,3)$}} (t3r);
+
+%		\path (t1) edge [bend left=7pt] node {\small{0}} (t0);
+%
+%		\path (t0) edge [bend left=7pt] node {\small{50}} (t2);
+%		\path (t2) edge [bend left=7pt] node {\small{0}} (t0);
+%
+%		\path (t0) edge [bend left=5pt] node {\small{50}} (t3);
+%		\path (t3) edge [bend left=7pt] node {\small{0}} (t0);
+	\end{tikzpicture}

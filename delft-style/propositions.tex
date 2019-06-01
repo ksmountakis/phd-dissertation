@@ -1,0 +1,178 @@
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%																						%
+% 10 props																			%
+% - not more than 4 pertain to the content								%
+% - the rest 4 pertain to some area of research
+% - at most 2 of them could be funny not serious; pun statements
+%
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+
+% bob + tomas + cees
+% leo + karen + (milano, lombardi, oddi, policella, leus)
+
+\documentclass[print,nativefonts]{dissertation}
+\usepackage{enumerate}
+
+%% Turn off page numbering for the propositions and make the margins on both
+%% sides equal and symmetrical.
+\geometry{twoside=false}
+\pagestyle{empty}
+
+\begin{document}
+
+%% Specify the title and author of the thesis. This information will be used on
+%% both the English and Dutch side and in the metadata of the final PDF.
+\title{{Scheduling under uncertainty: Attaining flexibility, robustness and stability}}
+\author{Kiriakos Simon}{Mountakis}
+
+\begin{center}
+
+{\Large\titlefont\bfseries Propositions}
+
+\bigskip
+
+accompanying the dissertation
+
+\bigskip
+
+%% Print the title.
+{\makeatletter
+\titlestyle\bfseries\large\@title
+\makeatother}
+
+%% Print the optional subtitle.
+{\makeatletter
+\ifx\@subtitle\undefined\else
+    \titlefont\titleshape\@subtitle
+\fi
+\makeatother}
+
+\bigskip
+
+by
+
+\bigskip
+
+%% Print the full name of the author.
+\makeatletter
+{\large\titlefont\bfseries\@firstname\ {\titleshape\@lastname}}
+\makeatother
+
+\end{center}
+
+\bigskip
+\bigskip
+
+\begin{enumerate}[1.]
+	\item Scheduling under uncertainty is not so much about finding a good schedule, as it is about maintaining a good schedule as task execution unfolds. (Chapter~1)
+
+	\item Partial-order schedules are not equivalent to earliest-start scheduling policies. (Chapters~2 and 5)
+
+	\item The concurrent flexibility metric is not only more accurate but also at least as efficient (to compute) as the naive flexibility metric. (Chapters~3 and 4)
+
+	\item The concurrent and naive flexibility metrics are special-cases of a more generic flexibility metric.
+
+	\item Sample size plays an important role when optimizing a predictive schedule subject to stochastic task durations. (Chapters~6 and 7)
+
+	\item Whenever you call a procedure an algorithm you have to identify the problem it solves.
+
+	\item People falsely feel that software (and associated development practices), like hardware, needs to be replaced often due to aging.
+
+	\item A UNIX-based operating system is an Integrated Development Environment (IDE).
+
+	\item Programmers often focus so much on code reusability that they end-up compromising code usability.
+
+	\item The world would be a better place if people were more knowledgable and cared more about politics.
+
+	%\item If drinking a drink is possible, then fooding a food should also be possible.
+
+	\item If a picture is a thousand words then two pictures are a million words. 
+\end{enumerate}
+
+\bigskip
+\bigskip
+
+%% Apart from the name and title of the supervisor, the following text is
+%% dictated by the promotieregelement.
+\begin{center}
+These propositions are regarded as opposable and defendable, and have been approved as such by the promotor prof.\ dr.\ C.\ Witteveen.
+\end{center}
+
+\clearpage
+{\selectlanguage{dutch}
+
+\begin{center}
+
+{\Large\titlefont\bfseries Stellingen}
+
+\bigskip
+
+behorende bij het proefschrift
+
+\bigskip
+
+%% Print the title.
+{\makeatletter
+\titlestyle\bfseries\large\@title
+\makeatother}
+
+%% Print the optional subtitle.
+{\makeatletter
+\ifx\@subtitle\undefined\else
+    \titlefont\titleshape\@subtitle
+\fi
+\makeatother}
+
+\bigskip
+
+door
+
+\bigskip
+
+%% Print the full name of the author.
+\makeatletter
+{\large\titlefont\bfseries\@firstname\ {\titleshape\@lastname}}
+\makeatother
+
+\end{center}
+
+\bigskip
+\bigskip
+
+\begin{enumerate}[1.]
+	\item Scheduling van taken met onzekerheid heeft niet zozeer betrekking op het vinden van een goed schedule als wel het in stand houden van een goed schedule tijdens het uitvoeren van de taken. (Hfst 1)
+
+	\item Partial-order schedules zijn niet equivalent aan earliest-start scheduling policies. (Hfst 2)
+
+	\item De concurrent flexibility metriek is niet alleen meer accuraat, maar ook minstens zo effici\"ent te berekenen als de na\"ieve flexibility metriek. (Hfst 3 en 4)
+
+	\item Steekproefgrootte speelt een belangrijke rol in het optimaliseren van een voorspellend schedule dat onderworpen is aan stochastische tijdsduur van taken. (Hfst 6 en 7) 
+
+	\item Als je een procedure een algoritme noemt, moet je ook aangeven welk probleem het oplost.
+
+	\item Ten onrechte denkt men dat software (en ermee geassocieerde ontwikkelmethodieken), evenals hardware, veelvuldig vervangen dient te worden ten gevolge van veroudering.
+
+	\item Een UNIX gebaseerd operating systeem is een IDE (Integrated Development Environment).
+
+	\item Programmeurs focussen zo vaak op herbruikbaarheid van code, dat de bruikbaarheid van hun code eronder te lijden heeft.
+
+	\item De wereld zou er beter op worden als mensen meer verstand zouden hebben en meer zouden geven om politiek.
+
+	%\item If drinking a drink is possible, then fooding a food should also be possible.
+	\item Als een afbeelding meer zegt dan duizend woorden, dan zeggen twee afbeeldingen meer dan een miljoen woorden. 
+\end{enumerate}
+
+\bigskip
+\bigskip
+
+%% Apart from the name and title of the supervisor, the following text is
+%% dictated by the promotieregelement.
+\begin{center}
+Deze stellingen worden opponeerbaar en verdedigbaar geacht en zijn als zodanig goedgekeurd door de promotor prof.\ dr.\ C.\ Witteveen.
+\end{center}
+
+}
+
+\end{document}
+
+

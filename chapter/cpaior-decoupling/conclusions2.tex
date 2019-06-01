@@ -1,0 +1,14 @@
+\section{Conclusions and Discussion}
+
+We have shown that adapting a decoupling after a new variable commitment has been
+made in most cases significantly increases the flexibility of the free, non-committed, variables.
+We also showed that this updating method did not induce any disadvantage to the actors involved: every commitment
+is preserved and the current decoupling bounds are never violated.
+%To obtain such a decoupling update method, we used an exact method based on computing minimum matchings.
+We introduced a simple heuristic that replaces the rather costly computation of a decoupling with maximum flexibility by a computation of a decoupling with maximal flexibility. This heuristic reduces the computation time per update from $O(n^3)$ to $O(n.\log n)$ (amortized) time.
+As we showed experimentally, the computational investments for the heuristic are significantly smaller, while we observed almost no loss of flexibility compared to the exact method.
+
+In the future, we want to extend this work to computing flexible schedules for STPs: Note that the update heuristic 
+also can be used to find a maximal flexible schedule given a solution $s$ of an STP. Such a solution is nothing more than
+a non-optimal decoupling $(s,s)$ for which, by applying our heuristic, an $O(n \log n)$ procedure exists to find an optimal
+flexible schedule. Furthermore, we are planning to construct dynamic decoupling methods in a distributed way, like existing approaches to static decoupling methods have done.

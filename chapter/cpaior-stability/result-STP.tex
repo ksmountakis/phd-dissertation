@@ -1,0 +1,50 @@
+\subsection{The resulting STP}
+
+Start by noting that constraint (\ref{P'-sjtj}) is always true and can be omitted.
+Moreover, (\ref{P'-tjsj}) can be rewritten as (\ref{P'-pp}), to obtain the following reformulation:
+\begin{align}
+	\tag{$P'$}
+	\min_{s\geq 0} \quad 	& \sum_{j\in V} \sum_{p\in \z{P}} \max(0, s_{jp} - \tau_j)		& \\
+	\textrm{s.t.}\quad	&	s_{ip} - s_{jp} \leq - d_{ip}	& (i,j) \in E, p \in \z{P} \label{P'-sisj} \\
+						&	s_{jp'} - s_{jp} \leq w		& (p, p') \in \z{P}^2, j\in V \label{P'-pp}
+\end{align}
+Those familiar with \emph{Temporal Constraint Satisfaction Problems} (TCSPs) \cite{dechter1991} will 
+recognize (\ref{P'-sisj}) and (\ref{P'-pp}) as the constraints of a \emph{Simple Temporal Problem} (STP) 
+with variables $T=\{s_{jp}: j \in V, p\in \z{P}\}$.
+Note that if the original task network $G(V,E)$ is acyclic, the resulting STP is always \emph{consistent} (i.e. has a solution).%
+\footnote{If $G(V,E)$ is acyclic, there exists an infinite number of feasible solutions $(s,t)$ for $(P)$,
+for each of which there exists a counterpart $(s',t')\in \Lambda^*$ (according to Lemma~\ref{lemm-Lambda}) 
+with $s'$ satisfying (\ref{P'-sisj}) and (\ref{P'-pp}).}%
+The \emph{earliest-start-time assignment} (est-assignment) is a feasible solution that can be found efficiently
+for a given STP by computing all-pairs-shortest-paths in its \emph{distance-graph} representation (see Fig.~\ref{fig-STN}).
+In our case, variables $\{s_{1p}: p \in P\}$ can be fixed to zero, assuming that source task 1 starts at time zero in all scenarios.
+
+\begin{figure}
+	\centering
+	\input{fig-STN}
+	\caption{The solution-space of $(P')$ is equivalent to that of a STP with a time-variable
+	$s_{ip}$ for each task $i$ and scenario $p$ and constraints (\ref{P'-sisj}) and (\ref{P'-pp}).
+	We illustrate here how each precedence-constraint $(i,j)$ translates to a corresponding structure in the resulting STP,
+	assuming three scenarios $P=\{p,p', p''\}$ are possible.}
+\end{figure}
+
+In the est-assignment, each variable (i.e. each $s_{jp}$ in our case) takes the minimum value that it may take in a feasible solution.
+As such, it clearly optimizes the objective of $(P)$ and $(P')$.
+By Lemma~\ref{lemm-Lambda}, the est-assignment $s$ can be extended to an optimal olution $(s,t)$ for $(P)$ by letting 
+$t_j = \max_{p\in P} s_{jp} - w$ for all $j\in V$.
+An all-pairs-shortest-path algorithm such as Floyd-Warshall \cite{} takes $O(N^3)$ where $N=n m$ is the number of variables.
+Therefore, we have so far managed to improve the worst-case bound of optimally trading-off tardiness and stability, 
+from $O(n^5m^4)$ to $O(n^3m^3)$, which is still disappointing.
+Fortunately, as we show in the following, by exploiting the special structure of the resulting STP 
+we are able to compute its est-assignment in time $O(n^2m)$.
+ 
+%
+% how to convert the distance graph to a directed graph
+%
+
+If there is a path from $i$ to $j$ in $G(V, E)$,
+then there is no path from $s_{ip}$ to $s_{jp'}$ for some $p, p' \in \z{P}$ in the distance-graph of the resulting STP,
+but there is a path from $s_{jp'}$ to $s_{ip}$, for all $p, p' \in \z{P}$.
+
+The distance from some $s_{jp}$ to some $s_{jp''}$ via some $s_{jp'}$ with $p\neq p' \neq p''$ is greater (by $w$)
+than the distance from $s_{jp}$ to $s_{jp''}$ directly.

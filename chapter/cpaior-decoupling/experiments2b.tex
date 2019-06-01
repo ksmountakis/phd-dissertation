@@ -1,0 +1,188 @@
+\section{Experimental Evaluation}
+\label{section:experiments}
+We discuss an experimental evaluation of the dynamic total decoupling method.
+%First of all, these experiments are used to give an impression of \emph{(i)} the practical value of our metric, i.e., whether the improved flexibility metric really improves the existing concurrent flexibility metric and \emph{(ii)} if so, what is a good (approximation) algorithm (among the ones we investigated) that can be applied.
+%
+These experiments have been designed (\emph{i}) to verify whether updating a decoupling indeed significantly increases the decoupling flexibility compared to using a static decoupling and (\emph{ii}) to verify whether the heuristic significantly reduces the computational investments in updating as expected.
+
+\noindent
+{\bf Material } We applied our updating method to a dataset of STP benchmark instances (see \cite{planken:2013}). This dataset contains a series of sets of STP-instances with STPs of varying structure and number of variables.
+Table~\ref{table1} contains the main characteristics of this benchmark set. 
+\begin{table}[h]
+\begin{center}
+\caption{STP Benchmarksets used in the experiments.}\label{table1}
+\begin{tabular}{ | l |  c  c c c  | }
+  \hline
+  {\bf benchmark set} & {\bf nr instances} & \ {\bf min vars\ \ } &\ { \bf av vars\ \ } &\ {\bf max vars} \\
+  \hline			
+  bdh & 300 & 41  & 207 & 401 \\
+  diamonds & 130 &  111 & 857 & 2751 \\
+  chordalgraphs & 400 &  200 & 200 & 200 \\
+  NeilYorkeExamples & 180 &  108  & 1333 & 4082 \\
+  sf-fixedNodes & 112 &  150 & 150 & 150  \\
+\hline  
+\end{tabular}
+\end{center}
+\end{table}
+The size of the STP-instances in this dataset varies from instances with 41 variables with 614 constraints to instances with 4082 nodes and 14110 constraints. In total, these sets contain 1122 STP-instances. 
+We used MATLAB (R2016b) on an iMac 3.2 Ghz, Intel Core i5, with 24Gb memory to perform the experiments. 
+
+%In particular, we used a fast implementation of the Jonker-Volgenant algorithm \cite{jonker:1987} to compute minimal cost assignments to obtain the concurrent flexibility of an STP.\\
+\noindent
+{\bf Method }For each instance in the benchmark set we first computed a maximum decoupling $(l, u)$ with its flexibility $flex = \sum^n_{j=1} (u_j - l_j)$, using the minimum matching method. Then, according to an arbitrary ordering $< t_1, t_2, \ldots t_n >$ of the variables in $T$, each variable $t_i$ is iteratively committed to a fixed value $v_i$, where $v_i$ is randomly chosen in an interval $(l_i, u_i)$ belonging to the current temporal decoupling $(l, u)$. 
+After each such a commitment, we compute a new updated decoupling $(l^i, u^i)$ where $T_c = \{t_1, \ldots t_i \}$ and $T_f = \{ t_{i+1}, \ldots t_n \}$.
+%Once $t_i$ has been committed to a particular value, every variable $t_1, \ldots t_{i}$ has been committed to a value and does not contribute anymore to the flexibility of the constraint system. 
+The total flexibility of the new decoupling $(l^i, u^i)$ is now dependent upon the $n - i$ free variables in $T_f$ and will be denoted by $f^{i}_h$. 
+%for the heuristic updating and $f^{i}$ for the exact updating. 
+We initially set $f^0_h = flex$.
+In order to account for the decreasing number of free variables after successive updates, we compute after each update the heuristic update flexibility per free variable in $T_f$: $f^{i}_h/(n-i)$. To compare these flexibility measures with the static case, for the latter we take the total flexibility of the free variables $\var{flex}^i = \sum^n_{j=i+1} (u_j - l_j)$ and then compute the flexibility per free time variable without updating: $\var{flex}^i/(n-i)$.
+
+%\begin{enumerate}
+%\item the (average) static flexibility per remaining free variable $flex^{i}/(n-i)$. This indicates the amount of flexibility we have
+%per remaining temporal variable in choosing a feasible value for it given the original static decoupling
+%\item the (average) dynamic flexibility per remaining free variable $f^{i}/(n-i)$. This indicates the amount of flexibility we have
+%per remaining temporal variable in choosing a feasible value for it given the current updated decoupling.
+%\end{enumerate}
+
+As a summary result for each benchmark instance $k$, we compute 
+\begin{enumerate}
+\item the average over all updates of the static flexibility per free variable: \\ $av\_stat = \sum^n_{i=1} \var{flex}^{i}/((n-i).n) $  
+%\item the average of the exact update flexibility per step: $av\_exact = \sum^n_{i-1} f^{i}/((n-i).n) $. 
+\item the average over all updates of the heuristic update flexibility per free variable: \\
+$av\_h = \sum^n_{i=1} f^{i}_h/((n-i).n)$ 
+\end{enumerate}
+
+Note that the ratio $\var{rel\_flex}_h = av\_h / av\_stat$ indicates the impact of the heuristic updating method for a particular instance: 
+a value close to 1 indicates almost no added flexibility (per time variable) by updating, but a value of 2 indicates that the flexibility (per time variable)
+doubled by updating the decoupling.
+
+Finally, we collected the $\var{rel\_flex}_h$ results per instance for each benchmark set and measured their minimum, mean and maximum values per benchmark set.\\
+
+\noindent
+{\bf Results }
+The $\var{rel\_flex}_h$ results are grouped by benchmark set and their minimum, mean, and maximum per benchmark set are listed in Table~\ref{table2}.
+
+\begin{table}[h]
+\begin{center}
+\caption{Statistics of flexibility ratio's $\var{rel\_flex}_h$ of decoupling updates vss static decoupling per benchmark set.}\label{table2}
+\begin{tabular}{ |  l || c c c c  | }
+  \hline
+  {\bf benchmark set\ \ \ }    & \ \ {\bf min\ \ } & \ \ {\bf mean\ \ }  & {\ \bf max\ \ } &\\
+  \hline			
+  bdh-agent-problems\ \ \   & 1.00 & 1.00 & 1.002 &  \\
+  diamonds                         & 1.34 & 1.95 & 2.39 & \\
+  chordalgraphs           & 1.08 & 1.31 & 1.65 &  \\
+  NeilYorkeExamples  & 1.20 & 1.74 & 2.39 &  \\
+  sf-fixedNodes           & 1.21 & 1.38 & 1.78 &  \\
+  \hline  
+\end{tabular}
+\end{center}
+\end{table}
+As can be seen, except for bdh-agent-problems, dynamic updating of a temporal decoupling increases the mean flexibility per variable rather significantly: For example,  
+in the diamonds and NeilYorke benchmark sets, updating almost doubled the flexibility per free time variable.\footnote{The reason that in the bdh-agent problems the updating did not increase, is probably due to the fact that in these instances, as we observed, the flexibility was concentrated in a very few time point variables. Eliminating the flexibilities by commitments of these variables did not affect the flexibility of the remaining variables that much.}
+
+We conclude that, based on this set of benchmarks, one might expect a significant increase in flexibility if a decoupling is updated after changes in commitments have been detected, compared to the case where no updating is provided.
+
+To verify whether the heuristic was able to reduce the computation time significantly, unfortunately, we can only present partial results.
+The reason is that for the more difficult instances in these benchmark sets, computing the updates with an exact minimum matching method was simply too time-consuming.\footnote{Some of the more difficult benchmark problems even did not finish within 36 hrs.}
+We therefore selected from each benchmark set the easy\footnote{A benchmark problem instance in \cite{planken:2013} was considered to be `'easy'' if the exact update method finished in 15 minutes.
+For the bdh-agent set we collected the instances until easybdh 8\_10\_50\_350\_49, for the diamonds set all instances up to diamonds-38\-5.0, for the chordal graphs all instances until chordal-fixedNodes-150,5,1072707262, for the NeilYorkeExamples all instances until ny-419,10, and for the sf-fixedNodes the instances until sf-fixedNodes-150,5,1072707262.} instances and collected them in the easy-\verb!<!benchmark\verb!>! variants of the original benchmark sets.
+We then measured the mean computation time per benchmark set for both the exact and heuristic updating method and also the mean performance ratio $rel\_flex / rel\_flex_h$ of the
+exact versus the heuristic update method. The latter metric indicates how much the exact method outperforms the heuristic method in providing flexibility per time variable.
+The results are collected in Table~\ref{table3}.
+
+\begin{table}[h]
+\begin{center}
+\caption{Comparing the time (sec.) and performance ratio of the exact and heuristic updating methods (easy variants of benchmark instances) }\label{table3}
+\begin{tabular}{ |  l || c c c c  | }
+  \hline
+  {\bf benchmark set}          & \ {\bf cpu heuristic} & {\bf cpu exact}  & {\bf  perf. ratio} &\\
+  \hline			
+  easy-bdh-agent-problems\ \ \   & 0.21  & \ \ 2.75  & 1.00 &  \\
+  easy-diamonds                         & 0.38  & \ 67.65 & 1.05 & \\
+  easy-chordalgraphs           & 0.78  & 12.6 & 1.06 &  \\
+  easy-NeilYorkeExamples  & 0.61 &  135.62 &  1.01&  \\
+  easy-sf-fixedNodes           & 0.13 & \ \ \ 4.71 & 1.03&  \\
+  \hline  
+\end{tabular}
+\end{center}
+\end{table}
+From these results we conclude that even for the easy cases, the heuristic clearly outperforms the exact update method, being more than 10 times and sometimes more than 200 times faster.  We also observe that the heuristic method does not significantly lose on flexibility: The performance ratio's obtained are very close to 1. 
+%We expect these figures to be even more impressive for the more difficult instances.
+
+%\noindent
+%{\bf Removing tightly coupled variables} 
+%Next, generalising from rigid components, we investigate whether removal of variables that are tightly coupled improves the concurrent flexibility.
+%
+%To each instance $S$ in the benchmark sets, we applied the following algorithm:
+%\begin{enumerate}
+%\item Determine the distribution $F_S$ of sums $D_S(i,j) + D_S(j,i)$ for all entries $D_S$. 
+%Remember that for each $(i,j)$ this sum indicates the tightness of the constraints between variable $t_i$ and $t_j$.
+%\item To remove the $\delta$-percent tightest constraints, collect all pairs of variables $t_i$ and $t_j$ such that $D_S(i,j) + D_S(j,i)$ occurs in the $\delta$-percent lowest part of the distribution $F_S$. 
+%\item For each such a pair $(i,j)$, remove the variable  ($t_i$ or $t_j$) from $T$ whose removal results in the largest increase of the concurrent flexibility for the remaining set of variables. 
+%\item Compute  the concurrent flexibility $\flex(S')$ of the subsystem $S'$ obtained in this way.
+%\end{enumerate}
+%For each instance, this procedure was repeated for 10 threshold values $\delta$ ranging from $\delta= 0.05$ to $\delta = 10$. 
+%We computed for each instance the maximum ratio $\flex(S')/\flex(S)$ ({\bf max ratio}) obtained and the corresponding threshold value $\delta$ ({\bf threshold}) for which it was obtained.
+%Note that values $\flex(S')/\flex(S) >1$ indicate an improvement that can be obtained by looking at a subset of variables instead of all variables.
+%
+%The results are summarised in Table~\ref{table2}.
+%Observe that, in general, as all improvements are  5\% or less, no significant increase in flexibility can be observed in any set of benchmark problems. Furthermore, looking at the threshold values, it hardly seems to make sense to go beyond threshold values of  $\delta = 1$ to detect an improvement in concurrent flexibility. This seems to show that a simple greedy approach based on tightness of constraints does not help that much in improving the flexibility.
+%\begin{table}[h]
+%\begin{center}
+%\caption{Removing tightly coupled variables for improving concurrent flexibility.}\label{table2}
+%\begin{tabular}{ | l | c  c  | }
+%  \hline
+%  {\bf benchmark set} & {\bf max ratio}  
+%  & {\bf threshold} \\
+%  \hline			
+%  bdh & 1 & 0 \\
+%  diamonds & 1.05 & 0.62  \\
+%  chordal & 1.01 &  0.05 \\
+%  NeilYorke & 1.04 & 0.37  \\
+%%  sf-fixedNodes & 1.003 & 0.14  \\
+%  \hline  
+%\end{tabular}
+%\end{center}
+%\end{table}
+%
+%{\bf Iteratively removing least contributing variables}
+%In the first two experiments we applied algorithms attempting to improve the concurrent flexibility by removing variables that were rigidly or tightly coupled.
+%Since we observed that the improvements in concurrent flexibility were quite modest, we decided to use another approach not based on the detection and removal of tightly coupled variables.
+%Instead, we used a fairly simple greedy approach using the minimum cost assignment algorithm as a subroutine. The algorithm  iteratively removes that variable $t \in T$ whose removal results in the largest increase in concurrent flexibility until no further improvement is possible.
+%Given an STN $S=(T,C)$ the algorithm is as follows:
+%\begin{algorithm}
+%\begin{algorithmic}
+%\STATE compute $\flex(S_T)$;
+% \WHILE{$ \exists t \in T$ s.t.\ $\flex(S_{T - \{t\}}) \geq \flex(S_T)$}
+%          \STATE $t := \argmax_{t} \flex(S_{T - \{t\}})$;\\  
+%          \STATE $\flex(S_T) = \flex(S_{T - \{t\}})$;
+%          \STATE $T := T - \{t\}$;
+%          \ENDWHILE
+%           \STATE \textbf{return}  $\flex(S') = \flex(S_T)$;  
+% \end{algorithmic}
+% \end{algorithm}
+%%\vspace{-0.1cm}
+%
+%In Table~\ref{table3}, we have presented for each benchmark set  the average ratio 
+%$\flex(S')/\flex(S)$ ({\bf ratio}) of the concurrent flexibility based on a subset of variables ($S'$) vss the concurrent flexibility of the original system ($S$) and the average reduction ({\bf reduction}) in the number of variables obtained when computing $\flex(S')$.
+%It turns out that this procedure greatly improves the concurrent flexibility by removal of variables, although showing remarkable differences between the benchmark sets.
+%While the bdh and chordal  instances were not sensitive to this approach, the flexibility in the NeilYorkeExamples and the diamonds benchmark sets could
+%be improved significantly (up to 50\%). This improvement was established using a relatively small part of the original set of variables due to a significant reduction (0.48 and 0.70) of the number of variables involved.  Clearly, we need to further investigate which properties are responsible for the (in)sensitivity to these greedy approaches.
+%\begin{table}[h]
+%\begin{center}
+%\caption{Iteratively removing variables to maximising concurrent flexibility}\label{table3}
+%\begin{tabular}{ | l | c  c | }
+%  \hline
+%  {\bf benchmark set} &  
+%  {\bf  ratio } & {\bf reduction} \\
+%  \hline			
+%  bdh &  1 & 0.01\\
+%  diamonds  & 1.50  & 0.70\\
+%  chordal  & 1.02  & 0.30\\
+%  NeilYorke  & 1.32 & 0.48  \\
+%%  sf-fixedNodes   & 1.02 & \\
+%  \hline  
+%\end{tabular}
+%\end{center}
+%\end{table}

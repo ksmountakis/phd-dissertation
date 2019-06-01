@@ -1,0 +1,101 @@
+\documentclass[print,nativefonts]{dissertation}
+
+\input{../packages-commands}
+
+\begin{document}
+
+%% Specify the title and author of the thesis. This information will be used on
+%% the title page (in title/title.tex) and in the metadata of the final PDF.
+\title[]{{Scheduling Under Uncertainty: Attaining Flexibility, Robustness and Stability}}
+\author{Kiriakos Simon}{Mountakis}
+
+%% Use Roman numerals for the page numbers of the title pages and table of
+%% contents.
+\frontmatter
+
+\include{title/title}
+
+%% The (optional) dedication can be used to thank someone or display a
+%% significant quotation.
+\dedication{\epigraph{In loving memory of my father, Georgios Mountakis}{}}
+
+\tableofcontents
+
+\include{summary/summary}
+\include{preface/preface}
+
+%% Use Arabic numerals for the page numbers of the chapters.
+\mainmatter
+
+%% Turn on thumb indices.
+%\thumbtrue
+
+\chapter{Introduction}
+\label{chapter:introduction}
+\input{chapter/introduction/body}
+
+\part{Simple Temporal Problems}
+\chapter{Preliminaries}
+\label{chapter/prelim-1}
+\input{chapter/prelim-1/body}
+
+\chapter[Temporal decoupling]{Temporal decoupling\protect\footnotemark{}\protect\footnotetext{
+This chapter has been published as:
+S. Mountakis, T.B. Klos, and C. Witteveen. Temporal flexibility revisited: Maximizing flexibility by computing bipartite matchings. 
+In \emph{International Conference on Automated Planning and Scheduling (ICAPS)}, pages 174-178, 2015.}}
+
+\label{chapter/icaps-flexibility}
+\input{chapter/icaps-flexibility/body}
+
+\chapter[Dynamic temporal decoupling]{Dynamic temporal decoupling\protect\footnotemark{}\protect\footnotetext{
+This chapter has been published as:
+K.S. Mountakis, T.B. Klos and C. Witteveen.  Dynamic Temporal Decoupling. 
+In \emph{International Conference on AI and OR Techniques in Constraint Programming for Combinatorial Optimization Problems (CPAIOR)}, pages 328-343, 2017.}}
+\label{chapter/cpaior-decoupling}
+\input{chapter/cpaior-decoupling/body}
+
+\part{Stochastic Task Networks}
+\chapter{Preliminaries}
+\label{chapter/prelim-2}
+\input{chapter/prelim-2/body}
+
+\chapter[Stable dispatching with resource constraints]{Stable dispatching with resource constraints\protect\footnotemark{}\protect\footnotetext{
+This chapter has been published as:
+K.S. Mountakis, T.B. Klos, C. Witteveen, and B. Huisman. Exact and heuristic methods for trading-off makespan and stability in stochastic project scheduling. 
+In \emph{Multidisciplinary International Scheduling Conference: Theory and Application (MISTA)}, pages 25-41, 2015.}}
+
+\label{chapter/mista-stability}
+\input{chapter/mista-stability/body}
+
+\chapter[Stable dispatching via dynamic programming]{Stable dispatching via dynamic programming\protect\footnotemark{}\protect\footnotetext{
+This chapter has been published as:
+K.S. Mountakis, T.B. Klos and C. Witteveen. Stochastic Task Networks: Trading Performance for Stability. 
+In \emph{International Conference on AI and OR Techniques in Constraint Programming for Combinatorial Optimization Problems (CPAIOR)}, pages 302-311, 2017.}}
+\label{chapter/cpaior-stability}
+\input{chapter/cpaior-stability/body}
+
+\part{Epilogue}
+
+\chapter{Conclusion}
+\label{chapter/conclusion}
+\input{chapter/conclusion/body}
+
+%\include{epilogue/epilogue}
+%\include{acks/acks}
+
+%% Use letters for the chapter numbers of the appendices.
+\appendix
+
+%\include{appendix-a/appendix-a}
+
+%% Turn off thumb indices for unnumbered chapters.
+\thumbfalse
+
+%\include{cv/cv}
+\include{publications/publications}
+
+\bibliographystyle{mystyle}
+\bibliography{dissertation}
+
+\end{document}
+

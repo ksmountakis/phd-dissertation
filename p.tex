@@ -1,0 +1,78 @@
+\documentclass[9pt]{book}  
+
+\usepackage[dvipsnames]{xcolor}
+\input{packages-commands}
+
+\begin{document}
+
+\title{Beyond Fixed-Time Scheduling}
+\author{Kiriakos Simon Mountakis}
+
+\maketitle
+\tableofcontents
+\listoffigures
+\listoftables
+\listofalgorithms
+
+% -- opening 
+
+\chapter*{Preface}
+\input{chapter/preface/body}
+
+\chapter{Introduction}
+\label{chapter/introduction}
+\input{chapter/introduction/body}
+
+%\chapter{Preliminaries}
+%\input{chapter/preliminaries/body}
+
+% -- part 1
+
+\part{Simple Temporal Problems}
+
+\chapter{Background}
+\label{chapter/prelim-1}
+\input{chapter/prelim-1/body}
+
+\chapter{Flexible static decoupling}
+\label{chapter/icaps-flexibility}
+\input{chapter/icaps-flexibility/body}
+
+\chapter{Flexible dynamic decoupling}
+\label{chapter/cpaior-decoupling}
+\input{chapter/cpaior-decoupling/body}
+
+
+% -- part 2
+
+\part{Stochastic Task Networks}
+
+\chapter{Preliminaries}
+\label{chapter/prelim-2}
+\input{chapter/prelim-2/body}
+
+\chapter{Stable dispatching subject to resource constraints}
+\label{chapter/mista-stability}
+\input{chapter/mista-stability/body}
+
+\chapter{Stable dispatching with dynamic programming}
+\label{chapter/cpaior-stability}
+\input{chapter/cpaior-stability/body}
+
+
+% -- part 3
+
+\part{Conclusion}
+
+\chapter{Conclusion}
+\label{chapter/conclusion}
+\input{chapter/conclusion/body}
+
+\chapter*{Summary}
+\input{chapter/summary/body}
+
+ 
+\bibliographystyle{plain}
+\bibliography{p}
+
+\end{document}

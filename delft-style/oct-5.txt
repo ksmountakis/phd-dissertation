@@ -1,0 +1,31 @@
+Discussion on RPs, make it nedtrain oriented
+
+fast procedure can be applied to dynamic situations
+adapt the concurrent flex framework
+decoupling in a situation when schedules
+
+no technical terms when discussing RPs
+
+one of the weaknesses / limitations (!) is that task durations are known
+add in one or more sentences what makes this a limitation
+
+questions:
+	how do I introduce the discussion to RPs
+	how d
+
+
+optional:
+some line of argument might require reding preliminaries then refer to it explicitly
+
+RP discussion
+resumarrize motivation
+	statement
+machinery for not only coming up with flexible schedules but also adapting
+them ...
+extended a current static framework for obtaining flexible schedules into a dynamic framework
+...
+
+but also limitations 
+
+
+

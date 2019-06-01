@@ -1,0 +1,196 @@
+\section{Exact MILP-based approach}
+\label{sec-milp}
+ 	
+ 	PS-RCPSP (section~\ref{sec-problem}) asks to find an es-policy and a proactive schedule $(\xE,\xt)$
+	that together minimize the weighted sum of expected makespan and instability.
+	Section~\ref{sec-lp} presented a heuristic approach according to which 
+	$\xE$ is kept fixed while $\xt$ is optimally paired with the policy by solving a LP.
+	%
+ 	This section presents a Mixed Integer LP (MILP) model with which PS-RCPSP can be solved to optimality.
+ 	However, it should be pointed-out that a solution is trully exact only if we assume
+ 	stochastic duration distributions can be accurately described by the chosen sample $\Gamma$;
+ 	for general probability distributions we obtain a lower bound.
+ 	In fact, the problem of computing the exact expected makespan of a given es-policy
+ 	(and assuming duration distributions with discrete support) 
+ 	has been shown by Hagstrom in \cite{hagstrom1988computational} to be intractable.
+ 	However, our notion of exactness is in line with the computational study of Stork \cite{stork2000branch}
+ 	where "optimal" scheduling policies are computed by using a fixed sample of duration distributions.
+ 	
+ 	This model includes binary variables representing the 
+ 	structure of $\xE$ and linear variables representing $\xt$.
+ 	To our knowledge, no other exact approaches have been proposed in 
+ 	the literature for problems of similar type
+ 	(i.e. asking for a scheduling policy and proactive schedule that together optimize some
+ 	tradeoff between expected makespan and instability).
+ 	%In fact, and with the exception of \cite{deblaere2011proactive},
+ 	%existing heuristics for similar problems (e.g. \cite{van2008,lamas2015})
+ 	%do not attempt to optimize the scheduling policy and the proactive schedule together as a pair.
+ 	%
+ 	To arrive at this PS-RCPSP model, we merge the LP model presented in the previous section
+ 	with a MILP model that has been proposed by Artigues et al. \cite{artigues2003insertion}
+ 	and which allows to solve the deterministic RCPSP by treating it as a flow-network problem.
+ 	The model presented here is not entirely new,
+ 	since a similar technique (repeating precedence constraints for each
+ 	scenario of the chosen sample) has been proposed in \cite{leus2011robust}
+ 	for minimizing the maximum regret of an es-policy.
+ 		
+	
+\subsection{The RCPSP model of Artigues et al.}
+	 
+	Artigues et al. \cite{artigues2003insertion}
+	represent a solution to the RCPSP as a so-called \emph{resource-flow}
+	$\xf \in \mathbb{R}^{n\times n\times m}_0$;
+	an assignment to variables $f_{ijr}$ associated 
+	with each pair of activities $(i,j) \in N^2$ and each resource $r \in R$.
+  	A resource-flow describes the "passing" of resource units inbetween activities.
+ 	More precisely, $\xf$ is an indirect representation of every schedule $\xs$ in which
+ 	$f_{ijr}$ units of resource $r$ are released by activity $i$ at its completion $s_i+d_i$
+ 	and then "picked up" by activity $j$ at its start $s_j$,
+ 	without another activity using these units between $s_i+d_i$ and $s_j$.
+ 	
+ 	A resource-flow is feasible when it satisfies
+ 	\begin{align}
+ 		\sum_{j \in N-\{i\}} f_{jir} = q_{ir}	\quad	\forall i \in N-\{1\} \label{eq-rf-1} \\
+ 		\sum_{j \in N-\{i\}} f_{ijr} = q_{ir} 	\quad	\forall i \in N-\{n\} \label{eq-rf-2}
+  	\end{align}
+ 	Eq. $(\ref{eq-rf-1})$ asks that each activity $i$ (except for the sink)
+ 	receives as many resource units as it requires the moment it starts.
+ 	Eq. $(\ref{eq-rf-2})$ asks that each activity $i$ (except for the source)
+	releases as many resource units as it has used the moment it finishes.
+	
+	The flow network $G(N,\phi(\xf))$ associated with $\xf$ is defined as
+	$\phi(\xf) := \{(i,j) \in N^2: f_{ijr} > 0 \textrm{ for some } r \in R\}$;
+	i.e. there is an arc from each activity to every other activity it
+	passes at least one resource unit to.
+  	As shown by Leus \cite{leus2011resource,leus2011robust},
+  	feasible resource-flows and es-policies are interrelated:
+  	$\xE = E \cup \phi(\xf)$ is a feasible es-policy if
+  	$\xf$ is a feasible resource-flow (and $G(N,\xE)$ is acyclic).
+  	Therefore, every schedule which satisfies $G(N,\xE)$ is feasible.
+  	The following MILP model proposed by Artigues et al.
+  	enables one to find a feasible resource-flow $\xf$
+  	which minimizes the cost (described by function $g$)
+  	of a schedule $\xs$ which satisfies the 
+  	temporal constraints of $G(N,E \cup \phi(\xf))$.
+  	
+  	\begin{align}
+  		\min \qquad			& s_n	\label{eq-art-obj}	\\
+  		\textrm{s.t.} \qquad &	s_j \geq s_i + d_i - M(1-z_{ij}) \qquad \forall (i,j) \in N \label{eq-art-pre} \\
+  			& z_{ij}=1 \qquad \forall (i,j) \in E \label{eq-art-zfix} \\
+  			& f_{ijr} \leq M z_{ij} \qquad \forall (i,j) \in N^2, r\in R \label {eq-art-fz} \\
+   			& (\ref{eq-rf-1}),(\ref{eq-rf-2}) \label{eq-art-inout} \\
+  			& f_{ijr} \geq 0, z_{ij} \in \{0,1\} \qquad \forall (i,j) \in N^2, r\in R \label{eq-art-dom}
+ 	\end{align}
+   	
+%   	\begin{center}
+%  	\begin{tabular}{ l l  r  l}
+%  	min.	&	$s_n$									&	& \\
+%  	s.t.	&	$f_{ijr} \leq M z_{ij}$					&	$\forall (i,j) \in N^2, r\in R$ & ($i$) \\
+%  			&	$s_j \geq s_i + d_i - M(1-z_{ij})$		&	$\forall (i,j) \in N^2$	& ($ii$) \\
+%  			&	$z_{ij} = 1$							&	$\forall (i,j) \in E$	& ($iii$) \\
+%  			&	$f_{ijr} \geq 0, z_{ij} \in \{0,1\}$	&	$\forall (i,j) \in N^2, r\in R$ & ($iv$) \\
+%  			&	(\ref{eq-rf-1}), (\ref{eq-rf-2})		& & ($v$)
+%  	\end{tabular}
+%  	\end{center}
+  	
+  	Here $M$ is a large constant.
+  	Due to (\ref{eq-art-inout}) $\xf$ is a feasible resource-flow.
+  	Due to (\ref{eq-art-fz}), if $f_{ijr} > 0$ for one or more $r \in R$ then $z_{ij} = 1$,
+  	meaning that variables $z_{ij}$ describe the flow-network $\phi(\xf)$ of the resource-flow
+  	(i.e. $\phi(\xf) = \{(i,j)\in N^2 : z_{ij}=1\}$).
+  	Due to (\ref{eq-art-pre}) and (\ref{eq-art-zfix}), $\xs$ describes a schedule which 
+  	satisfies the temporal constraints in $G(N,E\cup \phi(\xf))$.
+  	Since $\xf$ is a feasible resource-flow, $\xs$ is a feasible schedule.
+  	
+\subsection{Extension for S-RCPSP}
+  	
+  	This section presents a trivial extension to the RCPSP model of Artigues et al.
+  	which enables us to find optimal es-policies for the S-RCPSP.
+   	Considering a sample $\Gamma \subset \mathbb{R}^n$ of stochastic activity durations vector $\xD$
+   	allows us to present the following MILP model.
+	
+ 	\begin{align}
+ 		\min \qquad 			& \frac{1}{|\xSC|} \sum_{\xsc \in \xSC} s^{\xsc}_n \label{eq-sart-obj} \\
+ 		\textrm{s.t.} \qquad	& s^{\xsc}_j \geq s^{\xsc}_i + d^{\xsc}_i - M(1-z_{ij}) 
+ 							   \qquad \forall (i,j) \in N^2, \xsc \in \xSC \label{eq-sart-pre} \\
+ 								& (\ref{eq-art-zfix} - \ref{eq-art-dom}) \label{eq-sart-dom}
+ 	\end{align}
+   	
+%  	\begin{center}
+%  	\begin{tabular}{ l l  r  l}
+%  	$\min$	&	$ \sum_{\gamma \in \Gamma}^n g(\xs^\gamma) $		&	& \\
+%  	s.t.	&	$s^s_j \geq s^s_i + d^s_i - M(1-z_{ij})$	&	$\forall (i,j) \in N^2, s\in S$ & ($ii'$) \\
+%  			&	(\ref{eq-rf-1}), (\ref{eq-rf-2}), ($i$), ($iii$), ($iv$)		& &	
+%  	\end{tabular}
+%  	\end{center}
+  	
+  	Our extension is rather straightfoward.
+  	Each variable $s_i$ is included here as variable $s^{\xsc}_i$ for each sample scenario $\xsc \in \xSC$.
+  	Precedence constraints (\ref{eq-art-pre}) from before are 
+  	now replicated for each scenario $\xsc \in \xSC$ in condition (\ref{eq-sart-pre}).
+  	Objective (\ref{eq-art-obj}) is now replaced with objective (\ref{eq-sart-obj}),
+   	which estimates the makespan expectation $\mathbb{E}[S(E\cup \phi(\xf))]$ based on sample $\Gamma$.
+
+\subsection{Extension for PS-RCPSP}
+  	
+  	Here we extend the previous model by including a variable $t_i$ for each $i\in N$,
+  	which determines the activity's proactive starting time.
+  	The resulting PS-RCPSP MILP model is presented below.
+  	
+  	\begin{align}
+ 		\min \qquad & \left [
+ 			\alpha  \left( \frac{1}{|\xSC|} \sum_{\xsc \in \xSC} s^{\xsc}_n \right) +
+ 			(1-\alpha)  \left( \frac{1}{|\xSC|} \sum_{i=1}^{n}  \sum_{\xsc \in \xSC} (s^{\xsc}_i - t_i) \right)
+  			\right] \label{eq-milp-obj} \\
+ 		\textrm{s.t.} \qquad	& s^{\xsc}_j \geq s^{\xsc}_i + d^{\xsc}_i - M(1-z_{ij}) 
+ 							   \qquad \forall (i,j) \in N^2, \xsc \in \xSC \label{eq-milp-pre} \\
+ 								& (\ref{eq-art-zfix} - \ref{eq-art-dom}) \label{eq-milp-dom} \\
+ 								& s^{\xsc}_i \geq t_i \qquad i \in N \label{eq-milp-pro}, \xsc \in \xSC \\
+ 								& \xt \geq 0
+ 	\end{align} 	
+ 	
+   	The objective now becomes identical to that of the LP-based heuristic,
+  	measuring the weighted sum of expected makespan and expected instability.
+  	Condition (\ref{eq-milp-pro}) ensures that an activity 
+  	may not start earlier than its proactive start time.
+  	
+  	To summarize, by solving this model we obtain a PS-RCPSP solution $(\xE,\xt)$
+  	where $\xE = \{(i,j) \in N^2: z_{ij} = 1\}$ is a feasible es-policy and $\xt$ defines a proactive schedule.
+  	
+ 
+ 	\begin{proposition}
+ 	\label{pro-1}
+
+ 	Define $\xE := \{(i,j) : z_{ij} = 1\}$ the arcs of the flow-network
+ 	$G(N, E \cup \phi(\xf))$ associated with resource-flow $\xf$.
+ 	Let $\xf, \boldsymbol{z}, \xs, \xt$ be an optimal solution.
+ 	For each scenario $\xsc \in \xSC$,
+ 	$\xs^{\xsc}$ defines a schedule where each activity $i$ starts as soon as
+ 	allowed by its proactive release-time $t_i$ and es-policy $\xE$.
+  	\end{proposition}
+ 	
+ 	\begin{proof}
+ 	For each scenario $\xsc \in \xSC$,
+ 	let $\bar{x}^{\xsc}$ denote the earliest allowed start time for activity $i$,
+ 	allowed by the combination of $\xE$ and proactive schedule $\xt$.
+ 	We want to prove that in an optimal solution, 
+ 	$\xs^{\xsc} = \bar{x}^{\xsc}$ for all $\xsc \in \xSC$.
+ 	
+ 	Assume that $s^{\xsc}_i = \bar{x}^{\xsc}_i + \delta$ for some $\xsc \in \xSC, i \in N$, with $\delta > 0$.
+ 	Since (\ref{eq-milp-obj}) increases monotonically with $s^{\xsc}_i$,
+ 	the objective can be improved by setting $s^{\xsc}_i = \bar{x}^{\xsc}_i$,
+ 	without violating any constraints.
+ 	Therefore, in every optimal solution we have $s^{\xsc}_i = \bar{x}^{\xsc}_i$ 
+ 	for all $\xsc \in \Gamma$ and $i \in N$,
+ 	meaning that each $\xs^{\xsc}$ defines the earliest start times schedule
+ 	allowed by the combination of by es-policy $\xE$ and proactive schedule $\xt$ under scenario $\xsc$.
+ 	\hfill $\Box$
+ 	\end{proof}
+	
+	By proposition~\ref{pro-1} it follows that an optimal solution to the MILP model
+	presented above is, in fact, an optimal solution for the PS-RCPSP.
+
+
+%\subsection{Related work}
+%\paragraph{Braeckmans et al. \cite{braeckmans2005proactive}}
+%\paragraph{Leus et al. \cite{leus2011robust}}

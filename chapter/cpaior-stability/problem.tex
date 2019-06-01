@@ -1,0 +1,64 @@
+
+\section{Problem definition}
+We are given a task network $G(V,E)$ and a stochastic vector $D=(D_1,\ldots,D_n)$ describing task durations.
+Let $\z{Q}$ index the space of all possible realization scenarios for $D$ such that $d_{ip}$ denotes the realized duration of task $i$ in scenario $p\in\z{Q}$.
+We assume to know the probability distribution of $D$; i.e. the probability $\mathbb{P}[D = (d_{1p},\ldots,d_{np})]$ for all $p\in \z{Q}$.
+To limit the unpredictability of the realized schedule, we want to associate tasks with respective 
+\emph{planned release-times} $t=(t_1,\ldots,t_n)$ such that the realized schedule is formed by starting a task 
+as early as permitted by precedence-constraints, but not earlier than its release-time.
+That is, the start-time $s_{jp}$ of task $j$ in scenario $p$ will be determined as:
+\begin{align}
+	s_{jp} = \max[\max_{(i,j)\in E} (s_{ip} + d_{ip}), t_j] \label{sj-est}
+\end{align}
+
+Given a sample $\z{P} \subseteq \z{Q}$ of size $m$ of the stochastic durations vector,
+this paper is devoted to the following problem:
+\begin{align}
+	\tag{$P$}
+	\min_{t\geq 0} \quad 	& F := \sum_{j\in V, p\in\z{P}} s_{jp} 				&	\\
+	\textrm{subject to} \quad 	& s_{jp} = \max[\max_{(i,j)\in E} (s_i + d_i), t_j]		& \forall j\in V, p\in \z{P} 
+	\label{P-sj-compact} \\
+				& s_{jp} - t_j \leq w 						& \forall j\in V, p\in \z{P}
+\end{align}
+This problem tries to optimize a trade-off between stability and performance:
+release-times are sparsely spread in time in order to form a stable schedule, 
+i.e. such that in every considered scenario a realized start-time will stay within $w$ time-units  from the corresponding release-time.
+
+Since the whole space of possible duration realizations, $\z{Q}$, may be too large, or even infinite,
+we only consider a manageable sample $\z{P} \subseteq \z{Q}$ during optimization.%
+\footnote{Knowing the distribution of $D$, we assume to be able to draw $\z{P}$.}%
+At the same time, we want to ensure a minimal performance penalty $F - F^*$ where $F^*$ denotes the throughput of earliest-start dispatching with no release-times.
+\footnote{The reader can easily recognize the similarity of the proposed LP with a so-called Sample Average Approximation (SAA)
+of a stochastic optimization problem \cite{kleywegt2002}.}
+
+Instead of minimizing a standard performance criterion like expected makespan,
+we choose to maximize \emph{expected throughput}, $\frac{1}{m} \frac{n}{\sum_{j,p} s_{jp}}$,
+which equals the average rate at which tasks finish over all scenarios.
+It can be shown that a schedule of maximum throughput is one of minimum makespan and/or tardiness 
+(in case tasks are associated with deadlines).
+We maximize throughput indirectly by minimizing its inverse,
+with the constant $\frac{m}{n}$ omitted for simplicity.
+
+\subsubsection{LP formulation}
+The resulting problem is not easy to handle due to the equality constraint, 
+but using a standard trick it can be rewritten as the following linear program (LP):
+\begin{align}
+	\tag{$P$}
+	\min_{s,t\geq 0} \quad	&	F := \sum_{j\in V, p\in\z{P}} s_{jp} 				&	\\
+	\textrm{subject to}\quad	&	s_{jp} \geq s_{ip} + d_{ip} 		& (i,j) \in E, p \in \z{P} \label{P-sisj} \\
+				&	s_{jp} \geq t_j 			& j \in V, p \in \z{P}\label{P-tjsj} \\
+				&	s_{jp} - t_j \leq w 			& j \in V, p \in \z{P}\label{P-sjtj}
+\end{align}
+Note that the solution-space of the resulting LP encompasses that of the original formulation.
+However, it is easy to show that both problems have the same set of optimal solutions,
+because a solution $(s,t)$ for the LP cannot be optimal unless it satisfies (\ref{P-sj-compact}).
+
+Currently, the best (interior-point) LP solvers have a complexity of $O(N^3M)$ where $N$ is the number of variables and 
+$M$ the input complexity \cite{potra2000}.
+Thus, letting $\delta \leq n$ denote the max in-degree in $G(V, E)$,
+the cost of solving $(P)$ as an LP with $n m$ variables and $O(n \delta m)$ constraints can be bounded by $O(n^4 m^4 \delta) \subseteq O(n^5 m^4)$,
+which can be daunting even for small instances.
+Fortunately, as shown in the following section, 
+we manage to obtain the substantially tighter bound of $O(n^2 m)$ for solving $(P)$,
+by exploiting its simple structure to devise a dynamic programming algorithm.
+

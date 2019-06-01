@@ -1,0 +1,72 @@
+\documentclass{llncs}
+
+% included packages
+%\usepackage{times}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{microtype}
+%\usepackage{algorithmic}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\makeatletter
+\newcommand{\@chapapp}{\relax}%
+\makeatother
+%\usepackage[title,toc,titletoc,header]{appendix}
+
+\newtheorem{observation}{Observation}
+% custom commands
+\newcommand{\xest}{\textrm{est}}
+\newcommand{\xlst}{\textrm{lst}}
+\newcommand{\DP}{\textbf{\textsc{DP}}}
+\newcommand{\TD}{\textbf{\textsc{TD}}}
+\newcommand{\DU}{\textbf{\textsc{DU}}}
+\newcommand{\OD}{\textbf{\textsc{OD}}}
+\newcommand{\DTD}{\textbf{\textsc{DTD}}}
+
+\newcommand{\xl}{\lambda}
+\newcommand{\xu}{\mu}
+\newcommand{\BBox}{\rule{5pt}{6pt}}
+\newcommand{\blbox}{ \hfill \BBox}
+
+\newcommand{\var}[1]{\mathit{#1}}
+
+\begin{document}
+
+\pagestyle{headings}  % switches on printing of running heads
+%\addtocmark{} % additional mark in the TOC
+%\tableofcontents
+
+\mainmatter              % start of the contributions
+
+\title{Dynamic Temporal Decoupling}
+
+\titlerunning{Dynamic Decoupling}  
+% abbreviated title (for running head) 
+
+\author{Kiriakos Simon Mountakis \inst{1} \and Tomas Klos \inst{2}  \and Cees Witteveen\inst{1}}
+\authorrunning{Mountakis et al.} 
+\institute{Delft University of Technology, Delft, The Netherlands \and
+Utrecht University, Utrecht, The Netherlands}
+\maketitle          
+
+\begin{abstract}
+\input{abstract2}
+\keywords{simple temporal problem,  decoupling, flexibility}
+\end{abstract}
+
+\input{intro2}
+\input{preliminaries2}
+\input{minmatching2}
+\input{dynamicdecoupling2}
+%\input{dynamicdecoupling2-simon}
+%\input{dynamicdecoupling2-simon-latest}
+\input{heuristic2}
+\input{experiments2b}
+\input{conclusions2}
+%\input{appendix}
+
+\bibliographystyle{splncs03}
+%\bibliographystyle{llncs}
+\bibliography{decoupling,Flexibility}
+
+\end{document}

@@ -1,0 +1,88 @@
+
+\section{Introduction}
+In quite a number of cases a joint task has to be performed by several actors, each controlling only a part of the set of task constraints. 
+For example, consider making a joint appointment with a number of people, constructing a building that involves a number of (sub)contractors, 
+or finding a suitable multimodal transportation plan involving different transportation companies. 
+In all these cases, some task constraints are under the control of just one actor (agent), 
+while others require more than one agent setting the right values to the variables to satisfy them. 
+Let us call the first type of constraints \emph{intra-agent} constraints and the second type  \emph{inter-agent} constraints.
+
+If there is enough time, solving such multi-actor constraint problems might involve consultation, negotiation or other agreement technologies.
+%While there exists quite some literature on this subject and quite ingenious solution strategies have been proposed, 
+Sometimes, however, we have to deal with problems where communication between agents during problem solving is not possible
+or unwanted. For example, if the agents are in competition, there are legal or privacy issues preventing communication, or there is simply no time for
+communication. 
+
+In this chapter we use an approach to solve multi-actor constraint problems in the latter contexts: 
+instead of using agreement technologies, we try to avoid them by providing {\em decoupling techniques}. 
+% -- CEES
+%Intuitively, a decoupling technique decomposes a multi-actor constraint system in such a way that 
+%($i$) all inter-agent constraints are removed, 
+%($ii$) each of the agents is able to select a solution for its own set of intra-agent constraints such that 
+%($iii$) a simple merging of all individual agent solutions obtained always constitutes a solution to the total set of constraints. 
+%So, a decoupling guarantees that partial solutions are conflict-free and always can be simply merged to obtain a complete solution of the original system.
+% -- SIMON
+Intuitively, a decoupling technique modifies a multi-actor constraint system such that 
+each of the agents is able to select a solution for its own set of (intra-agent) constraints 
+and a simple merging of all individual agent solutions always satisfies the total set of constraints. 
+Usually, this is accomplished by tightening intra-agent constraints such that inter-agent constraints are implied. Examples of real-world applications of such decoupling techniques can be found in e.g.\  \cite{brambilla:2010} and \cite{leeuwen:2009}.
+% -- CEES
+%Quite some research has been spent on finding suitable decoupling techniques (e.g.,\cite{hunsberger:2002a,brambilla:2010,boerkoel:2013}) for Simple Temporal Problems (STPs),
+%a constraint formalism where the constraints $C$ are simple binary difference constraints (\cite{dechter:2003}) over temporal variables $T$ and solutions can be found in low polynomial time ($O(n^3) )$. 
+% -- SIMON
+
+Quite some research focuses on finding suitable decoupling techniques (e.g., \cite{hunsberger:2002a,brambilla:2010,boerkoel:2013}) for Simple Temporal Problems (STPs) \cite{dechter:2003}.
+An STP $S=(T,C)$ is a constraint formalism where a set of temporal variables $T=\{t_0, t_1,\ldots,t_n\}$ 
+are subject to binary difference constraints $C$ and solutions can be found in low polynomial ($O(n^3)$) time. 
+Since STPs deal with temporal variables, a decoupling technique applied to STPs is called {\emph{temporal decoupling}.
+The quality of a temporal decoupling technique depends on the degree to which it tightens intra-agent constraints:
+the more it restricts the flexibility of each individual agent in solving their own part of the constraints, the less it is preferred.
+Therefore, we need a flexibility metric to evaluate the quality of a temporal decoupling.
+
+%One such a metric is the (temporal)  \emph{flexibility} of a temporal decoupling. 
+Originally, flexibility was measured by summing the differences between the highest possible (latest) and 
+the lowest possible (earliest) values of all variables in the constraint system after decoupling (\cite{hunsberger:2002a,hunsberger:2002b}). 
+This so-called \emph{naive flexibility metric} has been criticized, however, because it does not take into account the dependencies between the variables and, 
+in general, seriously overestimates the ``real'' amount of flexibility.
+An alternative metric, the \emph{concurrent flexibility metric} has been proposed in \cite{wilson:2014}. 
+This metric accounts for dependencies between the variables and is based on the notion of an \emph{interval schedule} for an STP $S$: 
+For each variable $t_i \in T$ an interval schedule defines an interval $[l_i, u_i]$,
+%such that every combination $v = (v_1, \ldots, v_n)$ of choices $v_i$ of values in such intervals constitutes a solution for $S$. 
+such that choosing a value within $[l_i, u_i]$ for each variable $t_i$, always constitutes a solution for $S$.
+The sum $\sum^n_{i=1} (u_i - l_i)$ of the widths of these intervals determines the flexibility of $S$. 
+The concurrent flexibility of $S$ then is defined as the maximum flexibility we can obtain for an 
+interval schedule of $S$ and can be computed in $O(n^3)$ (see \cite{mountakis:2015}).
+
+As shown in \cite{wilson:2014}, the concurrent flexibility metric can also be used to obtain an optimal (i.e.~maximum flexible) temporal decoupling of an STP. 
+This decoupling is a \emph{total decoupling}, that is, a decoupling where the $n$ variables are evenly distributed over $n$ independent agents and thus every agent controls exactly one variable. 
+It has been shown that this total decoupling is optimal for every partitioning of the set of temporal variables if one considers the concurrent flexibility metric as the flexibility metric to be used. 
+In this paper, we concentrate on such (optimal) total decouplings of an STP. 
+
+%Most literature on temporal decoupling has been concentrated on the centralized computation of a decoupling, cf. \cite{hunsberger:2002b,brambilla:2010}. 
+%Recently, however, quite elegant distributed approaches to the construction of a temporal decoupling have been proposed \cite{boerkoel:2013,Mogali:2016}.
+%As far as we know, however, no studies have been done on the subject of this paper: the \emph{dynamic temporal decoupling} of STPS.
+%This idea can be motivated as follows: 
+In all existing approaches, a single temporal decoupling is computed in advance and is not changed, 
+even if later on some agents announce their commitment to a specific value (or range of values) for a variable they control. 
+%-- CEES
+%Intuitively, however, such additional information could be useful for other agents, because it could increase the flexibility of variables they are not yet committed to. 
+%They can only profit from such a change in flexibility, however, if the current decoupling would be updated. On the other hand, 
+%since agents might not accept modifications in the current decoupling that would impose additional restrictions upon them, 
+%we have to make sure that a decoupling update will never negatively affect the current flexibility of any agent, 
+%neither globally, nor locally, i.e. with respect to commitments they could have been planning for. 
+%-- SIMON
+Intuitively, however, we can use such additional information for the benefit of all agents, by possibly increasing the flexibility of variables they are not yet committed to. Specifically, when an agent announces a commitment to a sub-range of values within the given interval schedule (that represents the current decoupling), we are interested in updating the decoupling such that the individual flexibility of no agent is affected negatively. 
+
+More precisely, the overall aim of this paper is to show that a decoupling update method with the following nice properties do exist:  first of all, 
+it never affects the current flexibility of the agents negatively, and, secondly, it never decreases (and possibly increases) the individual flexibility of the variables not yet committed to.
+We will also show that updating a temporal decoupling as the result of a commitment for a single variable can be done in almost linear (amortized) time ($O(n \log n)$), 
+which compares favourably with the cost of computing a new optimal temporal decoupling ($O(n^3)$).
+
+{\bf Organisation } In Sect.~\ref{section:prelim} we discuss existing relevant work on STPs and temporal decoupling (TD).
+Then, in Sect.~\ref{section:computing}, extending some existing work, we briefly show how a total TD can be computed in $O(n^3)$, using a minimum matching approach. 
+In Sect.~\ref{section:adapt}, we first provide an exact approach to update an existing decoupling after commitments to variables have been made. 
+%We show that it satisfies the additional requirement as preserving individual flexibility of variables in case values for one or more variables have been assigned. 
+We conclude, however, that this adaptation is computationally quite costly. Therefore, in Sect.~\ref{section:heuristic} we offer an alternative, heuristic method, that is capable to adapt a given temporal decoupling in almost linear time per variable commitment.
+To show the benefits of adapting the temporal decoupling, in Sect.~\ref{section:experiments} we present the results of some experiments using STP benchmarks sets with the heuristic decoupling update and compare the results with an exact, but computationally more intensive updating method.
+%Almost last, but not least, in Section~\ref{extension}, we show how our approach can be extended to non-total decouplings and how the heuristic can be used to obtain a flexible schedule from a given point-schedule. 
+We end with stating some conclusions and suggestions for further work. 

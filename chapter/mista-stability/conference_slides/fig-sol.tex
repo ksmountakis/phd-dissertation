@@ -1,0 +1,16 @@
+	\begin{tikzpicture}[->, auto, node distance=1.5cm, scale=0.8, transform shape]
+		\tikzstyle{every state}=[fill=Red4,draw=none,text=white,inner sep=2.5pt, minimum size=0pt]
+		\node[state] (t0) {$t_0$};
+		\node[state] (t1) [left of=t0] {$t_1$};
+		\node[state] (t2) [right of=t0] {$t_2$};
+		\node[state] (t3) [below of=t0] {$t_3$};
+
+		\path (t0) edge [bend left=7pt] node {\small{50}} (t1);
+		\path (t1) edge [bend left=7pt] node {\small{0}} (t0);
+
+		\path (t0) edge [bend left=7pt] node {\small{50}} (t2);
+		\path (t2) edge [bend left=7pt] node {\small{0}} (t0);
+
+		\path (t0) edge [bend left=5pt] node {\small{50}} (t3);
+		\path (t3) edge [bend left=7pt] node {\small{0}} (t0);
+	\end{tikzpicture}

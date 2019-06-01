@@ -1,0 +1,15 @@
+This paper concerns networks of precedence constraints between tasks with random durations, 
+known as stochastic task networks, often used to model uncertainty in real-world applications. 
+In some applications, we must associate tasks with reliable start-times from which realized start-times will (most likely) not deviate too far.
+We examine a dispatching strategy according to which a task starts as early as precedence constraints allow,
+but not earlier than its corresponding \emph{planned release-time}.
+As these release-times are spread farther apart on the time-axis, 
+the randomness of realized start-times diminishes (i.e. \emph{stability} increases).
+Effectively, task start-times becomes less sensitive to the outcome durations of their network predecessors.
+With increasing stability, however, performance deteriorates (e.g. expected makespan increases).
+Assuming a sample of the durations is given,
+we define an LP for finding release-times that minimize the performance penalty of reaching a desired level of stability.
+The resulting LP is costly to solve, so, targeting a specific part of the solution-space, 
+we define an associated Simple Temporal Problem (STP) and show how optimal release-times can be constructed from its earliest-start-time solution.
+Exploiting the special structure of this STP, we present our main result, 
+a dynamic programming algorithm that finds optimal release-times with considerable efficiency gains.

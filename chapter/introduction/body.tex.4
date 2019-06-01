@@ -1,0 +1,68 @@
+
+\begin{center}
+	\fbox{\ldots}
+\end{center}
+
+% the thing with teams
+The various human resources (or actors) participating in the NedTrain workshop 
+are organized into teams and each team is typically managed by a corresponding foreman. 
+We may assume that members of different teams will not participate in a common task.
+That is, teams define a partitioning of all maintenance tasks into disjoint subsets,
+or in other words, each team is responsible for realizing their part of the schedule.
+
+Given that tasks are interrelated via temporal constraints and resource limitations at the depot,
+the decision of when to dispatch a task might affect the future available dispatching options for a number of other tasks.
+As such, realizing a feasible schedule for all tasks might require that teams share and negotiate their dispatching decisions.
+However, negotiating the dispatching of several hundreds of tasks based on synchronous communication between actors
+would lead to an overly complex and inefficient dispatching process.
+
+Moreover, even though teams would like to have the freedom to consider alternatives for their part of the schedule,
+as time progresses a team might begin to form a more accurate idea of when their tasks should be dispatched.
+That is, given the present state of the dispatching process,
+a team might be able to tell at which times or within which time-ranges certain tasks will be dispatched in the near future.
+
+Given the observations above,
+we can now more precisely describe the purpose of our research in terms of the following Research Problem:
+
+\begin{quote}
+\textbf{Research Problem 1}:
+How to enable teams to quickly consider feasible alternatives for their part of the schedule 
+without having to communicate with or worry about the decisions of other teams?
+Furthermore, how to utilize a more precise knowledge of actor intentions (as those are communicated with time)
+in order to enhance the ability of the dispatching process to deal with uncertainty?  
+\end{quote}
+
+\begin{center}
+	\fbox{\ldots}
+\end{center}
+
+% summary of the two parts
+
+This thesis summarizes results for two different types of scheduling problems and as such it is divided into Part I and Part II, respectively.
+Both types of problems belong to the research area of scheduling under uncertainty.
+Uncertainty, however, has a different meaning in each of the two cases, as we briefly explain soon.
+Despite focusing on different sources of uncertainty, Parts I and II have a common underlying theme: 
+beyond finding a fixed schedule for the given scheduling problem, 
+we are interested in finding a strategy for adjusting the solution in a continuous scheduling process.
+
+
+Part I focuses on problems related to dispatching instantaneous events subject to Simple Temporal Problem (STP) constraints.
+Such constraints restrict the minimum and maximum temporal distance between the dispatching of pairs of events.
+It is assumed that each event is associated with a respective actor that will choose when to dispatch his event from a respective time-window.
+Uncertainty in this case results from not being able to predict how an actor will choose within a given time-window.
+We are interested in finding a \emph{flexible} strategy for initializing these time-windows but also for updating them as choices are being made.
+As the dispatching process unfolds,
+we strive to maximize the degree of freedom with which actors will continue making dispatching decisions.
+
+Part II focuses on problems related to dispatching non-instantaneous events that correspond to tasks with random durations,
+subject to simple precedence constraints and resource constraints.
+Uncertainty in this case results from not being able to predict the outcome duration of a task.
+We are interested in finding a dispatching strategy that enables us to predict with some confidence the outcome start-times of the tasks, 
+even though the outcome task durations are unpredictable.
+More in particular, we are interested in finding a strategy that optimizes the trade-off between two conflicting qualities:
+dispatching tasks efficiently and dispatching tasks predictably.
+
+\begin{center}
+	\fbox{\ldots}
+\end{center}
+

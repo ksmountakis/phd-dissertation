@@ -1,0 +1,217 @@
+	As discussed in Chapter~1,
+	in a domain like the NedTrain workshop we would like to enable human resources (or actors) 
+	to decide the dispatch times of their tasks ``just in time'',
+	instead of commiting to a fixed schedule from the start.
+	Moreover, we explained how doing so introduces an additional source of uncertainty,
+	since the mechanism by which dispatching decisions will be made is unknown.
+	We identified some complications caused from such a source of uncertainty
+	and stated associated Research Problems that we would like to solve.
+
+	The framework of scheduling techniques based on the so-called Simple Temporal Problem (STP) \cite{dechter1991}
+	was developed with exactly this type of dynamic dispatching process in mind,
+	making it an obvious starting point for further research.
+	In Part I of this dissertation we extend earlier work by Wilson et al. who first considered using the STP 
+	in order to model a dispatching process in the NedTrain workshop \cite{wilson2011efficient, wilson:2014, wilson:2016}.
+	This chapter prepares the reader for Chapters 3 and 4,
+	where our results are presented, 
+	by offering a non-technical introduction to some important STP-related concepts.
+	At the same time, we state Research Questions in order to precisely describe how 
+	existing literature needs to be extended in order to solve the Research Problems identified in Chapter~1.
+
+\section{Simple Temporal Problems}	
+
+	A STP is a type of Temporal Constraint Satisfaction Problem (TCSP) \cite{dechter1991,ghallab2004} that
+	restricts the possible temporal distances between a set of $n$ instantaneous events.
+	Each event is associated with a respective \emph{time-variable} 
+	and each constraint bounds, from above and below, the distance between a pair of time-variables.
+	A solution to a STP is a \emph{schedule}: an assignment of dispatching times to the time-variables satisfying all pair-wise constraints.
+	And even though time-variables correspond to instantaneous events,
+	a STP offers sufficient representational power to model temporal constraints between non-instantaneous events, 
+	e.g. tasks with specific durations.
+	Quite simply, two time-variables are needed per task: 
+	one for its dispatching time and one for its finish time,
+	with constraints asking their temporal distance to be equal to the task's duration.
+	In addition, release-/due-date constraints on groups of tasks 
+	(e.g. when groups of tasks refer to the maintance work associated with a train) are easily modelled as STP constraints.
+	In fact, as discussed later, there are STP-related techniques that enable us to handle resource constraints 
+	by transforming them in a preprocessing phase into temporal constraints,
+	thus only having to ``worry'' about temporal constraints during dispatching. 
+
+	% the query
+	Realizing a feasible schedule for a given STP by dispatching events at suitable moments 
+	generally requires answering the following query:
+	Given that some events have been dispatched (i.e. given a feasible partial schedule),
+	within which time-windows shall we dispatch remaining events in order 
+	to guarantee that a complete feasible schedule remains realizable in the long run?
+	In other words: within which time-ranges can we dispatch a task without risking to run out of feasible options later?	
+
+	% todo: how this provides the freedom that we need and some visibility into the future
+
+	This query can be answered efficiently (in low-order polynomial time) by a \emph{constraint propagation} algorithm.
+	Such an algorithm typically manipulates a graph representation of the given STP, known as the Simple Temporal Network (STN).
+	In this representation, each time-variable associated with an event is a node and 
+	each minimum (maximum) pair-wise distance constraint between two time-variables is a weighted arc.
+	Effectively, the STP/STN machinery enables us to maintain a compact encoding of all potentially realizable schedules 
+	and decide on-the-fly how to extend the partial schedule.
+
+\section{Flexibility}
+
+	It is this freedom during dispatching, as opposed to commiting to a fixed schedule,
+	that makes STPs attractive for scheduling in a dynamic environment such as the NedTrain workshop.
+	Intuitively, the larger the solution-space (i.e. the number of feasible schedules), 
+	the greater the amount of freedom in choosing preferable yet feasible dispatching timepoints.
+	For this reason, an important concept often encountered in the literature is the \emph{flexibility} of a given STP,
+	which is conceptually proportional to the size of its solution-space.
+
+	The main challenge in defining a flexibility metric for STPs is to come up with something efficient to compute and yet accurate.
+	The most widely accepted flexibility metric essentially measures the perimeter of the bounding box of the solution-space
+	(essentially providing an outter approximation).
+	\footnote{The solution-space of a STP is generally a polytope.}
+	An attractive property of this metric is that it can be computed efficiently,
+	in fact as a by-product of constraint propagation and more specifically via an all-pairs-shortest-path computation on the STN.
+	However, as pointed out by Wilson et al. \cite{wilson:2014} the main downside of this \emph{naive flexibility} metric is that it can 
+	seriously over-estimate the actual amount of flexibility in a given STP.
+
+	In response to this disadvantage of naive flexibility,
+	Wilson et al. managed to define a more accurate metric, namely the \emph{concurrent flexibility} metric.
+	The latter essentially measures the perimeter of the bounded or inscribed box inside the solution-space
+	(essentially providing an inner approximation) and so does not account for any infeasible schedules.
+	Unfortunately, however, this metric has been defined as the solution to a linear program (LP).
+	As such, computing the concurrent flexibility of a given STP can be substantially more costly than computing its naive flexibility,
+	which we obtain as a by-product of solving a shortest-path problem.
+	%This observation lead us to the following question:
+	%\begin{quote}
+	%	\textbf{Research Question 1:}
+	%	{How to compute concurrent flexibility in low-order polynomial time?}
+	%\end{quote}
+
+\section{Temporal decoupling}
+
+	In several domains like the NedTrain workshop, 
+	events are associated with actors that controls their dispatching.
+	Considering two events controlled by different actors,
+	dispatching them at a feasible distance requires some form of agreement between those actors.
+	If dispatching times are determined dynamically,
+	realizing a feasible schedule for the whole STP would require communication between the different actos.
+	However, it is often the case that such synchronous communication is undesired or even impossible,
+	as it limits the autonomy of actors and/or might violate privacy requirements.
+
+	To deal with the complications of actors having to negotiate dispatching decisions for a large number of events,
+	a certain body literature focuses on the problem of \emph{temporal decoupling}.
+	This problem asks to turn a given STP into a decoupled STP,
+	i.e. a partitioning of the given STP into sub-problems that each actor or team of actors can solve in isolation.
+	To dispatch their events, an actor must only observe the constraints of a sub-problem 
+	within the decoupled STP which only includes variables controlled by said actor.
+	Without having to account for the dispatching decisions of other actors,
+	each actor will realize a partial schedule for their part of the problem.
+	The decoupling process ensures that merging all partial schedules will result in a feasible schedule for the original, joint STP.
+	Finding such a decoupling essentially amounts to tightening constraints which are local to each actor (i.e. only involve variables the actor controls) 
+	such that constraints including variables that belong to different actors are implied.
+	Clearly then, the decoupled STP's solution-space is contained within that of the original STP.
+	Since flexibility is highly valuable for dispatching,
+	the objective in finding a decoupling is to retain as much of the original flexibility as possible.
+
+	In \cite{hunsberger:2002b} Hunsberger first formally defined the decoupling problem and proposed heuristics for 
+	the problem of maximizing the retained naive flexibility.
+	In \cite{plankenEtAl:2010} Planken et al. showed that finding an optimal temporal decoupling with respect to a general objective is NP-hard,
+	but a decoupling that optimizes a linear function of the time-variables (unlike the objective used by Hunsberger) can be formulated as a LP. 
+	In contrast with both these centralized approaches, 
+	Boerkoel and Durfee \cite{boerkoel:2011} proposed a distributed algorithm for finding a decoupling. 
+	Their approach deals with privacy concerns that the actors might have,
+	since it does not require a central process that can modify and access the whole joint STP.
+	Such a decentralized approach does not require that an actor shares their part of the scheduling problem with other actors and/or a central authority,
+	which might be desirable if not necessary in certain domains with privacy concerns.
+
+	The methods discussed above aim at maximizing the amount of retained naive flexibility. 
+	Wilson et al., on the other hand, focused on decoupling while retaining concurrent flexibility \cite{wilson:2014}.
+	Interestingly, they found that their LP-based method for computing the concurrent flexibility of a STP actually gives, 
+	as a by-product, an optimal \emph{total decoupling}, retaining the maximum amount of concurrent flexibility.
+	In contrast with a decoupling in the broad sense,
+	a total decoupling enables dispatching each time-variable in isolation from every other variable.
+	It can be used in the edge case with as many agents as there are events, each agent controlling a single event.
+	A total decoupling is specified as a so-called \emph{interval schedule}:
+	a time-window per event within which the controlling agent can dispatch it without having to coordinate with other agents.
+	An interval schedule allows for a particularly efficient dispatching process,
+	since dispatching an event amounts to just picking a suitable time from a time-window, in constant time.
+	Moreover, it facilitates an optimally flexible dispatching process,
+	as far as concurrent flexibility is concerned.
+
+\section{Resource constraints}
+\label{chapter/prelim-1/resource-constraints}
+
+	% forbidden sets
+	So far in our discussion we have ignored that in many applications of scheduling,
+	tasks occupy certain amounts of one or more resources during their execution.
+	Such is also the case with NedTrain's maintenance workshop,
+	where resources correspond to people and equipment.
+	Depending on their outcome dispatching times and durations,
+	two or more tasks which are not precedence-related may overlap during a certain time interval.
+	A combination of precedence-unrelated tasks the total resource demands of 
+	which would exceed resource capacities in case they overlapped is often known as a \emph{forbidden set}.
+	The resource demands of certain tasks and the resource capacities of the environment 
+	are often known together as \emph{resource constraints}.%
+	\footnote{Resource demands and capacities constitute a compact encoding of the collection of forbidden sets.
+		Enumerating forbidden sets directly instead would lead to an inefficient problem formulation since there can by as many forbidden sets 
+		as there are members in the power-set of the given set of tasks.}
+	Given a STP along with resource constraints,
+	an emerging problem not addressed by the dispatching strategies discussed so far
+	is that of ensuring a realized schedule satisfying both temporal and resource constraints.
+
+	Existing literature related to this problem can be divided in two categories.
+	On one hand, there are techniques for finding a fixed schedule satisfying both STP and resource constraints.
+	It should be noted that answering whether such a schedule exists is a hard problem,
+	in contrast with doing so only subject to STP constraints.
+	On the other hand, there are techniques that deal with resource constraints 
+	by transforming the given STP into a so-called \emph{partial order schedule} (also a STP),
+	by addding (or ``posting'') precedence constraints that eliminate forbidden sets.
+	Doing so ensures that every temporally-feasible schedule for the extended STP will also satisfy resource constraints.
+	Existing literature focuses on clever heuristics for eliminating forbidden sets
+	while striving to preserve as much of the original STP's flexibility as possible.
+
+	Since we have rejected the idea of scheduling according to a fixed schedule,
+	techniques falling in the first category are not within the scope of our approach.
+	Methods for finding partial order schedules, on the other hand, are perfectly suitable.
+	They enable us to deal with resource constraints in an offline, preprocessing phase
+	and then dispatch the partial order schedule as a regular STP,
+	with a focus on decoupling and flexibility as outlined earlier.
+
+\section{Research Questions}
+
+	\begin{quote}
+		\textbf{Research Question~1.1:}
+		Is it possible to compute the concurrent flexibility in a given STP as efficiently as the naive flexibility, in low-order polynomial time?
+	\end{quote}
+
+	With the interval schedule produced by the decoupling method of Wilson et. al,
+	By taking the product of time-windows prescribed in the interval schedule, for the events controlled by a team,
+	the team can directly enumerate all alternatives provided.
+	Note, however, that the time-windows prescribed by this method stay \emph{fixed} throughout the dispatching process.
+
+	\ldots
+
+	As time progresses, we expect actors to develop an increasingly clear picture of when their events will be dispatched in the near future. 
+	When a team commits to dispatching a future event within a certain sub-range of the time-window precscribed by the interval schedule,
+	an opportunity emerges to further enhance the flexibility of the dispatching process by \emph{redistributing unused flexibility}.
+	To offer a more complete solution for Research Problem~1, 
+	we are interested in finding an answer to the following question:
+
+	\begin{quote}
+		\textbf{Research Question~1.2:}
+		{How to update a given interval schedule by redistributing unused flexibility 
+		when actors commit to specific dispatching times or time-ranges?}
+	\end{quote}
+
+	Note that care should be taken to avoid updating a given decoupling in a disruptive manner.
+	Time-windows in the updated interval schedule should be compatible with previously made commitments.
+	Moreover, time-windows for events without commitments should not differ radically from those in the previous interval schedule.
+	Finally, updating the interval schedule should be a sufficiently efficient process,
+	in order to avoid introducing a source of disruptive delays.
+	To find a better solution for Research Problem~1,
+	in addition to the Research Question above we are also interested in answering the following question:
+
+	\begin{quote}
+		\textbf{Research Question~1.2:}
+		{How to find a non-disruptive updated interval schedule of maximum flexibility in low-order polynomial time?}
+	\end{quote}
+
+

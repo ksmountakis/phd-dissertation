@@ -1,0 +1,59 @@
+\section{Dynamic Decoupling by updating} \label{section:adapt}
+A temporal decoupling allows agents to make independent choices or commitments to variables they control.
+As pointed out in the introduction, we want to adapt an existing (total) temporal decoupling $(l, u)$ whenever an agent makes a new commitment to one or more temporal variables (s)he controls. To show that such a commitment could affect the flexibility other agents have in making their possible commitments, consider our leading example again:
+\begin{example} \label{ex.5}
+In Example~\ref{ex.3}  we obtained a temporal decoupling $(l,u) = ( (0, 15 ,13)$, $(0, 15, 19))$.  Here, agent 1 was forced to arrive at 12:15, but agent
+2 could choose to arrive between 12:13 and 12:19. Suppose agent 2 commits to arrive at 12:13. As a result, agent 1 is able to arrive at any time in the interval $[9,15]$. Then, by adapting the decoupling to the updated decoupling $(l',u') = ( (0, 9 ,13), (0, 15, 13))$, the flexibility of agent 1 could increase from 0 to 6, taking into account the new commitment agent 1 has made. 
+If the existing commitment $(l, u)$, however, is not updated, agent 1 still has to choose 12:15 as its time of arrival.
+\blbox
+\end{example}
+In order to state this \emph{dynamic decoupling} or \emph{decouple updating} problem more precisely, we assume that at any moment in time the set $T$ consists of a subset $T_c$ of variables committed to and a set of not committed to, or \emph{free}, variables $T_f$.  The commitments for variables $t_i \in T_c$ are given as bounds $[l^c_i, u^c_i]$, specifying that for $i \in T_c$, $t_i$ is committed\footnote{Note that this is slightly more general concept than a strict commitment of a variable $t_i$ to one value $v_i$.} to choose a value in the interval
+$[l^c_i,u^c_i]$. The total set of commitments in $T_c$ is given by the bounds $(l^c, u^c)$. We assume that these committed bounds do not violate
+decoupling conditions.
+
+Whenever $(l,u)$ is a total decoupling for $S = (T, C)$, where $T = T_c \cup T_f$, we always assume that $(l,u)$ respects the commitments, i.e.\ $[l_i, u_i] = [l^c_i, u^c_i]$ for every $t_i \in T_c$,
+and $(l, u)$ is an optimum decoupling for the free variables in $T_f$, given these commitments.
+Suppose now an agent makes a new commitment for a variable $t_i \in  T_f$. 
+In that case, such a commitment $[v_i, w_i]$ should satisfy the existing decoupling, that is $l_i \leq v_i \leq w_i \leq u_i$, but as a result, the new decoupling where $[l_i, u_i] = [v_i, w_i]$, $T'_c = T_c \cup \{t_i\}$,and $T'_f = T_f - \{t_i\}$ might no longer be an optimal decoupling w.r.t. $T'_f$ (e.g.\ see Example~\ref{ex.5}). In that case we need to update $(l, u)$ and to find a better decoupling $(l',u')$.
+
+The decoupling updating problem then can be stated as follows: 
+
+\begin{quote}
+%\noindent
+Given a (possibly non-optimal) total decoupling $(l,u)$ for an STP \\ $S = (T, C)$, with $T = T_c \cup T_f$, 
+%and a new commitment $[v_{i_0}, w_{i_0}]$ to a variable $i_0 \in T$ 
+%such that
+%$l_{i_0} \leq v_{i_0}$ and $w_{i_0} \leq u_{i_0}$, 
+find a new total decoupling $(l', u')$ for $S$ such that %\\[0.1ex]
+%\vspace{-0.45cm}
+\begin{enumerate}
+\item no individual flexibility of free variables is negatively affected, 
+i.e., for all $ j \in T_f$, $[l_j, u_j] \sqsubseteq [l'_j,u'_j]$\footnote{that is, the interval $[l'_j, u'_j]$ contains $[l_j,u_j]$.}; %\\[0.1ex]
+\item all commitments are respected, that is, 
+%$[l'^c_{i_0}, u'^c_{i_0}] = [v_{i_0}, w_{i_0}]$ and 
+for all $j  \in T_c$, $[l'^c_{j}, u'^c_{j}]= [l^c_{j}, u^c_{j}]$;%\\[0.1ex]
+\item the flexibility realized by $(l',u')$, given the commitments $(l'^c,u'^c)$, is maximum.
+\end{enumerate}
+\end{quote}
+Based on the earlier shown total decoupling problem $\TD(D)$,
+this decoupling update problem can also be stated as the following LP:
+\newpage
+\begin{align}
+\tag{$\DTD(D, T_c, T_f, (l,u)$}\label{DTD}
+\max \quad	&	\sum_j (u'_j - l'_j)	&				\\
+\textrm{s.t.}\quad	 	& u'_0 = l'_0 = 0 & \\
+				& u'_j - l'_i \leq d_{ij}	&	\forall i \neq j \in T \label{DTD-ij}  \\
+%                                & l'_j \leq u'_j  & \forall j \in T_f                  \\
+				& u_j \leq u'_j, \   l'_j \leq l_j&	\forall j \in T_f	\label{DTD-widen} \\ 
+				& l'_j = l_j , \ u'_j = u_j          & \forall  j \in T_c  \label{DTD-equality}
+			       \end{align}
+Here, $(l,u)$ is the existing total decoupling. \\
+In fact, by transforming $\DTD$-instances into  $\TD$-instances, we can show that the dynamic decoupling (decoupling updating) problem can be reduced to a minimum-matching problem and can be solved in  $O(n^3)$, too.\footnote{As has been observed by a reviewer, there exists an $O(n^2)$ algorithm for the dynamic variant of the minimum-matching problem. It is likely that our dynamic decoupling problem can be solved by such a dynamic minimum matching algorithm in $O(n^2)$ time, too.}  
+\noindent
+%{\bf Remark }Instead of solving $\DTD$ directly, we can always transform an instance of $\DTD$ into an instance of $\TD$.
+%This transformation takes time $O(n^2)$ and involves modifying the fist row and column of matrix $D$ so that
+%(\ref{DTD-widen}) and (\ref{DTD-equality}) are implied by (\ref{DTD-ij}) and the data of the new matrix.
+%Even though the solution-space of the resulting $\TD$ encompasses the solution-space of the given $\DTD$, 
+%we are able to show that the former has the same optimal solutions as the latter.
+%In effect, this allows us to solve the dynamic decoupling (decoupling updating) problem as a minimum-matching problem with complexity $O(n^3)$.
+

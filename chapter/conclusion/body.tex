@@ -1,0 +1,332 @@
+	This dissertation was motivated by the challenge of scheduling and dispatching operations 
+	subject to uncertain and dynamic conditions prevailing in NedTrain maintenance workshops.
+	After introducing NedTrain as a maintenance company, 
+	in Chapter 1 we stated Research Problems I and II, to which Parts I and II of the thesis are devoted, respectively. 
+	After introducing the reader to related literature in Chapters 2 and 5, 
+	these problems were then broken-down into Research Questions, 
+	establishing the scope of our work. 
+	In this chapter we examine to which extent definitive answers were found for our research questions. 
+	From a high-level standpoint, we also examine whether Research Problems I and II were addressed adequately. 
+	Finally, we conclude the chapter with a list of topics related to our work that could be investigated in future work.
+
+\section{Answers to Research Questions}
+	
+	Research Questions I.1, I.2 and I.3 were formulated at the end of Chapter~2 
+	by breaking-down Research Problem I through the prism of STP-related literature.
+	Research Questions II.1 and II.2 were formulated at the end of Chapter~5,
+	this time by breaking-down Research Problem II through the prism of stochastic scheduling literature.
+	The first three research questions were addressed in Chapters 3 and 4
+	and the last two research questions were addressed in Chapters 6 and 7.
+	
+	%Research Problem I was broken down into 
+	%In Section 2.5 and Section 5.4,
+	%two separate sets of research questions were defined,
+	%as a result of refining Research Problems I and II, respectively.
+	%Answers to the questions defined in Section 2.5 were given in Chapters 3 and 4, 
+	%while answers to the questions defined in Section 5.4 were given in Chapters 6 and 7. 
+
+\subsection{Research Question I.1}
+
+	The first approach examined in this thesis for dealing with uncertainty in NedTrain workshops
+	involves allowing people to (re)schedule themselves as they see fit, with as much flexibility as possible.
+	The challenge in this case is to guarantee the resulting schedule will satisfy temporal and resource constraints,
+	without relying on synchronous communication between independent parties (or work-teams) in the workshop. 
+	Flexible interval schedules originally proposed by Wilson et al. \cite{wilson:2016} could enable such a scheduling process.
+	The high worst-case complexity of $O(n^5)$ associated with their LP-based approach, however,
+	is expected to hit a performance barrier when $n$ is in the order of several hundreds or even thousands of tasks,
+	as is the case with problem instances representing a NedTrain workshop.
+	Reasoning about resource constraints significantly exacerbates this problem since a large number of candidate solutions must be evaluated.
+	In pursuit of a way around performance limitations, we formulated the following question:
+
+	\begin{quote}
+	%\textbf{Research Question~\ref{rquest-1-1}.} 
+	\emph{How to efficiently compute concurrent flexibility in a given STP, in low-order polynomial time?}
+	\end{quote}
+
+	This question was answered in Chapter 3 (published as \cite{mountakis:2015}).
+	There we show how to compute the maximum achievable amount of flexibility for a given STN
+	as a min-cost matching problem on a bipartite graph with $2 n$ nodes.
+	The use of, e.g. the Hungarian method, yields a worst-case complexity of $O(n^3)$, which is much better than $O(n^5)$.
+	Our approach was further improved in the first part of Chapter 4 (published as \cite{mountakis2017dynamic}).
+	Beyond just measuring the amount of achievable flexibility, there we show how an actual interval schedule offering maximum flexibility 
+	can be constructed from a min-cost matching, again in cubic time.
+	In effect, we exploited the special structure of the LP considered by Wilson et al. 
+	in order to come-up with a custom and more efficient solution method.
+	An obvious implication of our results is showing that concurrent flexibility is 
+	not only more accurate, but also at least as easy to compute as (the more prominent in existing literature) naive flexibility.
+	As such, existing approaches (e.g. POS-generation procedures; see Section~\ref{chapter:prelim-1:resource-constraints})
+	can be adapted to a more accurate flexibility metric without having to trade accuracy for efficiency.
+
+\subsection{Research Question I.2}
+
+	As task execution unfolds, more dispatching times become fixed, or known.
+	Once a dispatching time becomes fixed, the associated time interval prescribed in the interval schedule is no longer needed.
+	As task execution unfolds, we would like to keep redistributing unneeded flexibility over yet-undispatched tasks.
+	Care should be taken, however, to avoid causing disruptions.
+	If redistributing flexibility results in a drastically different interval schedule, or decoupling,
+	then the latter becomes a ``moving target'' that cannot be relied on to make commitments.
+	As such, redistributing flexibility should be performed incrementally,
+	i.e. with respect to an already existing interval schedule.	
+	Moreover, if redistributing flexibility is a slow operation then disruptive delays might be introduced.
+	In pursuit of such a dynamic decoupling operation, we raised the following question: 
+
+	\begin{quote}
+	%\textbf{Research Question~\ref{rquest-1-2}.}
+	\emph{How to incrementally recompute a concurrent flexibility interval schedule during dispatching?}
+	\end{quote}
+
+	We answer this question in Chapter~4 by developing an extension of the LP by Wilson et al. for computing a flexibile schedule from scratch.
+	This new LP can be used to construct an interval schedule of maximum flexibility with respect to an existing one,
+	by widening (if possible) the time intervals of yet-undispatched tasks and narrowing-down those of already dispatched tasks into the chosen timepoints.
+	The updated interval schedule is guaranteed to offer at least as much flexibility as the given interval schedule.
+	Moreover, this rescheduling operation is non-disruptive since
+	whatever dispatching options were available to work-teams by the initial interval schedule 
+	will continue to be valid until all tasks have been dispatched.
+	In fact, potentially more attractive options might become available later
+	as the interval schedule is kept up-to-date with the progressing task execution.
+
+\subsection{Research Question I.3}
+	
+	Keeping the interval schedule up-to-date with new information about already dispatched tasks is, in effect, a rescheduling operation.
+	For situations with a large number of tasks, 
+	a rescheduling operation should be computable as efficiently as possible.
+	Otherwise, there is a risk of impeding the task execution process with disruptive delays.
+	As such, we were led to the formulation of the following question:
+
+	\begin{quote}
+	%\textbf{Research Question~\ref{rquest-1-3}.}
+	\emph{How to redistribute concurrent flexibility as fast as possible (using heuristic methods if necessary)?}
+	\end{quote}
+
+	This question was answered in two steps in Chapter~4.
+	We managed to improve upon the computationally expensive LP-based approach for redistributing unused flexibility mentioned earlier,
+	by showing that updating a given interval schedule can be cast as the basic problem of finding a flexibile interval schedule from scratch.
+	Since the latter can be cast as a min-matching problem, 
+	the updating problem can also be solved efficiently in $O(n^3)$ with a min-cost matching algorithm.
+	In a second step, we managed to lower the cost of updating the interval schedule even further,
+	by developing a heuristic that performs each time window update in near-linear time, 
+	with almost no loss of optimality (as indicated by experiments).
+	
+	In conclusion,
+	our contributions with respect to concurrent flexibility are manifold.
+	We managed to improve the efficiency of computing flexible interval schedules.
+	We also managed to add a `dynamic' dimension to the existing `static' framework,
+	allowing the fast and incremental adaptation of flexible interval schedules as task execution progresses.
+
+
+\subsection{Research Question II.1}
+
+	The second approach considered in this thesis amounts to constructing a schedule with sufficient slack to absorb the effects of variable task durations.
+	In contrast with the existing approach at NedTrain, which is mostly manual and relies on the domain expertise of operational planners,
+	our approach involves a sophisticated modeling of uncertainty in the workshop.
+	Based on observations and data collected over past maintenance sessions,
+	the duration of each task is modelled as a (random variable with a known) probability distribution.
+	Based on such a stochastic model of uncertainty,
+	our approach involves constructing a predictive schedule with the right amount of slack at the right place.
+	Despite the insertion of slack,
+	the amount of time allocated for a task might turn-out to be insufficient during execution.
+	For this reason, a so-called earliest-start scheduling policy (a stochastic task network) is coupled with the predictive schedule.
+	The policy prescribes a set of rules for reacting to possible buffer-overruns,
+	i.e. how to update the predictive schedule in order to retain feasibility with temporal and resource constraints.
+	Our objective is to find such a (policy, schedule) pair that trades favorably between robustness 
+	(i.e. good expected performance w.r.t. deadlines) on one hand, 
+	and stability (i.e. tendency of outcome dispatching times to stay near the predictive schedule) on the other hand.
+	Existing approaches, however, mostly avoid treating the policy and the schedule together as a whole during optimization.
+	In pursuit of potentially better results by enabling access to a solution-space of higher dimensionality,
+	we stated the following research question:
+
+	\begin{quote}
+	%\textbf{Research Question~\ref{rquest-2-1}.}
+	\emph{How to optimize a scheduling policy and a predictive schedule together as a pair?}
+	\end{quote}
+
+	We managed to answer this question in Chapter~6 (published as \cite{mountakis2015}),
+	by developing stochastic extensions of existing mathematical programming models for RCPSP--a deterministic scheduling problem.
+	First we provide a LP formulation of the problem of fitting a predictive schedule to a given earliest start policy, 
+	using a sample of the random durations.
+	We then extend this LP into a MILP by introducing binary variables that enable reasoning 
+	about the structure of the earliest start policy at the same time as the structure of the predictive schedule.
+	As expected, this integrated approach outperforms existing ones in trading-off robustness for stability.
+	The computational cost, however, becomes prohibitive for instances of practical size.
+	The cost can be lowered by using a smaller sample (i.e. fewer duration realization scenarios), but this compromises solution quality.
+	Our experiments reveal that under a limited computation time budget,
+	it is more effective to use a two-step approach (i.e. find a policy first and fit a schedule to it) than
+	an integrated approach but with a small sample of task durations.
+	Our two-step approach relying on the LP formulation mentioned earlier seems to outperform existing two-step approaches significantly.
+	In conclusion, we were able to develop an integrated approach, therefore answering the research question adequately.
+	Moreover, we were able to deduce that such an integrated approach is beneficial only with a sufficiently large time-budget available for computation.
+	As a by-product of developing this integrated approach we managed to outperform existing two-step approaches, 
+	for the more practical case of dealing with a limited time-budget.
+
+\subsection{Research Question II.2}
+
+	As task execution progresses the durations and the dispatching times of certain tasks become known.
+	In effect, then, whatever stochastic modeling of uncertainty was used to generate an initial (schedule, policy) 
+	pair becomes obsolete during task execution.
+	As such, we would like to have a rescheduling operation for adapting the allocation of slack
+	and the structure of the policy to new information about outcome durations and dispatching times.
+	Modifying the structure of the earliest-start policy would involve reasoning about resource constraints.
+	To avoid the associated combinatorial explosion (since a rescheduling operation should be fast),
+	it would make more sense to quickly adapt the allocation of slack while keeping the policy fixed.
+	The LP-based approach for constructing a predictive schedule based on a fixed scheduling policy,
+	mentioned earlier, is not efficient enough for use as a rescheduling operation.	
+	As such, we decided to seek an answer for the following question:
+
+	\begin{quote}
+	%\textbf{Research Question~\ref{rquest-2-2}.}
+	\emph{How to efficiently update the predictive schedule by reacting to outcome durations, keeping pace with execution?}
+	\end{quote}
+
+	This question was answered in Chapter~7 (published as \cite{mountakis2017stochastic}).
+	There we develop a very efficient dynamic programming alternative to the LP-based approach presented in Chapter~6.
+	This fast approach for finding a stable predictive schedule enables us to handle instances with a large number of tasks.
+	It also enables us to use a large sample of task durations, i.e. a high-resolution representation of uncertainty.
+	This latter advantage is crucial for establishing stable dispatching times in situations where task durations exhibit aggressive variability,
+	as is the case with conditional repair tasks in the NedTrain workshop.
+
+\section{Solutions for Research Problems}
+
+Based on our answers to the research questions, 
+now from a higher-level standpoint we evaluate whether we addressed the research problems.
+
+\subsection{Research Problem I}
+
+ 	For the motivation behind this problem, the reader may refer to Section~\ref{chapter:introduction:research-problems}.
+ 	For convenience, the problem statement is repeated below.
+ 	
+	\begin{quote}
+		%\textbf{Research Problem I.}\\
+		\emph{How to compute flexible schedules for independent work-teams that can be easily adapted to changes in the environment?}
+	\end{quote}
+	
+	To deal with this problem we turned to the area of simple temporal reasoning,
+	which mostly relates to Artificial Intelligence (AI).
+	Based on the concept of a flexible interval schedule (or temporal decoupling),
+	we managed to form the following solution for this problem.
+	
+ 	Task execution in the workshop is orchestrated by an interval schedule,
+	which can be computed based on our answers to Research Questions I.1, I.2, and I.3.
+	Such an interval schedule prescribes, 
+	for each team in the workshop, a time-window for each of their tasks.
+	A team may pick any suitable time to dispatch a task within the given time-window,
+	without having to worry about the decisions of other teams
+	(i.e. the decisions of different teams in the workshop are decoupled).
+	The interval schedule guarantees a joint schedule will be formed by individual team decisions,
+	satisfying all workshop constraints: due-dates and precedence relations between tasks, 
+	but also resource constraints over shared equipment, platforms and so on.
+	Moreover, the time-windows available for each team will get even wider as task execution goes on and more dispatching options will be available.
+	In other words, each team in the workshop can freely (re)schedule themselves within the margins of given time-windows, knowing that:
+	i) their plans need not be shared with other teams, nor will they get invalidated by disruptions down the line,
+	ii) shared resources like equipment and platforms will be available without having to negotiate with other teams,
+	iii) even more (potentially more attractive) options for rescheduling might become available later.
+	
+	Despite its advantages, this approach also suffers from the following limitation.
+	In contrast with the approach proposed in Part II,
+	is that it relies on the assumption of deterministic task durations.
+	As such, the generation and continuous adaptation of an interval schedule must rely on worst-case estimates about the time needed to complete a task.
+	As a result, teams might be given more leeway than absolutely necessary in order to meet train delivery due-dates.
+
+ 
+\subsection{Research Problem II}
+
+	For the motivation behind this problem, the reader may refer to Section~\ref{chapter:introduction:research-problems}.
+ 	For convenience, the problem statement is repeated below.
+ 	
+	\begin{quote}
+		%\textbf{Research Problem II.} 
+		\emph{How to compute robust and stable schedules for work-teams in order to deal with uncertainty in the duration of maintenance tasks.}
+	\end{quote}
+
+	To deal with this problem we turned to the research area of stochastic project scheduling,
+	which mostly relates to Operational Research (OR).
+	Assuming that uncertain task durations behave like random variables with known distributions
+   	and based on the concept of robust and stable scheduling (or proactive/reactive scheduling),
+ 	we managed to form the following solution for this problem.
+ 	
+ 	Observing the fluctuations of task durations over past maintenance sessions,
+ 	we build a statistical model of uncertainty that suits the NedTrain workshop.
+ 	We assume to be able to derive information such as the probability that a particular 
+ 	repair task will have to be performed on a particular train,
+	given its past workshop visits and its forecasted condition.
+ 	Based on our answers to Research Questions II.1 and II.2,
+ 	this model of uncertainty is used in order to compute a ``predictive'' schedule
+ 	with the right amount of slack and at the right places.
+ 	Teams in the workshop can plan-ahead based on the given schedule,
+ 	knowing that scheduled times are unlikely to change in the future.
+ 	In case allocated slack turns-out to be insufficient,
+ 	a scheduling policy (computed alongside the schedule) tells operational planners which tasks to shift forward in order to repair the schedule.
+ 	The schedule and the policy guarantee that adaptations of the schedule during execution
+ 	do not compromise our chances of delivering trains on-time.
+ 
+ 	The main downside of this approach is that, in contrast with the one examined in Part I,
+ 	teams are not allowed to determine the dispatching times of their tasks on-the-fly, during execution.
+ 	Moreover, this approach does not guarantee full team independence in the workshop.
+ 	Independence is established to some degree, however, 
+ 	since scheduled dispatching times are expected to remain mostly unchanged during task execution
+ 	and thus no negotiation over dispatching decisions is necessary.
+  	
+
+\section{Recommendations for future work}
+
+	\subsubsection*{Combining uncertain durations with STNs}
+
+	A possible extension of current work would involve combining stochastic task durations 
+	with flexible interval schedules, therefore bringing together the best of the two approaches examined in Part I and Part II.
+	Such a technique could be based on the framework of so-called Probabilistic Simple Temporal Networks, or PSTNs \cite{santos1999}. 
+	A PSTN is a STN in which the maximum (or minimum) temporal distance between a pair of time variables can be a random variable. 
+	Future work could focus on the potential to define a stochastic generalization of flexibility, 
+	which would allow, in addition, the representation of stochastic task durations. 
+	Interestingly, some work in the direction proposed here is already underway \cite{brooks2015, lund2017}.
+
+	\subsubsection*{Partial temporal decoupling}
+	
+	The ``total decoupling'' techniques considered in Part I represent an extreme form of decoupling,
+	in that (the dispatching time of) every event is decoupled from that of every other event.
+	In other words, our approach covers the extreme case in which each event (or STP variable) is dispatched by a different actor.
+	Perhaps in most practical cases, however, there are fewer actors (or parties) than variables
+	and each actor controlls a subset of the STP variables.
+	In the NedTrain workshop, for example, we may assume that members of the same team 
+	can cooperatively determine a schedule for the subset of tasks they control.
+	As such, it would be interesting to develop a generalization of the flexible interval schedules framework,
+ 	such that the partial schedules of groups of variables are decoupled.
+	Then, the total decoupling technique examined in Part I would emerge as a special case when every group contains a single variable.
+	Another special case emerges when there is only one group containing all variables.
+	It is interesting to consider what the total width of the time-windows in the interval schedule represents, in each of the two cases. 
+	In the first case, it represents concurrent flexibility.
+	In the second case, since no pair of variables is decoupled, it represents the amount of naive flexibility.
+	That is, such a hypothetical partial decoupling framework would allow the unification of concurrent and naive flexibility
+	as the two concepts become special cases of a more general definition of flexibility.
+
+	\subsubsection*{Provisional schedules}
+	
+%	An approach considered in this thesis involves using an interval schedule,
+%	letting people (re)schedule themselves at will within given time-windows.
+%	Having a regular schedule (i.e. a single dispatching time per task), however, is often valuable from an organizational perspective,
+%	to the extent of course that such a schedule can be realized.
+	Stochastic scheduling techniques for computing a reliable predictive schedule 
+	is the main point of the approach examined in Part II of the thesis.
+	An interesting alternative would be to consider an STP-based approach for computing reliable schedules.
+	The term \emph{provisional schedule} shall be used as an alternative to a predictive schedule.
+ 	Given such a schedule, actors in the workshop strive to execute tasks at provisional dispatching times.
+	Occassional deviations are unavoidable, e.g. because of equipment break-downs or unforeseen late/early deliveries. 
+	Consider that a provisional schedule is essentially a point within the solution-space of the given STP (or POS), which is essentially a polytope.
+ 	Because of possible disruptive events, then, the outcome schedule (i.e. the outcome dispatching times) is expected to be another, nearby point.
+	An interesting question to be addressed in future work, 
+	asks how to pick a provisional schedule such that our chances of ending-up with a feasible realized schedule
+	(i.e. one within the solution-space) are maximized.
+	In other words, how to minimize the risk of failing to dispatch our tasks successfully because of disruptions. 
+ 	One could consider, for example,
+ 	taking the \emph{point of gravity}, or the \emph{center of mass}, of a polytope,
+ 	which can be easily approximated by sampling random points from the polytope \cite{kannan1997random}.
+ 		
+
+ 	\subsubsection*{POS generation targetting concurrent flexibility}
+
+	The approach examined in Part I assumes the computation of a POS 
+	(by translating resource constraints into additional temporal constraints) that offers high concurrent flexibility. 
+	POS generation heuristics like \emph{solve-and-robustify} \cite{policella2009solve}, however, only target the maximization of naive flexibility.
+	As Staats et al. observed \cite{staats2014}, such heuristics mostly yield poor results with respect to concurrent flexibility.	
+	Future work could therefore focus on devloping heuristics that specifically target concurrent flexibility.
+ 	Note that our work ``paved the way'' for such work by establishing that concurrent flexibility
+ 	is not only more accurate, but also can be computed at least as fast as naive flexibility.
+  

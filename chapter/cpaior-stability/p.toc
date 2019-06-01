@@ -1,0 +1,12 @@
+\contentsline {chapter}{}{0}
+\contentsline {title}{Stabilization of DAG Schedules}{1}
+\authcount {2}
+\contentsline {author}{K. S. Mountakis \unskip {} \and T. Klos\unskip {}}{1}
+\contentsline {section}{\numberline {1}Introduction}{1}
+\contentsline {section}{\numberline {2}The problem}{1}
+\contentsline {section}{\numberline {3}A stricter formulation}{1}
+\contentsline {section}{\numberline {4}Casting $(P')$ as an earliest-start-times problem}{2}
+\contentsline {paragraph}{Summarizing:}{3}
+\contentsline {subsection}{\numberline {4.1}Solving the $w=0$ case in $O(n m + n \delta )$}{3}
+\contentsline {section}{\numberline {5}Experiments}{3}
+\contentsline {section}{\numberline {6}Conclusion}{3}

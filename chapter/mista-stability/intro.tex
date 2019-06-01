@@ -1,0 +1,168 @@
+\section{Introduction}
+	
+	% -- deterministic RCPSP
+	
+	Project scheduling literature mostly concentrates on scheduling
+	subject to temporal and resource constraints.
+	The schedule sought for is an assignment of start-times to activities,
+	facilitating the efficient use of limited resources
+	in order to minimize a lateness measure such as the project makespan.
+	Finding a schedule usually invovles solving
+	the Resource-Constrained Project Scheduling Problem (RCPSP) 
+	(see \cite{artigues2013resource,hartmann2010survey} for comprehensive surveys).
+	This problem has been shown to be \textsc{NP}-Hard \cite{blazewicz1983scheduling} and
+	finds several industrial applications (e.g. \cite{bomsdorf2008model,bartels2009scheduling}).
+	Associated literature includes numerous exact and (meta-)heuristic algorithms,
+	able to find good schedules for large instances and diverse lateness measures
+	(e.g. \cite{schutt2013solving,kone2011event,kolisch2006experimental,de2014novel}).
+	%
+	% -- transition from RCPSP to S-RCPSP because of uncertainty
+	%
+	Solving an RCPSP serves the purpose of preparing a feasible schedule,
+	assuming a static deterministic project execution environment.
+ 	In practice, however, this assumption is rarely valid.
+ 	Activity durations used for preparing the schedule are mostly rough estimates,
+ 	since most projects are subject to delays during execution and
+ 	the final realized schedule is the result of 
+ 	subjecting the original schedule to modifications
+ 	which make it consistent with the project constraints in the face of delays.
+ 	Ad-hoc modifications lead to realized activity start-times 
+ 	that might differ from planned start-times,
+  	compromising project predictability and timeliness.
+	
+	This paper addresses the issue of hedging against project uncertainty 
+ 	by preparing a schedule in combination with an execution strategy for coping with delays.
+	In line with other works in \emph{stochastic project scheduling} 
+	(see \cite{herroelen2004robust} for a comprehensive review)
+	we assume activity durations are given as stochastic variables with known distributions
+	and propose a new \emph{proactive-reactive} scheduling method.
+	First, we define the Proactive Stochastic (PS) RCPSP as an extension of RCPSP.
+	The solution to PS-RCPSP is a \emph{proactive schedule} and an \emph{earliest-start (es-) policy}
+	that together minimize the weighted sum of the realized schedule's expected makespan 
+	and its expected deviation from the proactive schedule.
+	%
+	PS-RCPSP is, in fact, a generalization of the Stochastic RCPSP (S-RCPSP),
+	which asks to find a \emph{stochastic scheduling policy} instead of a schedule
+	and various \emph{classes} of policies have been proposed in the literature 
+	\cite{mohring1984stochastic,mohring1985stochastic,herroelen2004robust}.
+	In general, a  policy defines a mapping between activity duration realizations to realized schedules.
+	S-RCPSP asks to find a policy that minimizes the expected project makespan,
+	with only few exact and heuristic approaches (mainly meta-heuristics) proposed over the last decade
+	\cite{stork2000branch,ballestin2007worthwhile,ballestin2009resource,ashtiani2011new}.	
+	
+	Not preparing the project execution based on a schedule that can more or less be trusted
+	(but rather, letting the realized schedule unfold during execution) 
+	has been recognized as a shortcoming of S-RCPSP \cite{herroelen2004construction}.
+	This shortcoming motivates us and a number of 
+	other authors to propose a proactive-reactive approach,
+	with \cite{van2008,deblaere2011proactive,lamas2015}
+	yielding the most promising computational results in existing literature.
+	Different approaches pursue different optimization objectives;
+	however, the common aim is to optimize some \emph{tradeoff} between expected makespan 
+	and expected deviation from the proactive schedule.
+ 	In line with other authors we represent activity duration distributions with a sample
+ 	and propose a Linear Programming (LP)-based heuristic for PS-RCPSP,
+ 	a Mixed-Integer LP (MILP) model enabling us to obtain exact solutions, and
+ 	a MILP-based heuristic which asimilates \emph{iterative flattening} \cite{oddi2009iterative}.
+   	The (MI)LP models for PS-RCPSP proposed in this paper are the 
+ 	result of adjusting the models proposed by Artigues et al. in
+ 	\cite{artigues2003insertion} and \cite{leus2011robust}.	
+ 	We refer to exact solutions assuming stochastic duration distributions 
+ 	can be represented exactly by a sufficiently large sample.\footnote{
+ 	This notion of exactness is in line with Stork \cite{stork2000branch} who 
+ 	represent stochastic duration distributions with a sample
+ 	when proposing exact search methods for the S-RCPSP.}
+ 	
+ 	
+%%%	Following the definition of PS-RCPSP we propose a heuristic based on Linear Programming (LP),
+%%%	a Mixed Integer LP (MILP) model for PS-RCPSP that enables the finding exact solutions, and
+%%%	a MILP-based heuristic that involves solving a sequence of smaller subproblems.
+%%%	Similar proactive-reactive scheduling methods have been proposed by a number of authors,
+%%%	with the heuristics in \cite{van2008,deblaere2011proactive,lamas2015} 
+%%%	giving the most promising computational results.
+%%%	Experiments with the known PSPLIB benchset \cite{kolisch1997psplib}
+%%%	show that our heuristics compare favorably with prior art.
+%%%	
+%%%	This paper addresses the issue of hedging against project uncertainty 
+%%% 	by preparing a schedule in combination with an execution strategy for coping with delays and
+%%%	assuming activity durations are stochastic variables with known probability distributions.
+%%% 	We propose a Mixed Integer Linear Programming (MILP) model along with two associated heuristics
+%%% 	for a ploblem that we name the Proactive Stochastic RCPSP (PS-RCPSP).
+%%% 	PS-RCPSP is, in fact, a generalization of an extension to the RCPSP,
+%%% 	known as the Stochastic RCPSP (S-RCPSP),
+%%% 	which is the main problem of study in the area of stochastic project scheduling \cite{herroelen2004robust}
+%%%	(also known as reactive project scheduling).
+%%%	S-RCPSP asks to find a \emph{stochastic scheduling policy} instead of a schedule.
+%%%	Various \emph{classes} of policies have been proposed in the literature 
+%%%	\cite{mohring1984stochastic,mohring1985stochastic,herroelen2004robust} but in general,
+%%%	a policy is a combinatorial object representing a set of rules
+%%%	that may guide the materialization of a final realized schedule,
+%%%	as actual activity durations become known during project execution.
+%%%	In effect, the policy defines a mapping from
+%%%	every possible realization of activity durations to a corresponding realized schedule.
+%%%	S-RCPSP asks to find a policy that minimizes the expected value of some project lateness measure
+%%%	(e.g. the expected project makespan).
+%%%	Few exact and heuristic S-RCPSP solution algorithms have been developed over the last decade
+%%%	\cite{stork2000branch,ballestin2007worthwhile,ballestin2009resource,ashtiani2011new}.
+%%%	
+%%%	% -- transition from S-RCPSP to PS-RCPSP
+%%%	
+%%%	A main characteristic of S-RCPSP is that no schedule is prescribed prior to project execution.
+%%%	Activity start-times are determined in a purely dynamic manner by the scheduling policy.
+%%%	This has been recognized as a drawback (e.g. \cite{herroelen2004construction}) 
+%%%	since the existence of a \emph{proactive}
+%%%	schedule that can more or less be trusted may serve important organizational purposes.
+%%%	An attempt to overcome this drawback gave rise to the research area of proactive-reactive project scheduling
+%%%	which  is the research area that our work belongs to.
+%%% 	The main idea behind the proactive-reactive approach is to execute the project by using
+%%%	a proactive schedule together with a scheduling policy.
+%%% 	The general aim of prominent approaches in this area 
+%%%  	(e.g. \cite{van2008,deblaere2011proactive,lamas2015}) is to
+%%% 	optimize some tradeoff between expected makespan and 
+%%%	expected instability (deviation of the realized from the proactive schedule).
+%%%		
+%%%	The problem studied here, the PS-RCPSP, asks to find
+%%%	a \emph{proactive} schedule paired with an \emph{earliest-start} (es) policy.
+%%%	An es-policy is a set of temporal constraints between pairs of activities.
+%%%	The proactive schedule prescribes release-times 
+%%%	(i.e. earliest possible start-times) for activities.
+%%%	An activity may start at its prescribed release-time or later in case of delays
+%%%	(i.e. other activities requiring more than allocated time) as determined by the es-policy.
+%%%	In effect, the tuple (proactive schedule, es-policy) defines a mapping from
+%%%	every possible realization of activity durations to a corresponding realized schedule.
+%%%	PS-RCPSP asks to find this tuple that minimizes 
+%%%	the \emph{weighted sum} of two performance criteria:
+%%%	\begin{enumerate}
+%%%		\item expected project makespan,
+%%%		\item expected tardiness with respect to the proactive schedule.
+%%%	\end{enumerate}
+%%%	The first criterion is relevant for obvious reasons.
+%%%	The second criterion represents the extent to which the proactive start-times can be trusted.
+%%% 	One typically wants to achieve low instability to avoid what is
+%%% 	known as \emph{nervousness} \cite{steele1975nervous} and induces organizational costs.
+ 	
+ 	% -- paper structure and contributions
+ 	
+	%This paper is about a problem of practical value in project scheduling:
+	%trading expected makespan for stability under stochastic uncertainty.
+	
+	The contributions of this paper extend from section~\ref{sec-problem} and onwards.
+	In order to base the paper on a consistent and self-contained framework of notation,
+	section~\ref{sec-prelim} summarizes existing concepts from
+	deterministic, reactive, and proactive-reactive project scheduling.
+ 	Section~\ref{sec-problem} introduces in a formal manner the problem studied here,
+ 	that we name Proactive Stochastic RCPSP.
+	Section~\ref{sec-lp} presents one main contribution of this paper:
+	a LP-based heuristic for solving this problem.
+ 	Section~\ref{sec-milp} presents another main contribution:
+ 	a MILP model for this problem which enables us to obtain exact PS-RCPSP solutions.
+ 	To our knowledge, no other exact solution methods have been proposed for poblems of similar type.
+	Section~\ref{sec-milp-heuristic} presents yet another contribution,
+	a MILP-based heuristic for PS-RCPSP.
+	Section~\ref{sec-experiments} presents an experimental study in which we find
+	that the LP-based heuristic performs favorably in comparison to the state-of-art,
+	especially when the aim is to achieve near-zero instability.
+	We also find the MILP-based heuristic to be more effective (albeit less efficient)
+	when one is willing to accept medium levels of instability in order to minimize expected makespan.
+	Section~\ref{sec-conclusion} concludes the paper.	
+ 	

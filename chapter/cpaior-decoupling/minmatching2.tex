@@ -1,0 +1,170 @@
+\section{Total decoupling by minimum matching} \label{section:computing}
+
+In the introduction we mentioned that an (optimal) total decoupling can be achieved in $O(n^3)$ time.
+In the previous section, we presented an LP to compute such a decoupling. If the STP has $n$ variables, the LP to be solved has $2n$ variables and $n^2$ constraints. 
+Modern interior-point methods solve LPs with $n$ variables and $m$ constraints in roughly $O(n^3 m)$ \cite{potra2000}.
+Thus, the complexity of solving total decoupling as an LP might be as high as $O(n^5)$.
+In a previous paper (\cite{mountakis:2015}), we have shown that computing the concurrent flexibility of an STP can be reduced to a  
+\emph{minimum matching} problem (see \cite{papadimitriou:1982}) using the distance matrix $D$ to construct a weighted cost matrix $D^*$ for the latter problem. 
+
+This reduction, however, does not allow us to directly compute the corresponding flexibility maximizers $(l,u)$.
+In this section we therefore show that there is a full $O(n^3)$ alternative method for the LP-based flexibility method to compute the concurrent flexibility and the 
+corresponding maximizers $(l,u)$, thereby showing that an optimal total decoupling can be computed in $O(n^3)$.
+\subsubsection{Flexibility and minimum matching }
+Given an STN $S = (T, C)$ with minimum distance matrix $D$, let $\var{flex}(S)$ be its concurrent flexibility, realised by the maximizers $(l, u)$. 
+Hence, $\var{flex}(S) = f(l,u) = \sum^n_{i=1} (u_i - l_i)$. Unfolding this sum --as was noticed in \cite{mountakis:2015}-- we obtain 
+\begin{equation} f(l, u) = \sum_{i\in T} (u_i - l_i) = \sum_{i\in T} (u_{\pi_i} - l_i) \end{equation}
+for every permutation $\pi$ of $T$.\footnote{To avoid cumbersome notation, we will often use $i \in T$ as a shorthand for $t_i \in T$.}
+Since $(l,u)$ is a total decoupling, we have 
+\begin{align}
+ u_j - l_i \leq& \; d_{ij}  &\mbox{ $\forall i \neq j \in T$ } \\ 
+u_j - l_j = ( u_j - z) + (z -l_j) \leq& \; d_{0j}+d_{j0} &\mbox{ $\forall j \in T$}
+\end{align}
+Hence, defining the modified distance  matrix (also called \emph{weight matrix}) $D^* = [d^*_{ij}]_{n \times n}$ by 
+\[
+d^*_{ij} =
+\begin{cases}
+d_{ij}, & 1 \leq i \neq j \leq n \\
+d_{0i}+d_{i0}, & 1 \leq i=j \leq n
+\end{cases}
+\]
+we obtain the following inequality:
+\begin{align} 
+	f(l, u) \leq \min \{\sum_{i\in T} d^*_{i\pi_i}: \pi \in \Pi(T)\}  \label{eq.minmatch}	
+\end{align}
+where $\Pi(T)$ is the space of permutations of $T$.
+Equation~(\ref{eq.minmatch}) states that the maximum flexibility of an STN is upper bounded by the value of a minimum matching in a bipartite graph with weight matrix $D^*$. The solution of such a matching problem consists in finding for each row $i$ in $D^*$ a unique column $\pi_i$ such that the
+sum $\sum_{i\in T} d^*_{i\pi_i}$ is minimized.  As we showed in \cite{mountakis:2015}, by applying LP-duality theory, equation~(\ref{eq.minmatch}) can be replaced by an equality: $f(l, u) = \min_{\pi \in \Pi(T)} \sum_{i \in T} d^*_{i\pi_i}$, so the concurrent flexibility $\var{flex}(S) = f$ can be computed by a minimum matching algorithm as e.g.\ the Hungarian algorithm, running in $O(n^3)$ time.
+
+\subsubsection{Finding a maximizer $(l, u)$ using minimum matching } With the further help of LP-duality theory i.c., complementary slackness conditions (\cite{papadimitriou:1982}), the following result is immediate:
+\begin{observation} \label{prop.CS}
+If $\pi$ is a minimum matching with value $m$ for the weight matrix $D^*$, then there exists a maximizer $(l, u)$ for the concurrent flexibility $\var{flex}(S)$ of $S$, such that $\var{flex}(S) =m $ and
+for all $i \in T$, $u_{\pi_i} - l_i = d^*_{i\pi_i}$.
+\end{observation}  
+
+Now observe that the inequalities stated in the LP-specification \ref{DP} and the inequalities $u_{\pi_i} - l_i = d^*_{i\pi_i}$ in Observation~\ref{prop.CS} all are binary difference constraints. Hence, the STP $S' = (T', C' )$, where
+\begin{align*}
+T'=&\; L \cup U = \{l_i \;|\; i \in T \} \cup \{u_i \;|\; i \in T \}, \\
+C' =&\; \{ u_i - l_j \leq d^*_{ij} \:|\; i, j \in T \} \cup \{ l_i - u_{\pi_i} \leq - d^*_{i\pi_i}  \mid  i \in T \} \cup \{ l_i - u_i  \leq 0  \mid  i \in T \} 
+\end{align*}
+is an STP\footnote{We should note that this STP has two external reference variables $u_0=l_0=0$.} and every solution $s' = (l_1, \ldots l_n, u_1, \ldots, u_n)$ of $S'$ in fact is a maximizer $(l, u)$ for the original STP $S$, since
+the flexibility associated with such a solution $(l, u)$ satisfies $\var{flex}(S) \geq f(l, u) = \sum_{i \in T} (u_i - l_i) \geq \sum_{i \in T} d^*_{i\pi_i} = \var{flex}(S)$. Hence, this pair $(l, u)$ is a maximizer realizing $\var{flex}(S)$.
+
+In particular, the earliest and latest solutions of $S'$ have this property.
+Hence, since $(i)$ $D^*$ can be obtained in $O(n^3)$ time, $(ii)$ a minimum matching based on $D^*$ can be computed in $O(n^3)$, and $(iii)$ the STN $S'$ together with a solution $s = (l, u)$ for it can be computed in $O(n^3)$,
+we obtain the following result: 
+%implying that both the maximum flexibility of $S$ as well as its maximizers $(l, u)$ can be obtained in $O(n^3)$:
+\begin{corollary}\label{corrolary-TD-to-MM} 
+Given an STN $S=(T,C)$ with distance matrix $D$,
+an optimal total decoupling $(l, u)$  for $S$ can be found in $O(n^3)$.
+%\begin{enumerate}
+%	\item Compute the cost matrix $D^*$ from $D$ to obtain a minimum matching problem with cost matrix $D^*$;
+%	\item Solve this problem in $O(n^3)$ to obtain an optimal matching $\pi$ with value $f$.
+%	\item Based on $\pi$, define the STN $S'=(T', C')$ with $T'$ and $C'$ as given above.
+%	\item Find an earliest-/latest-start schedule $s = (s_1, \ldots, s_n, s_{n+1}, \ldots, s_{2n})$ of $S'$ in $O(n^3)$  (e.g. by Floyd-Warshall).
+%	\item Let $l = (s_1, \ldots s_n)$ and $u = (s_{n+1}, \ldots, s_{2n})$. Then $(l, u)$ is a  maximizer for $f(l,u)=f$.
+%\end{enumerate}
+\end{corollary}
+
+%\begin{example}
+%Continuing our previous example, based on $D$, the corresponding eight matrix $D^*$ is:
+%\begin{equation*}
+%D^* = \left[\begin{array}{ccc}
+%                  0 & 15 & 19  \\
+%                  -5 & 10 & 4  \\
+%                  -8 & 2  & 6
+%                  \end{array}  \right]
+%\end{equation*}
+%A minimum weight matching solution is obtained by the permutation $\pi(0)=0$, $\pi(1)=2$, $\pi(2)=1$, resulting in the matching with value $0+2+4 = 6$.
+%Hence, the maximum decoupling bounds $(l, u)$ have to satisfy $u_0 - l_0 = 0$, $u_2 - l_1 = 4$, $u_1 - l_2 =2$.
+%The distance matrix $D'$ for the STN $S'= (T', C')$ is given by:
+%\begin{equation*}
+%D' = \left[\begin{array}{ccc}
+%                  0 & 15 & 19  \\
+%                  -5 & 10 & 4  \\
+%                  -8 & 2  & 6
+%                  \end{array}  \right]
+%\end{equation*}
+%
+%\end{example}
+%Keeping in mind this upper-bound for the objective,
+%we continue with the following necessary optimality conditions for total decoupling.
+%\begin{proposition}
+%	\label{TD-necessary}
+%	If $(l,u)$ is optimal for $\TD(D)$, then:
+%	\begin{enumerate}
+%		\item $l_i = \max_{k\in T} (u_k - d_{ik})$ for all $i \in T$,
+%		\item $u_j = \min_{k\in T} (l_k + d_{kj})$ for all $j \in T$.
+%	\end{enumerate}
+%\begin{proof}
+%\ldots
+%\end{proof}
+%\end{proposition}
+%
+%We say that $(l, u)$ yields a \emph{matching} between a particular variable
+%$l_i$ and a particular variable $u_j$, if $l_i = u_j - d_{ij}$ (or  $u_j = l_i + d_{ij}$).
+%By Proposition~\ref{TD-necessary} if we assume that $(l, u)$ is optimal, then 
+%every $l_i$ matches some $u_{\pi_i}$ and every $u_{\pi_i}$ is matched by some $l_i$ according to a permutation $\pi \in \Pi(T)$.
+%That is, each optimal $(l, u)$ \emph{yields} a matching $\pi$ between variables $u_j$ and $l_i$.
+%Let us associate each such matching $\pi$ between $l_i$ and $u_j$ with cost $f(l, u) = \sum_{i\in T} (u_{\pi_i}-l_i) = \sum_{i\in T} d_{i\pi_i}$.
+%
+%\begin{proposition}
+%\label{lu-optimal-iff}
+%$(l,u)$ is optimal for $\TD(D)$ iff it yields a minimum cost matching.
+%\begin{proof}
+%As shown earlier, every optimal $(l, u)$ yields a matching $\pi$.
+%This must be a minimum cost matching, otherwise 
+%$f(l, u) = \sum_{i\in T} d_{i\pi_i} > \sum_{i\in T} d_{i\pi^*_i}$
+%where $\pi^*$ is a minimum cost matching and bound (\ref{f-upper-bound}) does not hold.
+%\end{proof}
+%\end{proposition}
+%
+%In other words, the maximum flexibility of a total decoupling for STN with distance matrix $D$ 
+%equals the minimum cost of a matching for a bipartite graph with nodes $u_j$ on one side and 
+%nodes $l_i$ on the opposing side and with each edge $(u_j, l_i)$ associated with cost $d_{ij}$.
+%
+%\begin{proposition}\label{TD-l-u-from-pi}
+%For every minimum cost matching $\pi$, there exists an optimal $\TD(D)$ solution $(l, u)$ that yields $\pi$.
+%\begin{proof}
+%Consider a minimum cost matching $\pi$ for the matching problem formulated by the distances matrix $D$ of the given STN $S = (T,C)$.
+%By Propositions~\ref{TD-necessary} and \ref{lu-optimal-iff}, an interval schedule $(l, u)$ satisfying
+%\[
+%	u_{\pi_i} - l_i = d_{i\pi_i} \quad \forall i\in T
+%\]
+%where $l_i = \max_{j\in T} (u_j - d_{ij})$ is an optimal solution for $\TD(D)$.
+%
+%We will now show how to construct such a $(l, u)$ from a given minimum cost matching $\pi$.
+%Consider a new STN $S' = (L \cup U ,  C')$  where $L = \{ l_i \;|\; t_i \in T\}$ and $U = \{ u_i \;|\; t_i \in T\}$.
+%xxxxxxx
+%\[
+%	C' :=  \{t_j - t_{\pi_i} \leq d_{ij} - d_{i\pi_i}: \forall (i,j) \in T\times T\}
+%\]
+%Note that $D$ is an all-pairs-shortest-path matrix, thus: $d_{i\pi_i} + d_{\pi_{i}j} \geq d_{ij}$ and so $d_{\pi_ij} \geq d_{ij} - d_{i\pi_i}$.
+%Therefore, a feasible solution $u$ for $S'$ satisfies each constraint of $S$,
+%but in addition the following constraints:
+%\begin{align}
+%	u_j - & u_{\pi_i}  \leq d_{ij} - d_{i\pi_i}	\quad & \forall (i,j) \in T\times T \nonumber \\ \Leftrightarrow \quad 
+%	& u_{\pi_{i}} \geq u_j - d_{ij} + d_{i\pi_{i}} \quad & \forall i \in T, j \in T \nonumber \\ \Leftrightarrow \quad
+%	& u_{\pi_{i}} - \max_{j\in T} (u_j - d_{ij}) \geq d_{i\pi_{i}} \quad & \forall i \in T \label{upi-max-j}
+%\end{align}
+%At the same time, $u_{\pi_{i}} - \max_j (u_j - d_{ij}) \leq u_{\pi_{i}} - u_{\pi_{i}} + d_{i\pi_{i}}$.
+%This, in combination with (\ref{upi-max-j}), implies that every feasible solution of $S'$ satisfies the desired condition:
+%\[
+%	u_{\pi_i} - \max_j (u_j - d_{ij}) = d_{i\pi_i}
+%\]
+%In other words, we may construct an optimal $(l,u)$ for total decoupling,
+%by finding any feasible solution $u$ for STN $S'$ defined above, and then letting $l_i = \max_j (u_j - d_{ij})$ for all $i \in T$.
+%\end{proof}
+%\end{proposition}
+%
+%\begin{corollary}\label{corrolary-TD-to-MM} 
+%Given STN $S=(T,C)$ with distances matrix $D$,
+%an optimal $(l, u)$ for $\TD(D)$ can be found in $O(n^3)$ as follows:
+%\begin{enumerate}
+%	\item Formulate minimum matching problem between $2n$ nodes $u_j$ and $l_i$ with costs $d_{ij}$ for each edge $(l_i, u_j)$.
+%	\item Solve in $O(n^3)$ by use of, e.g. the Hungarian method, to obtain optimal matching $\pi$.
+%	\item Based on $\pi$, define STN $S'=(T, C')$ with $C'$ as in Proposition~\ref{TD-l-u-from-pi}.
+%	\item Find earliest-/latest-start schedule $u$ of $S'$ in $O(n^3)$ with an all-pairs-shortest-path algorithm (e.g. Floyd-Warshall).
+%	\item Let $l_i = \max_{j\in T} (u_j - d_{ij})$ for each $i\in T$, to obtain $(l, u)$.
+%\end{enumerate}
+%\end{corollary}

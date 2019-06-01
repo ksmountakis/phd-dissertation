@@ -1,0 +1,59 @@
+	\section{Proactive Stochastic RCPSP}
+	\label{sec-problem}
+		
+	In deterministic and reactive project scheduling,
+	the main problem under study (RCPSP and S-RCPSP, respectively) is stated clearly.
+	A clearly stated problem model cannot be found in proactive-reactive project scheduling literature,
+	perhaps because this research area is still in a burn-in phase.%
+	\footnote{Some works refer to \cite{herroelen2004construction} but this is a formal treatment of a
+	proactive-reactive \emph{machine} scheduling problem.}%
+	Existing literature seems to pursue the general aim 
+	of optimizing some tradeoff between expected makespan and 
+	expected instability (deviation from the proactive schedule).
+	This section presents the formal statement of a proactive-reactive scheduling problem for which
+	(heuristic and exact) solution methods are proposed in subsequent sections.
+	
+	The problem presented here, the Proactive Stochastic RCPSP (PS-RCPSP), 
+	asks to find a tuple $(\xE,\xt)$ where $\xE$ is an es-policy and $\xt$ is a proactive schedule,
+	minimizing the weighted sum of two performance criteria:
+	\begin{enumerate}
+		\item expected value of project makespan,
+		\item expected value of tardiness with respect to proactive release-times.
+	\end{enumerate}
+	The first criterion measures lack of robustness and is relevant for obvious reasons.
+	The second criterion measures instability and captures the expected 
+	deviation of the realized schedule from the proactive schedule.
+	Note that $\xt$ prescribes activity release-times (an activity $i$ may not start earlier than $t_i$).
+	Intuitively, instability represents the extent to which the proactive start-times can be trusted,
+	when used for organizational purposes before and during project execution.
+ 	
+ 	An instance of this problem is encoded by a tuple $(n,m,\xq,\xb,E,\xD,\alpha)$.
+ 	For clarity, we summarize the meaning of problem parameters.
+ 	Positive integer $n$ is the number of activities and $m$ is the number of resources.
+ 	Parameters $\xq \in \mathbb{N}^{m\times n}_0$ and $\xb \in \mathbb{N}^m_0$ 
+ 	define resource requirements and availabilities respectively.
+ 	Set $E \subseteq \{1,\ldots,n\}^2$ defines pairwise precedence constraints.
+ 	Stochastic vector $\xD$ is of length $n$ with each element 
+ 	$D_i$ a stochatic variable (with given distribution $\mathbb{P}[D_i = t]$)
+ 	which describes the uncertain duration of activity $i$.
+ 	Finally, parameter $\alpha \in [0,1]$ determines the desired tradeoff between
+ 	robustness (i.e. minimization of expected makespan) 
+ 	and stability (i.e. minimization of expected instability).
+  	More emphasis can be put on either minimizining makespan (by choosing $\alpha$ closer to one)
+  	or minimizing instability (by choosing $\alpha$ closer to zero).
+	
+ 	Formally, the problem can be stated as follows:
+ 	\begin{align}
+ 		\min \qquad & f(\xE, \xt) := \alpha \cdot \mathbb{E} \left[ [\xS((\xE,\xt),\xD)]_n \right] + 
+ 									(1-\alpha) \cdot \mathbb{E} \left[ \sum_{i=1}^n 
+ 									([\xS((\xE,\xt),\xD)]_i - t_i) \right] 
+ 									\label{eq-psrcpsp-obj} \\
+ 		\textrm{s.t.} \qquad	&	\Phi(G(N,\xE)) = \emptyset \label{eq-psrcpsp-1} \\
+ 								&	T(\xE) \supseteq E \label{eq-psrcpsp-2} \\
+ 								&	G(N,\xE) \textrm{ is acyclic} \label{eq-psrcpsp-3} \\
+ 								&	\xE \in \{1,\ldots,n\}^2, \xt \geq 0
+ 	\end{align}
+ 	Conditions (\ref{eq-psrcpsp-2},\ref{eq-psrcpsp-3}) ensure there is a non-empty
+ 	set of schedules satisfying the problem's precedence constraints as prescribed in $E$.
+ 	Condition (\ref{eq-psrcpsp-1}) ensures that each such schedule also satisfies the
+ 	problem's resource constraints prescribed by $\xq$ and $\xb$.

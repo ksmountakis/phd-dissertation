@@ -1,0 +1,30 @@
+This paper addresses a problem of practical value in project scheduling:
+trading expected makespan for stability,
+under stochastic activity duration uncertainty.
+We present the formal statement of a problem 
+that we name Proactive Stochastic RCPSP (PS-RCPSP).
+Assuming activity durations follow known probability distributions,
+PS-RCPSP asks to find a so-called earliest-start (es) policy and
+a proactive schedule that together minimize the weighted 
+sum of expected project makespan and expected instability
+(deviation of the realized from the proactive schedule).
+%
+Extending an existing MILP model for the well-known deterministic 
+Resource-Constrained Project Scheduling Problem (RCPSP),
+we present a MILP model for PS-RCPSP, which allows us to 
+find optimal (es-policy, proactive schedule) pairs.
+To deal with instances of practical size,
+we propose a Linear Programming (LP)-based 
+and a Mixed-Integer LP (MILP)-based heuristic.
+Our LP-based heuristic optimizes the proactive schedule while 
+keeping the es-policy part of the solution fixed.
+Our MILP-based heuristic aims to optimize the structure of the policy together with the proactive schedule.
+In contrast to existing state-of-art approaches such as
+CCP \cite{lamas2014purely} and STC \cite{van2008},
+our heuristics rely on optimizing the proactive schedule together with the scheduling policy.
+%
+Experiments show that the LP-based heuristic is efficient and compares favorably with the state-of-art 
+(i.e.\ achieves smaller expected makespan for a certain level of expected instability)
+when the aim is to achieve near-zero instability at the cost of higher makespan.
+The MILP-based heuristic seems more effective (albeit not as efficient) when the aim is to
+achieve low expected makespan at the cost of moderate or high instability.

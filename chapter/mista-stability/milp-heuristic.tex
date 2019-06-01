@@ -1,0 +1,72 @@
+	\section{Heuristic MILP-based approach}
+ 	\label{sec-milp-heuristic}
+  
+ 	
+ 	Even for small instances (e.g. with 30 activities and 4 resources),
+ 	solving the proposed model might take an inordinate amount of time.
+ 	We propose an algorithm (Algorithm~\ref{alg-milp-heuristic}),
+ 	the main idea of which was inspired by the \emph{iterative flattening}
+ 	heuristic of Oddi et al. \cite{oddi2009iterative}.
+ 	The heuristic of Oddi et al. was developed for the
+ 	deterministic RCPSP with minimum/maximum time-lag precedence constraints \cite{herroelen2001note}.
+ 	Every feasible schedule for the problem they study is compactly represented 
+ 	as a network of temporal constraints (known as a Simple Temporal Network \cite{dechter1991}).
+ 	It is the similarity with an es-policy (which is a network of zero-lag temporal constraints)
+ 	that has inspired the development of the heuristic presented here. 
+  
+ 	The proposed heuristic involves solving a sequence of 
+ 	sufficiently small subproblems with non-increasing optimal objective values.
+ 	Each iteration involves solving a partially solved instance to optimality.
+ 	Thus, worst-case complexity is exponential in the number of activities.
+ 	In practice, however, "good" solutions can be obtained with relative efficiency.
+  	
+ 	\begin{algorithm}
+ 		\caption{Iterative flattening for PS-RCPSP}
+ 		\label{alg-milp-heuristic}
+ 		\begin{algorithmic}[1]
+ 		\State $\xs \leftarrow$ schedule for RCPSP $(N,R,E,\mathbb{E}[\xD],\xq,\xb)$
+ 		\State $\xE^{*} \leftarrow E \cup \phi(\xf^{\xs})$ with $\xf^{\xs}$ extracted from $\xs$
+ 		\State $\xt^{*} \leftarrow (0,\ldots,0)$
+ 		%\State $k \leftarrow 0$
+ 		
+ 		\While {termination criteria not met}
+ 			\State $\mathcal{H} \leftarrow$ random subset of $\xE^{*}-T(E)$ chosen by criticality probability
+ 			\State $(\xE,\xt) \leftarrow$ 
+ 					optimal solution for PS-RCPSP $(N,R,\xE^{*}-\mathcal{H},\xD,\xq,\xb,\alpha)$
+ 			\If {$(\xE,\xt)$ has a lower objective than $(\xE^{*},\xt^{*})$}
+ 				\State $(\xE^{*},\xt^{*}) \leftarrow (\xE,\xt)$
+  			\EndIf
+  			%\State $k \leftarrow k + 1$
+ 		\EndWhile
+ 		\State return $(\xE^{*},\xt^{*})$
+ 		\end{algorithmic}
+ 	\end{algorithm}	
+ 	
+ 	Algorithm~\ref{alg-milp-heuristic} assumes as input an instance of the
+ 	PS-RCPSP.
+ 	According to aforementioned notation,
+ 	the instance is represented as $(N,R,E,\xD,\xq,\xb,\alpha)$.
+ 	An initial solution is obtained by solving a
+ 	deterministic RCPSP (lines 1-3)
+ 	which can be done efficiently with one of the various existing heuristics.
+ 	This solution will serve as a starting point for the first iteration,
+ 	which is described as follows.
+ 	A partial solution is formed by removing a random 
+ 	subset of highly critical arcs from the current solution (line 6).
+ 	The resulting subproblem is solved to optimality (by use of the proposed model)
+ 	and a complete solution is obtained (line 7).
+ 	If this new solution is better,
+ 	it becomes the starting point of the next iteration.
+ 	The algorithm may terminate when, e.g., a chosen
+ 	number of iterations have been performed,
+ 	or the objective has failed to improve a certain number of times. 
+ 	
+ 	\paragraph{Further efficiency improvements.}
+ 	Note that the optimal solution $(\xE,\xt)$   
+ 	of the subproblem solved in each iteration
+ 	cannot be worse than the best solution seen so far, $(\xE^*,\xt^*)$.
+ 	To improve performance one may use $(\xE^*,\xt^*)$ as an initial solution when solving the model (line 6).
+ 	Efficiency can be further improved by reducing the number of binary variables $z_{ij}$ in the model.
+ 	This can be accomplished by observing that
+ 	$z_{ij}$ for each $(i,j) \in T(\xE^* -  \mathcal{H})$ can be fixed to one and
+ 	$z_{ij}$ for each $(j,i) \in  T(\xE^* - \mathcal{H})$ can be fixed to zero.

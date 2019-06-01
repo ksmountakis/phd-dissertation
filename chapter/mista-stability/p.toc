@@ -1,0 +1,25 @@
+\begingroup \small 
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {2}Preliminaries}{3}
+\contentsline {subsection}{\numberline {2.1}Deterministic project scheduling}{4}
+\contentsline {paragraph}{Project source-sink convention.}{5}
+\contentsline {subsection}{\numberline {2.2}Reactive project scheduling}{5}
+\contentsline {paragraph}{List-based policies.}{5}
+\contentsline {paragraph}{Earliest-start policies.}{6}
+\contentsline {subsection}{\numberline {2.3}Proactive-reactive project scheduling}{6}
+\contentsline {section}{\numberline {3}Proactive Stochastic RCPSP}{7}
+\contentsline {section}{\numberline {4}Heuristic LP-based approach}{8}
+\contentsline {subsection}{\numberline {4.1}Related work}{9}
+\contentsline {paragraph}{Van de Vonder et al. \cite {van2008proactive}}{9}
+\contentsline {paragraph}{Leus et al. \cite {leus2004stability}}{10}
+\contentsline {section}{\numberline {5}Exact MILP-based approach}{10}
+\contentsline {subsection}{\numberline {5.1}The RCPSP model of Artigues et al.}{10}
+\contentsline {subsection}{\numberline {5.2}Extension for S-RCPSP}{11}
+\contentsline {subsection}{\numberline {5.3}Extension for PS-RCPSP}{12}
+\contentsline {section}{\numberline {6}Heuristic MILP-based approach}{12}
+\contentsline {paragraph}{Further efficiency improvements.}{13}
+\contentsline {section}{\numberline {7}Experiments}{13}
+\contentsline {paragraph}{Configuration of heuristics.}{15}
+\contentsline {paragraph}{Observations.}{15}
+\contentsline {section}{\numberline {8}Conclusions and future work}{15}
+\endgroup 

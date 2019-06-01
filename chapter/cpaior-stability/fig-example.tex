@@ -1,0 +1,55 @@
+
+\begin{figure}[!t]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\begin{tikzpicture}
+			\begin{scope}[every node/.style={circle,thin,draw}]
+ 				\node (1) at (0,+0)	{\scriptsize 1};
+				\node (2) at (1.2,-1)	{\scriptsize 2};
+				\node (3) at (1.2,+1)	{\scriptsize 3};
+				\node (4) at (2.4,-1)	{\scriptsize 4};
+				\node (5) at (3.5,+1)	{\scriptsize 5};
+				\node (6) at (2.4,-0)	{\scriptsize 6};
+				\node (7) at (3.5,-1)	{\scriptsize 7};
+				\node (8) at (4.5,+0)	{\scriptsize 8};
+			\end{scope}
+
+			\begin{scope}[>={Stealth[black]},
+				every node/.style={fill=white,circle},
+				every edge/.style={draw=black,thin}]
+				\path [->] (1) edge (2);				
+				\path [->] (1) edge (3);				
+				\path [->] (2) edge (4);				
+				\path [->] (3) edge (5);				
+				\path [->] (3) edge (6);				
+				\path [->] (4) edge (7);				
+				\path [->] (5) edge (8);				
+				\path [->] (6) edge (7);				
+				\path [->] (7) edge (8);				
+ 			\end{scope}
+		\end{tikzpicture}
+		\subcaption{Example construction plan.}
+		\label{fig-house-a}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.4\textwidth}
+		\begin{center}
+		    \begin{tabular}{ l l c }
+			    & Tasks & Durations (days) \\ \hline
+			    1. & Erect walls & 2-4  \\ 
+			    2. & Finish walls & 3-5 \\ 
+			    3. & Finish roof & 2-6 \\
+			    4. & Install plumbing & 3-5 \\
+			    5. & Finish exterior & 6-8 \\
+			    6. & Install electricity & 3-5 \\
+			    7. & Paint interior & 2-4 \\
+			    8. & Finishing touches & 1-1 \\
+		    \hline
+		    \end{tabular}
+		\end{center}
+	\subcaption{Estimated task durations.}
+	\label{fig-house-b}
+	\end{subfigure}
+	\caption{A motivating example.}
+	\label{fig-house}
+\end{figure}

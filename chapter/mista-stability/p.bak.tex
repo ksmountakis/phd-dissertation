@@ -1,0 +1,821 @@
+	%%%%%%%%%%%%%%%%%%%%%%% file template.tex %%%%%%%%%%%%%%%%%%%%%%%%%
+	%
+	% This is a general template file for the LaTeX package SVJour3
+	% for Springer journals.          Springer Heidelberg 2006/03/15
+	%
+	% Copy it to a new file with a new name and use it as the basis
+	% for your article. Delete % signs as needed.
+	%
+	% This template includes a few options for different layouts and
+	% content for various journals. Please consult a previous issue of
+	% your journal as needed.
+	%
+	%
+	% 5th Mar 2012
+	% NOTES for MISTA 2015
+	% This template has been supplied for use for the MISTA 2015 conference
+	% In essence it is the same as the one supplied by SV, but with additional comments
+	% The reason this template is being used is to make it as easy as possible
+	% to be able to submit to the post conference special issue of the Journal
+	% of Scheduling
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%
+	% First comes an example EPS file -- just ignore it and
+	% proceed on the \documentclass line
+	% your LaTeX will extract the file if required
+	\begin{filecontents*}{example.eps}
+	%!PS-Adobe-3.0 EPSF-3.0
+	%%BoundingBox: 19 19 221 221
+	%%CreationDate: Mon Sep 29 1997
+	%%Creator: programmed by hand (JK)
+	%%EndComments
+	gsave
+	newpath
+	  20 20 moveto
+	  20 220 lineto
+	  220 220 lineto
+	  220 20 lineto
+	closepath
+	2 setlinewidth
+	gsave
+	  .4 setgray fill
+	grestore
+	stroke
+	grestore
+	\end{filecontents*}
+	%
+	% For MISTA 2015, use the default option that has been supplied
+	\documentclass{svjour3}                     % onecolumn (standard format)
+	%\documentclass[smallextended]{svjour3}     % onecolumn (second format)
+	%\documentclass[twocolumn]{svjour3}         % twocolumn
+	%
+	\smartqed  % flush right qed marks, e.g. at end of proof
+	%
+	\usepackage{graphicx}
+	%
+	% \usepackage{mathptmx}      % use Times fonts if available on your TeX system
+	%
+	% insert here the call for the packages your document requires
+ 	\usepackage{latexsym}
+	\usepackage{amsmath}
+	\usepackage{amsfonts}
+	\usepackage{graphicx}
+ 	\usepackage{subfig}
+  	\usepackage{algorithmic}
+  	\usepackage{algorithm}
+  	\usepackage{enumerate}
+  	\usepackage{microtype}
+  	\usepackage{multirow}
+ 	
+	% please place your own definitions here and don't use \def but
+	% \newcommand{}{}
+	
+	\newcommand{\xsc}{\gamma}
+	\newcommand{\xSC}{\Gamma}
+	
+	\newcommand{\xs}{\boldsymbol{s}}
+ 	\newcommand{\xd}{\boldsymbol{d}}
+	\newcommand{\xq}{\boldsymbol{q}}
+	\newcommand{\xb}{\boldsymbol{b}}
+	\newcommand{\xl}{\boldsymbol{l}}
+	\newcommand{\xf}{\boldsymbol{f}}
+ 	\newcommand{\xD}{\boldsymbol{\mathcal{D}}}
+  	\newcommand{\xt}{\boldsymbol{t}}
+  	\newcommand{\xe}{\epsilon}
+	
+	\newcommand{\xE}{\mathcal{E}}
+	\newcommand{\xS}{\mathcal{S}}
+	\newcommand{\xX}{\boldsymbol{X}}
+	\newtheorem{edit}{Edit}	
+	
+	% Insert the name of "your journal" with
+	% This is preset for MISTA 2015: Do not change
+	\journalname{MISTA 2015}
+	%
+	\begin{document}
+	
+	\title{Trading robustness for stability in stochastic project scheduling 
+			-- a mathematical programming approach}
+	
+	\subtitle{}
+	
+	\author{First Author         \and
+	        Second Author %etc.
+	}
+	
+	\institute{First Author \at
+	              Affiliation \\
+	              \email{Second.Author@example.com}           %  \\
+	           \and
+	           Second Author \at
+	              Affiliation \\
+	              \email{Second.Author@example.com}           %  \\
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+	If you are submitting a full paper, insert your abstract here.
+	If you are NOT submitting a full paper (i.e. an abstract or extended abstract), then delete this section
+	\end{abstract}
+	
+	\section{Introduction}
+	
+	% -- deterministic RCPSP
+	
+	Project scheduling literature largely concentrates on finding a schedule
+	subject to temporal and resource constraints.
+	The schedule sought for is an assignment of start-times to activities
+	and serves an important function: 
+	it facilitates the efficient and coordinated use of limited resources,
+	in order to minimize a lateness measure such as the project makespan.
+	Finding such a schedule usually invovles solving an instance
+	of the resource-constrained project scheduling problem (RCPSP) \cite{hartmann2010survey},
+	which has been shown to be \textsc{NP}-Hard [cite].
+	RCPSP finds several industrial applications (e.g. \cite{bomsdorf2008model,bartels2009scheduling})
+	and associated literature is quite extensive,
+	with numerous exact and (meta-)heuristic algorithms.
+	The literature lacks heuristics with performance guarantees but existing 
+	(meta-)heuristics are able to find good solutions for large instances and various lateness measures.
+
+	% -- transition from RCPSP to S-RCPSP because of uncertainty
+	
+	Solving an RCPSP serves the purpose of preparing a feasible schedule,
+	assuming a static deterministic project execution environment.
+ 	In practice, however, this assumption is rarely valid.
+ 	Task durations used for preparing the schedule are mostly rough estimates,
+ 	since most projects are subject to delays during execution.
+ 	The final realized schedule is the result of 
+ 	subjecting the original schedule to modifications
+ 	which make it consistent with the project constraints in the face of delays.
+ 	If these modifications are decided ad-hoc,
+ 	realized activity start-times might differ significantly from planned start-times,
+  	compromising project timeliness in unpredictable ways.
+	
+	This paper addresses the issue of hedging against uncertainty,
+	by preparing a schedule in combination with a project execution strategy,
+	assuming activity durations are stochastic variables with known probability distributions.
+ 	We propose a mathematical programming model along with an associated heuristic
+	for a generalization of RCPSP that we name the Proactive Stochastic RCPSP (PS-RCPSP).
+ 	
+ 	We introduce this problem as a generalization of the Stochastic RCPSP (S-RCPSP),
+	a problem already known in the area of stochastic project scheduling \cite{herroelen2004robust}.
+	S-RCPSP asks to find a \emph{stochastic scheduling policy} instead of a schedule.
+	Various \emph{classes} of policies have been proposed in the literature 
+	\cite{mohring1984stochastic,mohring1985stochastic,herroelen2004robust} but in general,
+	a policy is a combinatorial object representing a set of rules
+	that may guide the materialization of a final realized schedule,
+	as actual activity durations become known during project execution.
+	In effect, the policy defines a mapping from
+	every possible realization of activity durations to a corresponding realized schedule.
+	S-RCPSP asks to find a policy that minimizes the expected value of some project lateness measure
+	(e.g. the expected project makespan).
+	Few exact and heuristic S-RCPSP solution algorithms have been developed over the last decade
+	\cite{stork2000branch,ballestin2007worthwhile,ballestin2009resource,ashtiani2011new}.
+	
+	% -- transition from S-RCPSP to PS-RCPSP
+	
+	One drawback of S-RCPSP is that no schedule 
+	(that can more or less be trusted) is prescribed prior to project execution
+	and activity start-times are determined in a purely reactive manner.
+	The problem studied here, the PS-RCPSP, asks to find
+	a \emph{proactive} schedule paired with an \emph{earliest-start} (es) policy.
+	An es-policy is a set of temporal constraints between pairs of activities.
+	The proactive schedule prescribes release-times (i.e. earliest possible start-times) for activities.
+	A activity may start at its prescribed release-time or later in case of delays
+	(i.e. other activities requiring more than allocated time) as determined by the es-policy.
+	% -- alternative formuulation
+	%If only a subset of activities can start at their prescribed release-time 
+	%due to other activities requiring more than their allocated time,
+	%the es-policy prescribes which activities to postpone in order to remain consistent with resource constraints.
+	%	
+	In effect, the tuple (proactive schedule, es-policy) defines a mapping from
+	every possible realization of activity durations to a corresponding realized schedule.
+	PS-RCPSP asks to find this tuple that minimizes 
+	the \emph{weighted sum} of two performance criteria:
+	\begin{enumerate}
+		\item expected value of project lateness (e.g. expected project makespan),
+		\item expected value of tardiness with respect to proactive release-times.
+	\end{enumerate}
+	The first criterion, to which we shall refer as \emph{lack of robustness}, is relevant for obvious reasons.
+	The second criterion, to which we shall refer as \emph{lack of stability} or \emph{nervousness},
+	captures the expected deviation of the realized schedule from the proactive schedule
+	and represents the extent to which the proactive start-times can be trusted.
+ 	One typically wants to achieve low lack of stability in order to avoid what has
+ 	been known as \emph{shop-floor nervousness} \cite{steele1975nervous}.
+ 	
+ 	% -- paper structure and contributions
+ 	
+ 	The content of this paper and contributions therein are structured as follows.
+ 	Section~\ref{sec-probdef} presents the definition of PS-RCPSP as a generalization of S-RCPSP.
+ 	In Section~\ref{sec-milp} we present a straightforward extension of the flow-network model for RCPSP
+ 	proposed by Artigues et al. \cite{artigues2003insertion} 
+ 	into the first (to our knowledge) mathematical programming model for S-RCPSP.
+ 	This allows us to present an extended model for PS-RCPSP,
+ 	which (in contrast to S-RCPSP) is a continuous optimization problem.
+ 	The state-of-art for problems similar to PS-RCPSP 
+ 	\cite{van2006trade,van2008,deblaere2011proactive,lamas2014purely}
+ 	optimize the proactive schedule and/or the scheduling policy separately.
+ 	Although not as efficient,
+ 	solving our model enables the optimization of the proactive schedule together with the policy,
+ 	making it the first exact method for proactive stochastic project scheduling.
+ 	Section~\ref{sec-heur} proposes a heuristic which combines the idea of
+ 	\emph{iterative flattening} \cite{oddi2009iterative} with the PS-RCPSP model,
+  	for solving small to medium-sized instances efficiently.
+  	This heuristic allows to arbitrarily calibrate the tradeoff between optimality and efficiency.
+ 	Section~\ref{sec-exp} presents an experiment 
+ 	with small instances of PSPLIB \cite{kolisch1997psplib}.
+ 	We find that our heuristic mostly outperforms the 
+ 	state-of-art in proactive stochastic project scheduling.
+ 	
+	\section{Preliminaries (needs compaction)}
+	\label{sec-prelim}
+ 	
+ 	\subsection{RCPSP}
+ 	 	
+	A project is usually represented as a direced acyclic graph $G(N,E)$,
+	with nodes $N=\{1,\ldots,n\}$ corresponding to the set of $n$ project activities.
+	Each directed arc $(i,j)$ in $E \subseteq \{(i,j) \in N^2\}$ defines a direct
+	temporal constraint between activities $i$ and $j$,
+	meaning that $j$ may not start unless activity $i$ has finished.
+ 	In effect, $E$ defines a binary, irreflexive and transitive relation:
+ 	if there is a path from activity $i$ to activity 
+ 	$j$ in $G(N,E)$ then $j$ cannot start unless $i$ has finished.
+	Let us $T(E) \supseteq E$ denote the transitive closure of $E$, 
+	defined as 
+	\[
+		T(E) := \{(i,j) \in N^2 : \exists 
+		\textrm{ a path from } i \textrm{ to } j \textrm { in } G(N,E)\}
+	\]
+	We shall name a \emph{temporally independent set} each
+	subset of activities $X \subseteq N$ which are mutually 
+	independent with respect to temporal constraints.
+	That is, if $X$ is a temporally independent set, then $X^2 \cap T(E) = \emptyset$.
+	Obviously, if only temporal constraints are taken into account, 
+	the activities of a temporally independent set may overlap in time in a schedule.
+	
+	We assume as input a set $R := \{1,\ldots,m\}$ of $m$ resources which must be shared among activities.
+	Each resource $r \in R$ is associated with known capacity $b_r \in \mathbb{N}_0$.
+	Furthermore, each activity $i \in N$ requires a known amount 
+	$q_{ir} \leq b_r$ of resource $r$ while it executes.
+	Vector $\xb \in \mathbb{N}^m_0$ and matrix $\xq \in \mathbb{N}^{n \times m}_0$
+	define the problem's resource constraints.
+	Every independent set $X$ for which $\sum_{i\in X} q_{ir} > b_r$ 
+	for some $r\in R$ is called a \emph{forbidden} set.
+	Even though it is allowed by the temporal constraints $E$, 
+	all activities in $X$ may not overlap at some timepoint $t$ because
+	resource $r$ will be used beyond its capacity, which is not possible.
+	
+	Let $H \subseteq N^2$ denote a set of temporal constraints.
+	Below we give the definition of a function $\Phi$ which returns the set of all forbidden sets
+	w.r.t. temporal constraints $H$ and the problem's resource constraints $(\xq,\xb)$.
+	\begin{align}
+		\Phi(H) := \{X \subseteq N: 
+		X^2 \cap T(H)=\emptyset, 
+		\sum_{i\in X} q_{ir} > b_r \textrm{ for some } r \in R\}
+	\end{align}
+	
+	In addition to the parameters mentioned so far,
+	we assume as input a vector $\xd \in \mathbb{N}^n_0$ such that $d_i$ defines the duration of activity $i$.
+	Overall, a tuple $(N,R,E,\xd,\xq,\xb)$ specifies an instance of the 
+	resource constrained project scheduling problem (RCPSP) \cite{}.
+	A schedule $\xs \in \mathbb{N}^n_0$ 
+	such that $s_i$ defines the start time of activity $i$,
+	is a feasible solution when it satisfies the temporal and resource constraints,
+	meaning that
+	\begin{align}
+		s_j \geq s_i + d_i \qquad & \forall (i,j) \in E \label{eq-precon} \\
+		a(\xs, t) \notin \Phi(E)	\label{eq-rescon} & \qquad \forall t \geq 0
+	\end{align}
+ 
+	Here, $a(\xs,t) := \{i \in N : t \in [s_i, s_i+d_i)\}$ is the set of
+	activities executing at timepoint $t$ according to $\xs$ and $\Phi$ as defined earlier.
+	Thus, (\ref{eq-rescon}) ensures there is no timepoint $t$ at which the
+	activities of a forbidden set overlap concurrently.
+	RCPSP asks to find a feasible schedule of minimum makespan
+	$C_{max}(\xs) := \max \{ s_i + d_i : i \in N\}$
+	which can be formally stated as
+	\begin{align}
+		\xs^* := \arg \min \{C_{max}(\xs):  (\ref{eq-precon}), (\ref{eq-rescon}) \}
+	\end{align}
+	
+	\subsection{Stochastic RCPSP}
+ 	
+	In the research area of stochastic project scheduling,
+	the activity durations vector $\xd$ is replaced with a stochastic vector $\xD$ such that $D_i$
+	is the stochastic variable representing the uncertain duration of activity $i$,
+	with a known probability distribution $\mathbb{P}[D_i = t]$.%
+	\footnote{We shall use the S-RCPSP notation proposed in \cite{ashtiani2011new},
+	denoting (elements of) stochastic vectors with a capital letter.}
+			
+	S-RCPSP is a purely reactive extension of RCPSP.
+	The solution sought for is no longer a schedule, but a reactive scheduling policy. 	
+	A policy is a combinatorial object $\pi$ which
+	parameterizes the mapping $p$ from every 
+	possible duration realization $\xd$ of stochatic vector $\xD$
+	to a corresponding realized schedule $p(\pi,\xd) \in \mathbb{R}^n_0$.
+	Mapping $p$ must comply with the \emph{non-anticipativity constraint}:
+	the decision to start activitty $i$ at time $[p(\pi,\xd)]_i$ cannot rely on 
+	information from the feature; it must have been taken by time $t \leq [p(\pi,\xd)]_i$.
+	
+	Different classes of policies have been proposed in the literature
+	\cite{mohring1984stochastic,mohring1985stochastic,stork2000branch,ashtiani2011new}.
+	The form of $\pi$ and the definition of $p$ depend on the class of the policy.
+ 
+ 	\subsubsection{Earliest-start policies}
+ 	
+  	An es-policy is a set of temporal constraints $\xE \subseteq N^2$ chosen such that
+ 	\begin{align}
+ 		T(\xE) \supseteq E, \label{es-1} \\
+ 		\Phi(\xE) = \emptyset \label{es-2}, \\
+ 		G(N,\xE) \textrm{ is acyclic} \label{es-3}
+ 	\end{align}
+ 	For every realization $\xd$ of $\xD$ and due to (\ref{es-1}),
+ 	a schedule $\xs$ that satisfies $\xE$
+ 	(i.e. $s_j \geq s_i + d_i$ for each $(i,j)\in \xE$)
+ 	also satisfies temporal constraints $E$.
+  	For every realization $\xd$ of $\xD$ and due to (\ref{es-2}),
+ 	a schedule $\xs$ satisfying $\xE$ also satisfies resource constraints $(\xq,\xb)$.
+ 	Eq. (\ref{es-3}) ensures that the
+ 	set of schedules which satisfy $\xE$  (for every possible choice of $\xd$) is non-empty.
+ 	
+ 	Projected schedule $p(\xE,\xd)$ is computed as the
+ 	\emph{earliest-start} schedule of $\xE$ under scenario $\xd \in \Omega$,
+ 	meaning that
+ 	\begin{align}
+ 		[p(\xE,\xd)]_j := \max \{ [p(\xE,\xd)]_i + d_i : (i,j) \in \xE\}
+ 	\end{align}
+ 	That is, to execute the earliest-start schedule means to start each activity $j$ 
+ 	immediatelly when all its predecessors in $G(N,\xE)$ have finished.
+  	This quantity is known in the literature as the duration of the
+ 	\emph{critical path} from source activity $1$ to activity $j$ in $G(N,\xE)$.
+ 	Since durations are stochastic the duration of the critical path to $j$, 
+ 	$[p(\xE,\xD)]_j$  is also stochastic.
+ 	That is, $p$ returns a stochastic vector schedule $\mathcal{X} = p(\xE,\xD)$
+ 	and the cost of this schedule $g(\mathcal{X})$ 
+ 	(i.e. its makespan $\max\{[p(\xE,\xD)]_i : i \in N\}$) is also a stochastic quantity.
+ 	S-RCPSP asks to find an optimal es-policy which can be defined as
+ 	\begin{align}
+ 		\xE^* := \arg \min \{\mathbb{E}[g(p(\xE,\xD))] : (\ref{es-1},\ref{es-2},\ref{es-3}), \xE \in N^2\}
+ 		\label{eq-s-rcpsp}
+ 	\end{align}
+  	
+	Stork \cite{stork2000branch} has proposed an branch-and-bound
+	algorithm for problem (\ref{eq-s-rcpsp}).
+	His algorithm considers each \emph{minimal} forbidden set $X$
+	(subset-minimal forbidden set) in some order and branches
+	on each of $|X^2|$ arcs which can be included in $\xE$
+	in order to eliminate $X$ from $\Phi(\xE)$.
+	Without obtaining new computational results,
+	in \cite{leus2011resource} Leus gives a formal treatment of
+	es-policies as resource-flow networks
+	(flow networks which can represent feasible RCPSP schedules) and
+	proposes a refined version of the branch \& bound algorithm of Stork.
+	Exploiting the relation between resource-flows and es-policies,
+	Leus and Artigues \cite{leus2011robust} propose a 
+	robust optimization model for es-policies,
+	for when a stochastic characterization of uncertainty is not available.
+	
+	\subsubsection{List-based policies}
+	
+	For completeness, we also discuss the classes of 
+	\emph{resource-based} (rb) policies and \emph{activity-based} (ab) policies.
+	An rb-policy is a priority vector $\xl \in \mathbb{R}^n$ assigning
+	priority $l_i$ to activity $i$.
+	Projected schedule $p(\xl, \xd)$ is computed by a variant of the
+	well-known parallel schedule-generation-scheme (SGS)
+	complying with the non-anticipativity constraint  \cite{ballestin2009resource}.
+	At $t=0$ and at each subsequent activity completion $t > 0$
+	one starts as many activities as allowed by temporal and resource constraints.
+	A similar class is that of \emph{activity-based} (ab) policies;
+	an ab-policy is again a priority vector.
+	But the behavior of $p$ is now slightly different:
+	a activity may not start at $t$ 
+	(even if temporal and resource constraints allow this) unless 
+	all activities of lower priority have finished by $t$.
+	Note that every projected schedule $p(\xl,\xd), \xd \in \Omega$
+	is feasible regardless of the choice of $\xl$ (due to procedure $p$).
+	S-RCPSP then asks to find a vector 
+	$\xl \in \mathbb{R}^n$ that minimizes $\mathbb{E}[g(p(\xl,\xD))]$.
+	
+	Stork \cite{stork2000branch} proposes exact branch-and-bound algorithms for both rb and ab-policies.
+	Ballest{\'\i}n \cite{ballestin2007worthwhile} proposes
+	an efficient genetic algorithm for ab-policies,
+ 	providing the first computatinal experience on larger S-RCPSP instances.
+	Ballest{\'\i}n and Leus \cite{ballestin2009resource} manage 
+	to obtain better results with a 
+	Greedy Randomized Adaptive Search Procedure (GRASP), 
+	again for the class of ab-policies.
+	The best performance (w.r.t. expected makespan minimization)
+	has so far been obtained with the more recent work of
+	Ashtiani et al. \cite{ashtiani2011new} who propose a GRASP
+	for a new class, namely \emph{pre-processing} (pp) policies--%
+	a hybrid between rb-policies and es-policies.
+	
+	\section{Proactive Stochastic RCPSP (work in progress)}
+	\label{sec-probdef}
+	
+	Having a schedule prior to project execution (that can more or less be trusted) serves important functions 
+	(e.g. the organization of resources and negotiation of contracts 
+	\cite{herroelen2004robust,braeckmans2005proactive}).
+	Therefore, not producing a schedule has been recognized as a major drawback of the S-RCPSP.
+	So-called "proactive-reactive" scheduling methods
+	\cite{herroelen2004robust,leus2004stability,van2008,deblaere2011proactive,lamas2014purely}
+	attempt to overcome this drawback by proposing that
+	the output of the scheduling effort is a pair $(\pi, \xt)$.
+	Here, $\pi$ defines a scheduling policy and $\xt$ a proactive schedule.
+ 	Each activity $i$ starts either at its proactive start-time $t_i$ or later (in case of delays)
+ 	as dictated by policy $\pi$.
+	
+	Let $p((\pi,\xt),\xD)$ denote the stochastic schedule that is realized accordingly.
+	Deviations of this realized schedule from the proactive schedule $\xt$ induce organizational costs.
+	The expected deviation (sometimes known as lack of stability, or nervousness \cite{steele1975nervous}) 
+	associated with $(\pi,\xt)$ is measured as
+   	\begin{align}
+  		\sum_{i\in N} \mathbb{E}\{[p((\pi,\xt),\xD)]_i - t_i \}	\label{eq-nerv}
+  	\end{align}
+  	
+  	Van de Vonder et al. \cite{van2006trade,van2008,van2007heuristic} 
+  	examine various two-stage approaches,
+  	the most competitive of which is the Start-Time Criticality (STC) heuristic. 
+   	First, a deterministic RCPSP schedule $\xt^0$ is found (using mean activity durations).
+  	Then, an es-policy is extracted ad-hoc from the structure of $\xt^0$ and is used as a guide to
+  	transform $\xt^0$ into a stable schedule $\xt$ by insertion of buffer-time between activities.
+	Recently, Lamas and Demeulemeester \cite{lamas2014purely} propose a 
+	chance-constrained programming (CCP) model for RCPSP, 
+	the solution to which is a stable proactive schedule.
+	Leus and Herroelen \cite{leus2004stability} assume they are given such
+	a stable proactive schedule $\xt$ and focus on the reactive step:
+	with a branch \& bound search, an es-policy $\xE$ is fitted to $\xt$
+	 such that $(\xE,\xt)$ minimizes $(\ref{eq-nerv})$.
+	Deblaere et al. \cite{deblaere2011proactive} transform 
+	an input schedule $\xt^0$ into a proactive schedule $\xt$,
+	at the same time choosing $\pi$ from the class of rb-policies so as to minimize nervousness,
+	in what seems to be the only approach which integrates the proactive and the reactive steps.
+	However, they assume an activity $i$ may start earlier than its prescribed start-time $t_i$
+	(i.e. the stable schedule does not define release-times),
+	rendering their approach not directly comparable.
+	
+	A characteristic of existing approaches is that the proactive schedule $\xt$ and policy $\pi$
+	are not optimized together as a tuple $(\pi, \xt)$.
+	Instead, either the policy (for \cite{van2008,lamas2014purely}) 
+	or the proactive schedule (for \cite{leus2004stability}) are supposed to be chosen separately,
+	without suggestions on how to do this effectively.
+	In fact, this characteristic was recognized as a drawback in \cite{van2008} by Van de Vonder et al.
+	(since the structure of both $\pi$ and $\xt$ determine overall performance)
+	which lead to a more integrated approach in \cite{deblaere2011proactive}.
+	
+	Along similar lines with \cite{deblaere2011proactive}, 
+	we propose an integrated approach to proactive-reactive scheduling.
+	
+	PS-RCPSP asks to find this tuple that minimizes 
+	the \emph{weighted sum} of two performance criteria:
+	\begin{enumerate}
+		\item expected value of project lateness (e.g. expected project makespan),
+		\item expected value of tardiness with respect to proactive release-times.
+	\end{enumerate}
+	In this paper we propose a mixed-integer linear programming (MILP)
+	model which can be used to solve the following problem
+  	\begin{align}
+ 		(\xE^*,\xt^*) := \arg \min \{\alpha \cdot \mathbb{E}[g(p(\xE,\xD))] 
+ 									+ (1-\alpha) \cdot \Delta
+ 			: (\ref{es-1},\ref{es-2},\ref{es-3}), \xE \in N^2, \xt \in \mathbb{R}^n \}
+ 		\label{eq-pr-rcpsp}
+ 	\end{align}
+ 	where $[p((\xE,\xt))]_i$ denotes the start time of activity $i$,
+ 	subject to temporal constraints $\xE$ and such that it never starts earlier than $t_i$
+ 	and $\Delta := \sum_{i \in N}\mathbb{E}\{[p((\xE,\xt),\xD)]_i-t_i\}$.
+ 	
+ 	\section{Heuristic LP approach}
+ 	\label{sec-lp}
+ 	
+ 	This section presents a heuristic for PS-RCPSP which consists of two stages:
+ 	\begin{enumerate}
+ 		\item
+ 		the deterministic RCPSP (using mean activity durations) is solved to obtain a good schedule $\xs$ and
+ 		an es-policy $\xE$ is derived from $\xs$ in polynomial time (as in \cite{artigues2003insertion}),
+ 		
+ 		\item
+ 		a proactive schedule $\xt$ is optimally "fitted" to $\xE$ so as to minimize 
+ 		\[
+ 			f(\xt) := \alpha \mathbb{E}[ [p((\xE,\xt),\xD)]_n ] + 
+ 			(1-\alpha) \sum_{i \in N} \mathbb{E}[ [p((\xE,\xt),\xD)]_i - t_i ]
+ 		\]
+ 	\end{enumerate}
+  	Here, parameter $\alpha \in [0,1]$ determines the desired tradeoff between expected makespan and instability. 
+ 	Finding the optimal $\xt$ for the chosen $\xE$ and $\alpha$ is achieved by solving the LP model presented below.	
+ 	
+  	\begin{align}
+ 		\min \qquad & \hat{f}(\xt) := \left[ 
+ 			\alpha  \left( \frac{1}{|\xSC|} \sum_{\xsc \in \xSC} s^{\xsc}_n \right) +
+ 			(1-\alpha)  \left( \frac{1}{|\xSC|} \sum_{i=1}^{n}  \sum_{\xsc \in \xSC} (s^{\xsc}_i - t_i) \right)
+ 			\right] \\
+ 		\textrm{s.t.} \qquad & s^{\xsc}_j \geq s^{\xsc}_i + d^{\xsc}_i \qquad \forall (i,j) \in \xE, \xsc \in \xSC \\
+ 							 & s^{\xsc}_i \geq t_i \qquad \forall i=1,\ldots,n
+ 	\end{align}
+  	
+ 	Here, $\Gamma \subseteq \mathbb{R}^n$ is a sample (of adequate size) of stochastic vector $\xD$,
+ 	used in estimating expected values in the objective.
+ 	The realization of activity durations under sample scenario $\xsc \in \Gamma$ 
+ 	is represented by vector $\xd^{\xsc} = (d^{\xsc}_1, \ldots, d^{\xsc}_n)$.
+ 	The corresponding realized schedule is $p((\xE,\xt),\xd^{\xsc}) = (s^{\xsc}_1, \ldots, s^{\xsc}_n)$,
+ 	as computed by the model constraints.
+ 	The solution is a proactive schedule $\xt=(t_1,\ldots,t_n)$ that optimizes the tradeoff between
+ 	expected makespan and instability for the given es-policy $\xE$. 
+ 	More emphasis can be put on either minimizing makespan or minimizing instability by choosing $\alpha$.
+	This LP model has $n$ linear variables $t_i$ and $n \cdot |\Gamma|$ linear variables $s^{\xsc}_i$.
+	
+	Note that $\xt$ is not guaranteed to be 
+	(precedence and resource) feasible with respect to mean activity durations
+	(as required in the work of van de Vonder \cite{van2008}).
+	Including the following constraint enforces $\xt$ to hold this property.
+	\[
+		t_j \geq t_i + \mathbb{E}[D_i] \qquad \forall (i,j) \in \xE
+	\]
+	However, we feel that this property only adds to the organizational value of $\xt$
+	when mean values are reasonable estimates of activity durations.
+	
+	\section{Exact Mixed Integer LP approach}
+	\label{sec-milp}
+	
+	Artigues et al. \cite{artigues2003insertion}
+	treat RCPSP as a flow-network problem.
+	The solution is represented as a resource flow.
+	They propose a MILP model.
+	Leus study the equivalence between a resource flow and an es-policy.
+	In their work with Artigues they extend this model with robust optimization techniques.
+	We will show that the model of Artigues can be extended 
+	in order to find optimal es-policies for the S-RCPSP (just a sketch, needs re-writing).
+	
+	\subsection{The RCPSP model of Artigues et al.}
+	 
+	Artigues et al. \cite{artigues2003insertion}
+	represent a solution to the RCPSP as a so-called \emph{resource-flow}
+	$\xf \in \mathbb{R}^{n\times n\times m}_0$;
+	an assignment to variables $f_{ijr}$ associated 
+	with each pair of activities $(i,j) \in N^2$ and each resource $r \in R$.
+  	A resource-flow describes the "passing" of resource units inbetween activities.
+ 	More precisely, $\xf$ is an indirect representation of every schedule $\xs$ in which
+ 	$f_{ijr}$ units of resource $r$ are released by activity $i$ at its completion $s_i+d_i$
+ 	and then "picked up" by activity $j$ at its start $s_j$,
+ 	without another activity using these units between $s_i+d_i$ and $s_j$.
+ 	
+ 	A resource-flow is feasible when it satisfies
+ 	\begin{align}
+ 		\sum_{j \in N-\{i\}} f_{jir} = q_{ir}	\quad	\forall i \in N-\{1\} \label{eq-rf-1} \\
+ 		\sum_{j \in N-\{i\}} f_{ijr} = q_{ir} 	\quad	\forall i \in N-\{n\} \label{eq-rf-2}
+  	\end{align}
+ 	Eq. $(\ref{eq-rf-1})$ asks that each activity $i$ (except for the sink)
+ 	receives as many resource units as it requires the moment it starts.
+ 	Eq. $(\ref{eq-rf-2})$ asks that each activity $i$ (except for the source)
+	releases as many resource units as it has used the moment it finishes.
+	
+	The flow network $G(N,\phi(\xf))$ associated with $\xf$ is defined as
+	$\phi(\xf) := \{(i,j) \in N^2: f_{ijr} > 0 \textrm{ for some } r \in R\}$;
+	i.e. there is an arc from each activity to every other activity it
+	passes at least one resource unit to.
+  	As shown by Leus \cite{leus2011resource,leus2011robust},
+  	feasible resource-flows and es-policies are interrelated:
+  	$\xE = E \cup \phi(\xf)$ is a feasible es-policy if
+  	$\xf$ is a feasible resource-flow (and $G(N,\xE)$ is acyclic).
+  	Therefore, every schedule which satisfies $G(N,\xE)$ is feasible.
+  	The following MILP model proposed by Artigues et al.
+  	enables one to find a feasible resource-flow $\xf$
+  	which minimizes the cost (described by function $g$)
+  	of a schedule $\xs$ which satisfies the 
+  	temporal constraints of $G(N,E \cup \phi(\xf))$.
+   	
+   	\begin{center}
+  	\begin{tabular}{ l l  r  l}
+  	min.	&	$g(\xs)$									&	& \\
+  	s.t.	&	$f_{ijr} \leq M z_{ij}$					&	$\forall (i,j) \in N^2, r\in R$ & ($i$) \\
+  			&	$s_j \geq s_i + d_i - M(1-z_{ij})$		&	$\forall (i,j) \in N^2$	& ($ii$) \\
+  			&	$z_{ij} = 1$							&	$\forall (i,j) \in E$	& ($iii$) \\
+  			&	$f_{ijr} \geq 0, z_{ij} \in \{0,1\}$	&	$\forall (i,j) \in N^2, r\in R$ & ($iv$) \\
+  			&	(\ref{eq-rf-1}), (\ref{eq-rf-2})		& & ($v$)
+  	\end{tabular}
+  	\end{center}
+  	
+  	Here $M$ is a large constant.
+  	Due to constraint ($v$) $\xf$ is a feasible resource-flow.
+  	Due to ($i$), if $f_{ijr} > 0$ for some $r \in R$ then $z_{ij} = 1$.
+  	Thus, variables $z_{ij}$ describe the flow-network $\phi(\xf)$ of the resource-flow
+  	(i.e. $\phi(\xf) = \{(i,j)\in N^2 : z_{ij}=1\}$).
+  	Due to ($ii$) and ($iii$), $\xs$ describes a schedule which 
+  	satisfies the temporal constraints in $G(N,E\cup \phi(\xf))$.
+  	Since $\xf$ is a feasible resource-flow, $\xs$ is a feasible schedule.
+  	
+  	\subsection{Extension for S-RCPSP}
+  	
+  	Define the indexing set $S := \{1,\ldots,|\Omega|\}$
+  	where $\Omega$ is a sample of stochastic activity durations vector $\xD$.
+  	This section proposes a trivial extension to the aforementioned model
+  	which enables us to find optimal es-policies for the S-RCPSP
+  	(i.e. accounting for stochastic activity durations).
+  	
+  	\begin{center}
+  	\begin{tabular}{ l l  r  l}
+  	min.	&	$\mathbb{E}[C]$		&	& \\
+  	s.t.	&	$s^s_j \geq s^s_i + d^s_i - M(1-z_{ij})$	&	$\forall (i,j) \in N^2, s\in S$ & ($ii'$) \\
+  			&	(\ref{eq-rf-1}), (\ref{eq-rf-2}), ($i$), ($iii$), ($iv$)		& &	
+  	\end{tabular}
+  	\end{center}
+  	
+  	For each scenario indexed by $s \in S$
+  	the corresponding schedule is an assignment to variables $(s^s_1, \ldots, s^s_n)$.
+  	Moreover, the objective now becomes to minimize the expected cost
+  	\begin{align}
+  		\mathbb{E}[C] = \frac{1}{|\Omega|} \sum_{s\in S} g(\xs^s)
+  	\end{align}
+  	where $g$ is a (linear) cost function such as the makespan.
+  	
+  	\subsection{Extension for PS-RCPSP}
+  	
+  	Here we extend the previous model by including a variable $t_i$ for each $i\in N$,
+  	which determines the activity's proactive starting time.
+  	The objective now accounts for nervousness along with expected cost.
+  	
+  	\begin{center}
+  	\begin{tabular}{ l l  r  l}
+  	min.	&	$\alpha \cdot \mathbb{E}[C] 
+  				+ (1-\alpha) \cdot \mathbb{E}[\Delta]  $		&	& \\
+  	s.t.	&	$s^s_i \geq t_i$	&	$\forall i \in N, s\in S$ & ($v$) \\
+  			&	$ \xt \in \mathbb{R}^n$	& & ($vi$) \\
+  			&	(\ref{eq-rf-1}), (\ref{eq-rf-2}), ($i$), ($ii'$), ($iii$), ($iv$)		& &	
+  	\end{tabular}
+  	\end{center}
+  	
+ 	Here, $\alpha$ is a parameter controlling the tradeoff between
+ 	expected cost and nervousness.
+ 	$\Delta$ measures nervousness as the total expected tardiness, defined as
+ 	\begin{align}
+ 		\mathbb{E}[\Delta] := \frac{1}{|\Omega|} \sum_{i\in N} \sum_{s \in S} (s^s_i - t_i)
+ 	\end{align}
+ 
+ 	\begin{proposition}
+ 	\label{pro-1}
+
+ 	Define $E_z := \{(i,j) : z_{ij} = 1\}$ the arcs of the flow-network
+ 	$G(N, E \cup \phi(\xf))$ associated with resource-flow $\xf$.
+ 	Let $\xf, \boldsymbol{z}, \xs, \xt$ be an optimal solution.
+ 	For each scenario index $s \in S$,
+ 	$\xs^s$ is the earliest-start schedule of $G(N, E_z)$ but such that
+ 	a activity $i$ never starts before $t_i$
+ 	(i.e. $\xt$ prescribes proactive release-times).
+  	\end{proposition}
+ 	
+ 	\begin{proof}
+ 	Let $\bar{\xs}^s$ denote the earliest-start schedule of $G(N,E_z)$ for $s\in S$ but
+ 	such that $\bar{s}^s_i \geq t_i$.
+ 	Assume that $s^s_i = \bar{x}^s_i + \delta$ for some $s \in S, i \in N$, with $\delta > 0$.
+ 	But $\mathbb{E}[\Delta]$ increases monotonically with $\xs^s$
+ 	which contradicts  $\xs^s$ being an optimal assignment
+ 	in combination with $\xf, \boldsymbol{z}, \xt$.
+ 	\hfill $\Box$
+ 	\end{proof}
+	
+	By Proposition~\ref{pro-1} it follows that
+	an optimal solution defines a pair $(\xE,\xt)$ (where $\xE := \{(i,j) : z_{ij}=1\}$)
+	which optimizes the tradeoff between expected cost and nervousness.
+	To our knowledge this is the first exact proactive-reactive scheduling method 
+	which integrates the proactive and the reactive steps.
+	
+	Moreover, this model constitutes a unified framework for
+	scheduling with and without uncertainty,
+	encompassing the deterministic RCPSP, the S-RCPSP and the PS-RCPSP.
+	E.g., as an alternative to Stork's branch-and-bound method \cite{stork2000branch},
+	one may choose $\alpha = 1$ to find optimal es-policies for the S-RCPSP.
+ 	
+	\section{Iterative flattening heuristic}
+ 	\label{sec-heur}
+ 	
+ 	Even for small instances (e.g. with 30 activities and 4 resources),
+ 	solving the proposed model might take an inordinate amount of time.
+ 	We propose an algorithm (Algorithm~\ref{alg-if})
+ 	inspired by the iterative flattening heuristic of Cesta et al. \cite{}.
+ 	The proposed algorithm involves solving a sequence of 
+ 	sufficiently small subproblems with non-increasing optimal objective values.
+ 	Each iteration involves solving a partially solved instance to optimality.
+ 	Thus, worst-case complexity is exponential in the number of activities.
+ 	In practice, however, "good" solutions can be obtained with relative efficiency.
+  	
+ 	\begin{algorithm}
+ 		\caption{Iterative flattening for PS-RCPSP}
+ 		\label{alg-if}
+ 		\begin{algorithmic}[1]
+ 		\STATE $\xs \leftarrow$ schedule for RCPSP $(N,R,E,\mathbb{E}[\xD],\xq,\xb)$
+ 		\STATE $\xE^{*} \leftarrow E \cup \phi(\xf^{\xs})$ with $\xf^{\xs}$ extracted from $\xs$
+ 		\STATE $\xt^{*} \leftarrow (0,\ldots,0)$
+ 		%\STATE $k \leftarrow 0$
+ 		
+ 		\WHILE {termination criteria not met}
+ 			\STATE $\mathcal{H} \leftarrow$ random subset of $\xE^{*}-T(E)$ chosen by criticality probability
+ 			\STATE $(\xE,\xt) \leftarrow$ 
+ 					optimal solution for PS-RCPSP $(N,R,\xE^{*}-\mathcal{H},\xD,\xq,\xb,\alpha)$
+ 			\IF {$(\xE,\xt)$ has a lower objective than $(\xE^{*},\xt^{*})$}
+ 				\STATE $(\xE^{*},\xt^{*}) \leftarrow (\xE,\xt)$
+  			\ENDIF
+  			%\STATE $k \leftarrow k + 1$
+ 		\ENDWHILE
+ 		\STATE return $(\xE^{*},\xt^{*})$
+ 		\end{algorithmic}
+ 	\end{algorithm}	
+ 	
+ 	Algorithm~\ref{alg-if} assumes as input an instance of the
+ 	PS-RCPSP.
+ 	According to aforementioned notation,
+ 	the instance is represented as $(N,R,E,\xD,\xq,\xb,\alpha)$.
+ 	An initial solution is obtained by solving a
+ 	deterministic RCPSP (lines 1-3)
+ 	which can be done efficiently with one of the various existing heuristics.
+ 	This solution will serve as a starting point for the first iteration,
+ 	which is described as follows.
+ 	A partial solution is formed by removing a random 
+ 	subset of highly critical arcs from the current solution (line 6).
+ 	The resulting subproblem is solved to optimality (by use of the proposed model)
+ 	and a complete solution is obtained (line 7).
+ 	If this new solution is better,
+ 	it becomes the starting point of the next iteration.
+ 	The algorithm may terminate when, e.g., a chosen
+ 	number of iterations have been performed,
+ 	or the objective has failed to improve a certain number of times. 
+ 	
+ 	Note that the optimal solution $(\xE,\xt)$   
+ 	of the subproblem solved in each iteration
+ 	cannot be worse than the best solution seen so far, $(\xE^*,\xt^*)$.
+ 	To improve performance one may use $(\xE^*,\xt^*)$ as an initial solution when solving the model (line 6).
+ 	Furthermore, to reduce the number of binary variables $z_{ij}$ in the model, 
+ 	one may let $z_{ij}=1$ for each $(i,j) \in T(\xE^* -  \mathcal{H})$ and $z_{ij}=0$ for
+ 	each $(j,i) \in  T(\xE^* - \mathcal{H})$.
+ 	
+ 	\section{Experiments with PSPLIB}
+ 	\label{sec-exp}
+ 	
+ 	\begin{figure}
+ 		\centering
+ 		\includegraphics[width=0.8\textwidth]{makespan_vs_nerv0.eps}
+ 		\caption{Trading makespan for stability.}
+ 		\label{fig-low}
+ 	\end{figure}
+ 	
+ 	\begin{table}
+ 	\centering
+ 	\begin{tabular}{l l l | l l l | l l l}
+ 	\hline
+ 			 			& 		   & 			   & \multicolumn{3}{c}{makespan} & \multicolumn{3}{c}{nervousness} \\
+   	variance			& $\alpha$ & sample size   & ours   &   ccp &   stc			&  ours  &  ccp   & stc \\
+   	\hline
+ 	\multirow{6}{*}{low}&  --      &  --		   & --    & 80.8  & 80.9			& --    & 0.09   & 0.12 \\
+ 						&  0.05	   &  50		   & 71.1  & 80.4  & 80.1			& 0.49  & 0.11   & 0.17 \\
+ 						&  0.10	   &  50		   & 69.3  & 78.0  & 77.6			& 0.69  & 0.19   & 0.39 \\
+   						&  0.15	   &  50		   & 67.4  & 76.3  & 75.9			& 0.92  & 0.31   & 0.63 \\
+  						&  0.20	   &  50		   & 66.5  & 74.1  & 73.7			& 1.26  & 0.62   & 1.14 \\
+  						&  0.25	   &  50		   & 65.0  & 72.4  & 71.9			& 1.59  & 1.07   & 1.84 \\
+   	\hline
+ 	\multirow{6}{*}{medium}&  --      &  --		   & --    & 102.8  & 103.0			& --    & 0.19   & 0.13 \\
+ 						&  0.05	   &  50		   & 97.8  & 102.2  & 101.5			& 0.21  & 0.22   & 0.19 \\
+ 						&  0.10	   &  50		   & 88.5  & 98.7  & 97.8			& 0.92  & 0.34   & 0.41 \\
+   						&  0.15	   &  50		   & 84.4  & 95.5  & 94.5			& 1.37  & 0.54   & 0.76 \\
+  						&  0.20	   &  50		   & 81.0  & 91.5  & 90.3			& 1.96  & 0.98   & 1.36 \\
+  						&  0.25	   &  50		   & 65.0  & 78.9  & 87.1			& 2.53  & 1.62   & 2.20 \\
+   	\hline
+   	\multirow{6}{*}{high}&  --      &  --		   & --    & 124.8  & 125.3			& --    & 0.28   & 0.15 \\
+ 						&  0.05	   &  100		   & 125.5  & 123.7  & 123.0		& 0.24  & 0.32   & 0.22 \\
+ 						&  0.10	   &  100		   & 119.9  & 118.5  & 117.3		& 0.31  & 0.50   & 0.52 \\
+   						&  0.15	   &  50		   & 112.2  & 114.5  & 113.0		& 0.83  & 0.76   & 0.87 \\
+  						&  0.20	   &  50		   & 102.5  & 108.6  & 107.0		& 1.53  & 1.36   & 1.68 \\
+  						&  0.25	   &  50		   & 97.2  & 103.8  & 102.4			& 2.28  & 2.26   & 2.69 \\
+  	\hline 		
+   	\end{tabular}
+  	\caption{Trading makespan for stability.}
+  	\end{table}
+ 	
+	\begin{acknowledgements}
+	Put any acknowledgements here, or delete this section
+	\end{acknowledgements}
+	
+	% BibTeX users please use one of
+	\bibliographystyle{plain}      % basic style, author-year citations
+	%\bibliographystyle{spmpsci}      % mathematics and physical sciences
+	%\bibliographystyle{spphys}       % APS-like style for physics
+	\bibliography{p}   % name your BibTeX data base
+	
+	% Non-BibTeX users please use
+	%\begin{thebibliography}{}
+	%
+	% and use \bibitem to create references. Consult the Instructions
+	% for authors for reference list style.
+	%
+	%\bibitem{RefJ}
+	% Format for Journal Reference
+	%Author, Article title, Journal, Volume, page numbers (year)
+	% Format for books
+	%\bibitem{RefB}
+	%Author, Book title, page numbers. Publisher, place (year)
+	% etc
+	%\end{thebibliography}
+	
+	\end{document}
+	% end of file sample.tex
+	
+	

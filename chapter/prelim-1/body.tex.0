@@ -1,0 +1,333 @@
+
+% stray pieces
+	%Dyo apla paradeigmata enos plan me temporal constraints parousiazetai tin eikona 1.
+	%Aristera vlepoume ena plan tou typou precedence constraint network,
+	%me duo mono tasks, onomazomena i kai j, ta opoia sxetizontai me ena precedence constraint.
+	%To eikonizomeno constraint simatodotei oti, to event j den mporei na ginei protou to task i exei ginei.
+	%Deksia vlepoume ena pio genikou tupou plan, plai me duo tasks sxetizomena me ena pio periploko temporal constraint.
+	%To eikonizomeno constraint simatodotei oti i xronikh apostash metaksy twn events i kai j 
+	%prepepi na einai metksy d_[ij] kai d_[ji] na ksekinisei protou to task i exei teleiwsei.
+	% todo: google scholar returns 1400 articles with the word 'scheduling' in the title, 
+	% published over the last year (2016) alone.
+
+%% from planning & scheduling to dynamic scheduling
+
+	\annotate{planning and scheduling are important}
+		Planning and scheduling are remarkably useful, if not indispensable, 
+		for orchestrating operations in a wide variety of contexts.
+		
+	\annotate{Distinction between planning and scheduling}
+		The terms planning and scheduling are often used interchangeably.
+		In line with computer science literature, however, 
+		this thesis adopts a clear distinction between the two:
+		Planning amounts to breaking-down a large process (e.g. carrying-out a construction project, or navigating a rover on a space-mission) into small units of work, 
+		often known as \emph{activities}, \emph{actions}, or \emph{tasks}.
+		Scheduling, on the other hand, amounts to finding \emph{dispatching times} for the tasks of a given plan, or in other words forming a \emph{schedule}. 
+		The schedule must typically satisfy \emph{temporal constraints} between pairs of tasks, restricting the allowed temporal distance between their dispatching times.
+		Depending on the operational context, the schedule might also need to satisfy other constraint types such as resource-constraints, 
+		to prevent tasks from oversubscribing to resources.
+
+		The work presented in this thesis focuses on a collection of scheduling problems, 
+		assuming that an adequate plan has already been synthesized.
+
+	\annotate{many types of scheduling problems in the literature}
+		Owing to the applicability of scheduling in a wide variety of operational contexts,
+		existing literature comprises a vast landscape of different problem models and associated solution techniques.
+		Indicatively, \emph{Google Scholar} returns over eight thousand articles and books
+		with the word \texttt{scheduling} in the title, published within the year 2016 alone.
+
+	\annotate{motivated by scheduling in the nedtrain depot}
+		Much like a large body of existing literature,
+		this dissertation also draws inspiration from a real-world application of scheduling.
+		More in particular, we are motivated by the problem of scheduling maintance operations for the train-fleet of 
+		\emph{Nederlandse Spoorwegen} (NS)\footnote{\texttt{http://www.ns.nl}}, the primary railway operator in the Netherlands. 
+		Such maintenance operations are carried-out by a subcontractor of NS, 
+		namely \emph{NedTrain}\footnote{\texttt{http://www.nedtrain.nl}}.
+		This particular Ph.D project\footnote{\texttt{http://www.alg.ewi.tudelft.nl/research-topics/scheduling-maintenance-operations/}} 
+		is part of \emph{NedTrain}'s \emph{Rolling Stock Life Cycle Logistics applied research and development programme}.
+
+	\annotate{ongoing scheduling: either desired or unavoidable}
+		In this application, and in fact in most real-world applications, generating a one-off schedule is not sufficient.
+		In practice, it is often \emph{unavoidable} and/or \emph{desired} to postpone scheduling and dispatching decisions into the future.
+
+	\annotate{NedTrain scheduling as an example}
+		For example, instead of commiting to a strict baseline schedule,
+		the actors (or human resources) partaking in the NedTrain maintenance tasks actually prefer to have a certain degree of freedom in choosing when to dispatch a task.
+		In fact, postponing dispatching decisions is not only preferable in this operational context, but also unavoidable.
+		A train might arrive unpredictably late at the maintenance depot, or a task might require more time than originally estimated for its completion.
+		Such unpredictable delays might easily render the initial schedule infeasible.
+		Moreover--and this constitutes a high-impact source of uncertainty in the maintenance depot--the very synthesis of the plan is uncertain.
+		The reason is that the actual condition of a train is not entirely known before it undergoes inspection.
+		As such, a repair task that was proactively included in the schedule might turn out to be unnecessary,
+		or it might turn out that an omitted repair task should be included in the schedule. 
+
+	\annotate{dynamic scheduling with no baseline schedule}
+		Anagnwrizontas loipon oti to scheduling ston pragmatiko kosmo einai ena ongoing process,
+		mia epilogi einai na parakampsume entelws tin paragwgi enos schedule kai na vasistoume se ena entelws dynamiko tropo diekpairewshs vasei dispatching rules.
+		Ontws ena kommati tis vivliografias exei afierwthei stin euresi tetoiwn dispatching rules ta opoia kanoun optimize kapoio kritirio.
+		Mporoume na anaferoume gia paradeigma sta scheduling policies, i ta STNUs.
+	
+		Omws auto to type of entirely dynamic scheduling pou kanei delegate ola ta dispatching decisions sto mellon einai se polles efarmoges akatallhlo.
+		Se oti akolouthei that diakrinoume merika apo ta pio simantika drawbacks mias tetoias entelws dinamikhs methodou.
+
+%% from dynamic scheduling to generic RQs
+
+	\annotate{drawbacks of entirely dynamic scheduling}
+		% the following can be potentially omitted
+		Se polles efarmoges tou scheduling uparxoun actors pou kalountai na diekpairewsoun to plan.
+		Daneizomenoi ena paradeigma apo to reference [], as doume to scheduling tou airport turnaround process,
+		kata to opoio diafora services prepei na ginoun provided kapoia services sto aerpolano stin pylh, opws de-boarding, cleaning, or fueling.
+		Auta ta services synithws parexontai apo diaforetikus actors oi opoioi prepei syllogika
+		na diekpairewsoun ena plan symfwna me sigkekrimena timing restrictions.
+		Ws ena enallaktiko paradeigma mporoume na fantastoume ena construction project,
+		sto opoio kapoia tasks opws i ekgatastash ilektrikou, ydravlikou, i to vapsimo prepei na ginoun apo diaforetikous actors.
+
+		% 1o thema: desmeush gia diathesimotita ana pasa stigmh kai eleipsh visibility of future events
+		Ena schedule parexei oratotita (even if questionable in uncertain conditions) sta mellontika task start and completion events.
+		Auti i paroxi oratotitas sto mellon einai simantiki stous actors pou metexoun sta tasks, alla kai se pithanous ekswterikous tous synergates.
+		Kata tin diarkeia enos ergou maintenance, gia paradeigma, 
+		mono vasei schedule mporoume na gnwrizoume ti stigmh (h xroniko parathuro) sto opoio 
+		sugkekrimeno proswpiko kai eksoplismos prepei na vriskontai se etoimotita gia na ektelesoun mia ergasia.
+		Enas tropos scheduling pou den parexei visibility of future events apaitei apo tous actors na kanoun mia eksairetika isxyrh desmeush:
+		na einai etoimoi ana pasa stigmh gia tin summetoxi se task, kathws to dispatching time tou task tha kathoristei dunamika kai aprovlepta.
+
+		% 2o thema: coordination mesw synchronous communication
+		Epipleon, me ena entelws dynamiko tropo scheduling,
+		gia na diasfalistei ena feasible dispatching,
+		o kathe actor tha prepei na paratirei ta dispatching decisions twn allwn.
+		Omws ena tetoio synchronous communication mporei na min einai epithymito, h akoma kai efikto.
+		Epistrefwntas sto paradeigma tou airport turnaround process, 
+		oi actors pou parexoun services synithws antistoixoun se diaforetikes etaireies.
+		Anti na xreiazetai na antallaksoun plirofories gia ta eswterika tous schedules,
+		einai protimotero na mporei o kathe actor na kanei dispatch ta tasks tou lamvanontas 
+		up'opsin o kathenas mono ta dika tou eswterika constraints kai veltistopoiwntas dika tou kritiria.
+
+	\annotate{the resulting conflict}
+		Apo ti mia loipon gnwrizoume oti ta dispatching decisions anavalontai gia to mellon ston pragmatiko kosmo,
+		apo tin alli diakrinoume simantika drawbacks otan to dispatching ginetai me entelws dinamiko tropo.
+		Auto mas odigei stin anazhthsh apanthshs sta parakatw erwthmata:
+
+	\annotate{generic research questions}
+		% symperasma
+		Dedomenwn twn proklhsewn pou anadeiksame proigoumenws egeiroume ta parakatw erwthmata.
+		- dinatotita stous actors na kanoun desmeuseis se sigkekrimena dispatching times i time-ranges
+		- auta ta dispatching times i time-ranges na einai prostateumena apo to uncertainty;
+		  diladi na min xreiazetai na anaprosarmozontai dynamika logw tis aprovleptis simperiforas allwn actors i allwn paragontwn avevaiotitas
+
+%% from generic RQs to refined RQs
+
+	\annotate{high-level look at the two parts}
+		This thesis summarizes results for two different types of scheduling problems and as such it is divided into respective parts I and II.
+
+		Both types of problems belong to the research area of scheduling under uncertainty, 
+		but uncertainty has a different meaning in each of the two cases.
+		Despite their differences, parts I and II have an underlying theme in common: 
+		beyond finding a fixed schedule for a given scheduling problem,
+		we are interested in finding a strategy for adjusting the solution in a continuous scheduling process.
+
+		Part I focuses on problems related to dispatching instantaneous events subject to Simple Temporal Problem (STP) constraints.
+		Such constraints restrict the minimum and maximum temporal distance between the dispatching of pairs of events.
+		It is assumed that each event is associated with a respective actor that will choose when to dispatch his event from a respective time-window.
+		Uncertainty in this case results from not being able to predict how an actor will choose within a given time-window.
+		We are interested in finding a \emph{flexible} strategy for initializing these time-windows and updating them as choices are being made,
+		striving to maximize the freedom with which actors can make choices as events keep getting dispatched.
+
+		Part II focuses on problems related to dispatching non-instantaneous events that correspond to tasks with random durations,
+		subject to simple precedence constraints and resource constraints.
+		Uncertainty in this case results from not being able to predict the outcome duration of a task.
+		We are interested in finding a dispatching strategy that enables us to predict with some confidence the outcome start-times of the tasks, 
+		even though the outcome task durations are unpredictable.
+		More in particular, we are interested in finding a strategy that optimizes the trade-off between two conflicting qualities:
+		dispatching tasks efficiently and dispatching tasks predictably.
+
+	\section{Research Questions -- Part I}
+
+	\annotate{What are STNs and how are they useful?}
+		The first part of this thesis focuses on problems related to the dispatching of instantaneous events 
+		subject to Simple Temporal Problem (STP) constraints.
+		A STP is a type of Temporal Constraint Satisfaction Problem (TCSP) \cite{} that enables us to model 
+		certain scheduling processes in Artificial Intelligence and other research areas.
+		Simply put, STP constraints restrict the minimum and maximum temporal distance between the dispatching of pairs of events.
+		Each event is associated with a respective \emph{time-variable}.
+		A solution to a STP is a \emph{schedule}: an assignment to time-variables satisfying all pair-wise distance constraints.
+		Successfully dispatching the events will lead to the realization of a feasible schedule.
+		To accomplish this one must be able to continuously answer the following basic query:
+			Given a partial schedule (i.e. that some events have been dispatched at certain times), 
+			within which time-windows shall we dispatch remaining events to ensure that a feasible schedule can be realized?
+
+		% todo: needs some further work here
+		Answering such queries can be done efficiently (in low-order polynomial time) with \emph{constraint propagation} algorithms
+		that manipulate a graph representation of the given STP, known as the Simple Temporal Network (STN).
+		In this representation, each time-variable associated with an event is a node and 
+		each minimum (maximum) pair-wise distance constraint between two time-variables is a weighted arc.
+		Effectively, the STP/STN machinery enables us to maintain a compact encoding of all potentially realizable schedules 
+		and decide on-the-fly how to extend the partial schedule.
+
+	\annotate{The concept of flexibility - RQ1}
+		This degree of freedom during dispatching, as opposed to commiting to a fixed schedule from the start,
+		is the main attractive characteristic of STPs, especially for scheduling in a dynamic environment.
+		Intuitively, the larger the solution-space (i.e. the number of feasible schedules), 
+		the greater the amount of freedom in choosing preferable yet feasible dispatching timepoints.
+		For this reason, an important concept often encountered in the literature is the \emph{flexibility} of a given STP,
+		which is conceptually proportional to the size of its solution-space.
+
+		The main challenge in defining a flexibility metric for STPs is to come up with something efficient to compute and yet accurate.
+		The most widely accepted flexibility metric essentially measures the perimeter of an outter approximation of the solution-space.%
+		\footnote{The solution-space of a STP is generally a polytope.}
+		An attractive property of this metric is that it can be computed efficiently as a by-product of constraint propagation;
+		more specifically via an all-pairs-shortest-path computation on the STN.
+		However, as pointed out by Wilson et al. \cite{} the main downside of this \emph{naive flexibility} metric is that it can 
+		seriously over-estimate the actual amount of flexibility in a given STP.
+
+		Wilson et al. managed to define a more accurate metric,
+		namely the \emph{concurrent flexibility} metric,
+		which essentially measures the perimeter of an inner approximation of the solution-space and so does not account for any infeasible schedules.
+		Unfortunately, however, this metric has been defined in terms of a linear program (LP) and as such,
+		computing the concurrent flexibility of a given STP can be substantially more costly than computing its naive flexibility.
+		This observation lead us to the following question:
+
+		\begin{quote}
+			\textbf{Research Question 1:}
+			{Is it possible to compute the concurrent flexibility as efficiently as the naive flexibility, in low-order polynomial time?}
+		\end{quote}
+
+	\annotate{Multiple agents controlling variables - RQ2, RQ3}
+		In several applications of STPs, events are associated with respective actors who control their dispatching.
+		If two events are controlled by different actors, ensuring they are dispatched at a feasible temporal distance requires communication.
+		However, a dispatching process that relies on synchronous communication is often undesired,
+		mainly because it restricts the autonomy and flexibility of actors and also because it may raise privacy concerns.
+		As a result, a (relatively small) body of literature focuses on the so-called \emph{temporal decoupling problem}.
+		This problem asks to transform the given joint STP by decoupling the parts controlled by different actors.
+		The resulting STP must enable each actor to decide when to dispatch variables he controls without having to consider the dispatching decisions of other actors. 
+		Effectively, actors realize individual partial schedules that when merged, always constitute a feasible joint schedule.
+
+		Decoupling a given STP involves tightening the constraints which are local to each individual actor
+		(i.e. only involve variables the actor controls) so as to imply shared constraints.
+		As a result, the solution-space of the resulting STP is a subset of that of the original STP.
+		As such, the main challenge in finding a decoupling is to retain as much of the original flexibility as possible.
+
+		Hunsberger first formally defined the decoupling problem and proposed heuristics for 
+		maximizing the amount of retained flexibility, with no guarantee of optimality.
+		Planken et al. showed that finding an optimal temporal decoupling is in general NP-hard,
+		but a decoupling that optimizes a linear function of the time-variables (unlike the flexibility metric used by Hunsberger) 
+		can be found in polynomial time by solving a LP.
+		In contrast with both aforementioned approaches which are centralized, 
+		Boerkoel and Durfee proposed a distributed algorithm for finding a temporal decoupling. 
+		Their approach deals with privacy concerns that the actors might have,
+		since it does not require a central process that can modify and access the whole joint STP.
+
+		All methods discussed so far aim at maximizing the retained amount of (the not so accurate but easy to compute) naive flexibility. 
+		Wilson et al., on the other hand, stumbled upon an interesting result:
+		their LP approach for computing the concurrent flexibility of a STP gives, as a by-product,
+		an optimal \emph{total decoupling}, that retains the maximum amount of concurrent flexibility.
+		A total decoupling enables dispatching each time-variable in isolation from every other variable.
+		It can be used in the extreme case with as many agents as there are events, each agent controlling his own event.
+		A total decoupling is specified as a so-called \emph{interval schedule}:
+		a time-window per event within which the controlling agent can dispatch 
+		the event without having to notify other agents or account for their choices.
+		This approach facilitates a particularly efficient dispatching process,
+		considering that dispatching an event amounts to simply picking a suitable time from its time-window, in constant time.
+		Moreover, it facilitates an optimally flexible dispatching process as far as the more accurate concurrent flexibility metric is concerned.
+		However, a disadvantage of the total decoupling approach of Wilson et al. involves solving a LP,
+		which leads us to the following question:
+
+		\begin{quote}
+			\textbf{Research Question 2:}
+			{Is it possible to obtain an optimal total decoupling in low-order polynomial time?}
+		\end{quote}
+		
+		Furthermore, the total decoupling approach of Wilson et al. provides a fixed interval schedule to carry out dispatching with a certain amount of flexibility per event,
+		as reflected by the width of the associated time-window.
+		Eventually, however, the agent controlling an event becomes ready to commit to a specific time (or time range) within the associated time-window.
+		This gives us the opportunity to further increase the flexibility of the dispatching process by continuously redistributing 
+		unused flexibility over the yet-undispatched events whenever some agents commit to a specific time (or time-range) for their events.
+		Note, however, that significantly altering time-windows each time unused flexibility is redistributed might be disruptive.
+		Motivated by the previous observations, we raise the following question:
+
+		\begin{quote}
+			\textbf{Research Question 3:}
+			{Is it possible to dynamically redistribute unused flexibility each time some agents commit to certain times (or time-ranges), in a non-disruptive manner?}
+		\end{quote}
+
+	\section{Research Questions -- Part II}
+		% What are stochastic task networks and how are they useful?
+			Part II discusses problems related to dispatching stochastic task networks, 
+			also known as stochastic activity networks.
+			Such a network is typically represented as a directed acyclic graph.
+			Nodes correspond to non-instantaneous tasks (or activities) with \emph{random durations} and each directed edge between two tasks specifies a \emph{precedence constraint}.  
+			A stochastic task network specifies that a task may not be dispatched until its \emph{predecessors} (i.e. tasks that connect to it with an arc) have finished.
+			That is, successfully dispatching a task involves simply waiting for an arbitrary amount of time after its predecessors have finished.
+			Such networks have been used in various domains in order to model partially ordered events with random durations.
+			A notable early application of this concept are \emph{PERT networks},
+			used to model the tasks of a project that is executed in an uncertain environment.
+
+			After a task has been dispatched (or started), its finish time will be determined by its outcome duration,
+			assumed to be randomly chosen by nature according to a \emph{known} probability distribution.
+			Typically, the aim is to finish all of the tasks as quickly as possible, i.e. to realize the shortest possible \emph{makespan}.
+			Note that \emph{given} a dispatching strategy, 
+			the realized makespan depends on the outcome durations and as such, it is also a random quantity.
+
+		% stochatic PERT problem
+			A large body of literature (see \cite{}) focused on the intractable problem \cite{} of determining the makespan distribution (or its expectation), 
+			assuming \emph{earliest-start} dispatching, i.e. starting a task with no delay when its predecessors finish.
+
+		% resource constraints
+			In some applications, tasks occuppy certain amounts of one or more resources during their execution.
+			Such resources might correspond to people or equipment that participate in executing the task.
+			Note that two or more tasks which are not precedence-related may overlap, depending on the outcome durations and the dispatching strategy.
+			An arising challenge in such applications is to find a dispatching strategy that minimizes the \emph{expected makespan},
+			while guaranteeing no resources get overused, regardless of outcome durations.%
+			\footnote{Note that earliest-start dispatching is not such a strategy, since it only accounts for precedence constraints.}
+			Various \emph{classes} of such dispatching strategies, known as \emph{scheduling policies}, are still being researched \cite{}.
+			Dispatching to minimize expected makespan is said to maximize \emph{quality-robustness}, or simply robustness.
+
+		% stability
+			Even though when scheduling tasks with uncertain durations one cannot generally predict the realized schedule with certainty,
+			it is often necessary to have a \emph{predictive schedule} from which the realized schedule is not expected to deviate too far.
+			%When the focus is exclusively on minimizing expected makespan, however, 
+			%the realized schedule (i.e. the outcome task start times) is mostly unpredictable.
+			A dispatching strategy that offers a reliable predictive schedule is said to be \emph{solution-robust} or \emph{stable}.
+			Scheduling tasks efficiently and scheduling tasks predictably are usually competing objectives.
+			A relatively small and modern part of literature focuses on dispatching strategies
+			that offer a good trade-off between solution-robustness and quality-robustness. 
+
+%% from refined RQs to structure
+
+	\section{Structure}
+		The remainder of this thesis is structured as follows.
+
+		Chapter~2 offers a technical introduction to Simple Temporal Problems and Stochastic Task Networks,
+		by recalling notation, definitions, and helpful results in existing literature.
+
+		Research Question 1 is answered positively in Chapter~3.
+		We manage to show that the amount of concurrent flexibility in a given STP is
+		bounded from above by the weights of the matchings that can be formed in a weighted bipartite graph, 
+		structured according to the constraints of the STP.
+		Moreover, we show that the amount of concurrent flexibility is actually equal to the minimum-weight matching,
+		which can be computed in low-order polynomial time;
+		in fact with the same worst-case complexity as that of computing the amount of naive flexibility.
+
+		Research Questions 2 and 3 are answered positively in Chapter~4. 
+
+
+%
+% CONCLUSION
+%
+
+	Eidame duo periptwseis scheduling with uncertainty.
+	Kataferame na proteinoume scheduling techniques pou epitygxanoun tous stoxous pou thesame sto introduction.
+
+	Kai stis duo periptwseis to proteinomeno technique einai ikano na parasxei visibility.
+	Stin prwti periptwsh oi actors zitountai na desmeuthoun se time-ranges, i.e. vasei enos interval schedule.
+	Stin deuteri periptwsh oi actors zitountai na desmeuthoun sto vicinity sigkekrimenwn dispatching times, i.e. vasei enos fixed-time schedule.
+
+	Kai stis duo periptwseis to proteinomeno technique einai ikano na prostateusei ta commitments twn actors apo tin epirroh tis avevaiotitas. 
+	Stin prwti periptwsi opou i pigi avevaiotitas einai oi aprovleptes dispatching choices twn actors vasei agnwstwn kritiriwn,
+	to commitment enos actor na kanei dispatch se ena sigkekrimeno time-range de xreiazetai pote na prosarmostei vasei twn dispatching choices allwn actors.
+	Stin deuteri periptwsh opou i pigi avevaiotitas einai ta aprovlepta delays,
+	to commitment enos actor se sigkekrimeno dispatching time einai prostateumeno se elegxomeno vathmo,
+	mesw tis sophisticated eisagwghs time-buffers, lamvanontas up'opsin ena statistiko monteo tis avevaiotitas.
+
+	% no solving these problems directly
+	% someone could use my approach to actually try to solve those nedtrain
+	% did not do experiments directly on nedtrain data

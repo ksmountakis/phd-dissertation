@@ -1,0 +1,106 @@
+
+\section{Preliminaries} \label{section:prelim}
+
+\subsubsection{Simple Temporal Problems }
+A Simple Temporal Problem (STP) (also known as a Simple Temporal Network (STN)) is a pair $S = (T,C)$, 
+where $T = \{t_{0},t_{1}, \ldots, t_{n}\}$ is a set of temporal variables (events) and 
+$C$ is a finite set of binary difference constraints $t_{j}-t_{i}\leq c_{ij}$, for some real number $c_{ij}$.\footnote{If both $t_{j}-t_{i}\leq c_{ij}$ and $t_{i}-t_{j}\leq c_{ji}$ are specified, we sometimes use the more compact notations $- c_{ji}\leq t_j - t_i \leq c_{ij}$ or $t_j - t_i  \in [-c_{ji},c_{ij}]$.}The problem is to find a solution, that is a sequence $(s_0, s_1,s_2, \ldots, s_n)$ of values such that, if each $t_i \in T$ takes the value $s_i$, all constraints in $C$ are satisfied.
+%A solution to $S$ is a \emph{(point) schedule} for $S$, that is, a function $\sigma: T \rightarrow \mathbb{R}$, assigning a real value (time-point) to each temporal variable in $T$, such that all constraints in $C$ are satisfied. 
+If such a solution exists, we say that the STN is \emph{consistent}. \footnote{W.l.g., in the remainder of the paper we simply assume an STN to be consistent. Consistency of an STN can be determined in low-order polynomial time~\cite{dechter1991}.}
+In order to express absolute time constraints, the time point variable $t_{0} \in T$, also denoted by $z$, is used. It represents a fixed reference point on the timeline, and is always assigned the value $0$. 
+\begin{example} \label{ex.1}
+Consider two trains 1 and 2 arriving at a station. Train 1 has to arrive between 12:05 and 12:15, train 2 between 12:08 and 12:20. 
+People traveling with these trains need to change trains at the station. Typically, one needs at least 3 minutes for changing trains. 
+Train 1 will stay during 7 minutes at the station and train 2 stays 5 minutes before it departs.
+Let $t_i$ denote the arrival time for train $i =1, 2$. Let $t_0 =z = 0$ represent noon (12:00). To ensure that all passengers have an opportunity to change trains, we state the following
+STP $S = (T, C)$ where:
+$T = \{ z, t_1, t_2 \},$ and $C = \{  5 \leq  t_1 - z \leq 15, \  8 \leq t_2 - z \leq 20, \  -2 \leq t_2 - t_1 \leq 4  \}$.
+% C_2 &=  \{ 0 \leq t_i - z \leq 5 \mid i=1,2,3 \} \cup \{ 0 \leq t_i - t_j \leq 5 \mid 1 \leq j < i \leq 3 \}.
+%\end{align*}
+As the reader may verify, two possible solutions\footnote{Of course, there are many more.} for this STP are $s = (0,10,10)$ and $s' = (0, 15,17)$. 
+That is, there is a solution when both trains arrive at 12:10, and there is also a solution where train 1 arrives at 12:15, while train 2 arrives at 12:17.\blbox
+\end{example}
+An STP $S = (T, C)$ can also be specified as a directed weighted graph $G_S = ( T_S, E_S, l_S )$ where the vertices $T_S$ represent variables in $T$ and for every constraint $t_j - t_i \leq c_{ij}$ in $C$, 
+there is a directed edge $(t_i, t_j) \in E_S$ labeled by its weight $l_S(t_i, t_j) = c_{ij}$. 
+The weight $c_{ij}$ on the arc $(t_i, t_j)$ can be interpreted as the length of the path from $t_i$ to $t_j$. 
+Using a shortest path interpretation of the STP $S=(T,C)$, there is an efficient method to find all shortest paths between pairs $(t_i, t_j)$  
+using e.g.\ Floyd and Warshall's all-pairs shortest paths algorithm \cite{floyd:1962}. 
+A shortest path between time variables $t_i$ and $t_j$ then corresponds to a \emph{tightest constraint} between $t_i$ and $t_j$. These tightest constraints can be collected  in an $n\times n$ \emph{minimum distance matrix} $D = [ d_{ij}]$, containing for every pair of time-point variables $t_i$ and $t_j$ the length $d_{ij}$ of the \emph{shortest path} from $t_i$ to $t_j$ in the distance graph.  
+%If $D_S$ contains the entries $d_{ij}$ and $d$, then $ t_i - t_j \leq D_S[j,i] $ and $t_j - t_i \leq D_S[i,j]$ are the strongest constraints implied by $C$ with respect to the temporal difference between $t_j$ and $t_i$. 
+In particular, the first row and the first column of the distance matrix $D$ contain useful information about the possible schedules for $S$:
+The sequence $lst = (d_{00},d_{01}, \ldots, d_{0n})$ specifies the latest starting time solution for each time point variable $t_i$. 
+%The first row of $D$ contains all entries $d_{0i}$ such that $t_i - z = t_i \leq D_S[0,i]$. This means that any schedule for $S$ should satisfy $t_i \leq D_S[0,i]$. Hence, $D_S[0,i]$ is $t_i$'s \emph{latest starting time}, denoted by $\lst(t_i)$ and the assignment $\sigma_{\max}(t) = \lst(t)$, $\forall t \in T$, is the maximum schedule for $S$.
+Analogously, $est = (-d_{00}, -d_{10}, \ldots, -d_{no})$ specifies the \emph{earliest starting time} solution.
+
+\begin{example} \label{ex.2}
+Continuing Example~\ref{ex.1}, the minimum distance matrix $D$ of $S$ equals
+\begin{equation*}
+D = \left[\begin{array}{ccc}
+                  0 & 15 & 19  \\
+                  -5 & 0 & 4  \\
+                  -8 & 2  & 0
+\end{array}  \right]
+\end{equation*}
+The earliest time solution therefore is $est = (0, 5 ,8)$, and the latest time solution $lst = ( 0, 15, 19)$. \blbox
+\end{example}
+Given $S$, the matrix $D$  can be computed in low-order polynomial ($O(n^3)$) time, where $n = |T|$, see \cite{dechter:2003}.\footnote{An improvement by Planken et al.~\cite{planken:2012} has shown that a schedule can be found in $O(n^2w_d)$-time where $w_d$ is the graph width induced by a vertex ordering.} Hence, using the STP-machinery we can find earliest and latest time solutions quite efficiently.
+\subsubsection{Temporal Decoupling  }
+In order to find a solution for an STP $S = (T, C)$ all variables $t_i \in T$ should be assigned a suitable value. Sometimes these variables are controlled by different agents. That is, $T - \{z\} = \{t_1,\ldots, t_n\}$ is partitioned into $k$ non-empty and non-overlapping subsets $T_1,\ldots,T_k$ of $T$, each $T_j$ corresponding to the set of variables controlled by agent $a_j\in A= \{a_1, a_2, \ldots, a_k\}$. Such a partitioning of $T -\{z\}$ will be denoted by $[T_i]^k_{i=1}$. In such a case, the set of constraints $C$ is split in a set $C_{intra}= \bigcup^k_{i=1} C_{i}$  of intra-agent constraints and a set $C_{inter} = C - C_{intra}$ of inter-agent constraints. Here, a constraint $t_i - t_j \leq c_{ji}$ is an intra-constraint occurring in $C_h$ if there exists a subset $T_h$ such that $t_i, t_j \in T_h$, else, it is an inter-agent constraint. Given the partitioning $[T_j]^k_{j=1}$, every agent $a_i$ completely controls the (sub) STP $S_i = (T_i \cup \{z\}, C_i)$, where $C_i$ is its set of intra-agent constraints, and determines a solution $s_i$ for it, independently from the others. 
+In general, however, it is not the case that, using these sub STPs, merging partial solutions $s_i$ will always constitute a total solution to $S$:
+\begin{example} \label{ex.3}
+Continuing Example~\ref{ex.1}, let train $i$ be controlled by agent $a_i$ for $i=1,2$ and assume that we have computed 
+the set of tightest constraints based on $C$.
+Then $S_1 = (\{z, t_1\}, \{\ 5 \leq  t_1 - z \leq 15 \})$ and $S_2 =   (\{z, t_2\}, \{\ 8 \leq  t_2 - z \leq 19 \})$.
+Agent $a_1$ is free to choose a time $t_1$ between 5 and 15 and suppose she chooses 10.
+Agent $a_2$ controls $t_2$ and, therefore, can select a value between 8 and 19. Suppose he chooses 16.
+Now clearly, both intra-agent constraints are satisfied, but the inter-agent constraint $t_2 - t_1 \leq 4$ is not, since $16 - 10 > 4$. 
+Hence, the partial solutions provided by the agents are not conflict-free.\blbox
+\end{example}
+The \emph{temporal decoupling} problem for $S = (T, C)$, given the partitioning $[T_j]^k_{j=1}$, is to find a suitable set $C'_{intra}= \bigcup^k_{i=1} C'_{i}$ of (modified) intra-agent constraints such that if $s'_i$ is an arbitrary solution to $S'_i = (T_i \cup \{z\}, C'_i)$, it always can be merged with other partial solutions to a total solution $s'$ for $S$.\footnote{In other words, the set $\bigcup^k_{i=1} C'_i$ logically implies the set $C$ of original constraints.}
+
+We are interested, however, not in arbitrary decouplings, but an \emph{optimal decoupling} of the $k$ agents,
+allowing each agent to choose an assignment for its variables independently of others, while maintaining \emph{maximum flexibility}. 
+This optimal decoupling problem has been solved in \cite{wilson:2013} for the total decoupling case, that is the case where $k=n$ and each agent $a_i$ controls a single time point variable $t_i$. 
+In this  case, the decoupling results in a specification of a lower bound $l_i$ and an upper bound $u_i$ for every time point variable $t_i \in T$, such that $t_i$ can take any value $v_i \in [l_i, u_i]$  without violating any of the intra- or inter-agent constraints. This means that if agent $a_i$ controls $T_i$ then
+her set of intra-agent constraints is $C_i = \{ l_j \leq t_j \leq u_j \mid t_j \in T_i \}$.
+
+The total flexibility the agents have, due to this decoupling, is determined by the sum of the differences $(u_i - l_i)$.
+Therefore, the decoupling bounds  $l = (l_i)^n_{i=1}$ and $u = (u_i)^n_{i=1}$ are chosen in such a way that the flexibility $\sum_i (u_i - l_i)$ is maximized.
+It can be shown (see \cite{wilson:2013}) that such a pair $(l, u)$ can be obtained as a maximizer of the following LP:
+\begin{align}
+\tag{$\TD(D)$}\label{DP}
+\max_{l, u }\quad	&	\sum_i (u_i - l_i)	&				\\
+\textrm{s.t.}\quad	&	l_0 = u_0 = 0            &          \\
+& l_i \leq u_i		&	\forall i \in T	\\
+			&	u_j - l_i \leq d_{ij}	&	\forall i \neq j \in T
+\end{align}
+where $D$ is the minimum distance matrix associated with $S$.
+\begin{example}
+Consider the matrix $D$ in Example~\ref{ex.2} and the scenario sketched in Example~\ref{ex.3}.
+Then the LP whose maximizers determine a maximum decoupling is the following:
+\begin{align*}
+%\tag{$\TD(D)$}\label{DP}
+\max_{l, u}\quad	&	\sum_i (u_i - l_i)	&\  \  \  \  \  \  \   	& \  \  \  \  \ 			\\
+\textrm{s.t.}\quad	        &	u_0 = l_0 = 0,  & \\
+                                & l_1 \leq u_1, \ \  l_2 \leq u_2 & \\
+			        &	u_1 - l_0 \leq 15, \ \ u_2 - l_0 \leq 19 &   \\
+			        &      u_ 0 - l_1 \leq -5, \  \ \; u_2 - l_1 \leq 4  &     \\
+			        &     u_0 - l_2 \leq -8, \ \ \  u_1 - l_2 \leq 2 &
+\end{align*}
+Solving this LP, we obtain $\sum^2_{i=0} (u_i - l_i) = 6$ with maximizers $l = (0, 15, 13)$ and $u = (0, 15, 19)$. This implies that in this decoupling $(l, u)$ agent $a_1$ is forced to arrive at 12:15, while agent $a_2$ can choose to arrive between 12:13 and 12:19. \blbox
+\end{example}
+
+\noindent
+{\bf Remark }Note that the total decoupling solution $(l, u)$ for $S$ also is a solution for a decoupling based on an arbitrary partitioning $[T_i ]^k_{i=1}$ of $S$. Observe that $(l, u)$ is a decoupling, if for any value $v_i$ chosen by $a_h$ and any value $w_j$ chosen by $a_{h'}$ for every
+$1 \leq h \neq h' \leq k$, we have $v_i - w_j \leq d_{ji}$ and $w_j - v_i \leq d_{ij}$. Since $(l, u)$ is a total decoupling, it satisfies the conditions of the LP~\ref{DP}. Hence, $u_i - l_j \leq d_{ij}$ and $u_j - l_i \leq d_{ji}$. Since $v_i \in [l_i, u_i]$ and $w_j \in [l_j, u_j]$, we then immediately have $v_i - w_j \leq u_i - l_j \leq d_{ji}$ and $w_j - v_i \leq u_j - l_i \leq d_{ji}$.
+Therefore, whatever choices are made by the individual agents satisfying their local constraints, these choices always will satisfy the original constraints, too. \blbox\\
+
+\noindent
+{\bf Remark } In \cite{wilson:2013} the $(l,u)$ bounds found by solving the LP~\ref{DP} are used to compute the concurrent flexibility $\var{flex}(S)= \sum^n_i (u_i - l_i)$ of an STP $S$.
+Taking the concurrent flexibility as our flexibility metric, the $(l, u)$ bounds for decoupling are always optimal, whatever partitioning $[T_i]^n_{i=1}$ is used: first, observe that due to a decoupling, the flexibility of an STN can never increase. Secondly, if the $(l,u)$ bounds for a total decoupling are used, by definition, the sum $\sum^k_{i=1} \var{flex}(S_i)$ of the (concurrent) flexibilities of the decoupled subsystems equals the flexibility $\var{flex}(S)$ of the original system. Hence, the total decoupling bounds $(l, u)$ are optimal, whatever partitioning $[T_i]^n_{i=1}$ used. \blbox
+
+In this paper, we will consider concurrent flexibility as our flexibility metric. Hence, a total decoupling is always an optimal decoupling for any partitioning of variables.
+Therefore, in the sequel, we concentrate on total decouplings.
+
+
+

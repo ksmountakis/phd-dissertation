@@ -1,0 +1,72 @@
+\section{Introduction}
+
+A \emph{stochastic task network} is a directed acyclic graph $G(V, E)$ 
+with each node in $V = \{1,\ldots,n\}$ representing a task with a random duration and 
+each arc $(i,j)\in E$ representing a precedence-constraint between tasks $i$ and $j$,
+specifying that task $j$ cannot start unless task $i$ has finished.
+%
+Such networks appear in several domains like project scheduling \cite{leus2011resource}, 
+parallel computing \cite{shestak2008}, or even digital circuit design \cite{blaauw2008},
+where there is a need to model a partial order of events with uncertain durations.
+%
+Postulating that a model of uncertainty is known, 
+task durations are described by a random vector $D=(D_1,\ldots,D_n)$ with a known probability distribution.
+%
+In project scheduling, for example, the duration $D_i$ of task $i$ may turn out to be shorter or longer 
+than a nominal value according to a certain distribution.
+%In digital circuit design, a task $i$ corresponds to a gate with an input/output delay $D_i$ that 
+%varies with a certain distribution across gates due to manufacturing imperfections.
+
+A given task network is typically mapped to a \emph{realized schedule} (i.e. an assignment of start-times to tasks) via \emph{earliest-start dispatching};
+i.e. observing outcome durations and starting a task immediately when precedence-constraints allow 
+(i.e. not later than the maximum finish-time of its network predecessors).
+Random durations make the realized start-time of a task (and the overall realized schedule makespan) also random.
+Since \emph{PERT networks} \cite{malcolm1959}, 
+a large body of literature focused on the problem of determining the makespan distribution \cite{adlakha1989},
+eventually shown to be a hard problem \cite{hagstrom1990}. 
+A variety of efficient heuristics have been developed so far (see \cite{blaauw2008}), 
+among which Monte Carlo sampling remains, perhaps, the most practical.
+
+Consider, for example, the stochastic task network in Fig.~\ref{fig-house}, 
+detailing the plan of a house construction project,
+assuming task durations are random variables that follow the uniform distribution within respective intervals.
+With earliest-start dispatching, the overall duration of the project (i.e. the realized schedule makespan) 
+will range between 12 and 20 days with an expected value of a little over 16 days.
+
+\input{chapter/cpaior-stability/fig-example}
+
+This paper addresses a problem which, to our knowledge, has not been addressed in existing literature.
+To motivate our problem, let us return to the earlier example and suppose task 7 
+(``Paint interior'') is assigned to a painting crew charging \$100 per day.
+Assume we are willing to hire them for at least 4 days (the maximum number of days they will need) and for at most 6 days; i.e. we have a budget of \$600 for painting.
+With earliest-start dispatching, 7 may start within 8 to 15 days from the project start (the start-date of task 1).
+A challenge that arises in this situation is deciding when to hire the painting crew,
+because to allow for an expected makespan of a little over 16 days (as mentioned earlier),
+we must book the painting crew from the 8-th day and until the 19-th day, at the excessive cost of \$1100.
+% ... est requires an agile availability of resources that might be too costly
+The solution we examine here, is to use a different dispatching strategy,
+associating task 7 with a \emph{planned release-time}, $t_7$, 
+before which it may not start even if installing plumbing and electricity are finished earlier than $t_7$.
+If we choose that 7 may not start earlier than, e.g., $t_7 = 13$ days from the project start,
+we only need to book the painting crew on the 13-th day until the 19-th day, for an acceptable cost of \$600.
+However, the price to pay for this stability is an expected makespan increase to a little over 17 days.
+
+Now suppose that after assessing our budget carefully it turns out that each task may deviate at most, say $w$ days, from its respective planned release-time.
+The emerging question addressed in this paper is:
+\begin{quote}
+	Which planned release-times reach the desired level of stability\footnote{As in Bidot et al. \cite{bidot2009}, stability here refers to the extent that a predictive schedule (planned release-times in our case) is expected to remain close to the realized schedule.}
+	while minimizing the incurred performance penalty?
+\end{quote}
+
+This problem does not involve resource-constraints.
+However, task networks are often used in the area of resource-constrained scheduling under uncertainty (see \cite{beck2002,herroelen2005})
+to represent solutions (e.g. the \emph{earliest-start policy} \cite{igelmund1983}, the \emph{partial-order schedule} \cite{policella2004,godard2005,bonfietti2014}).
+Thus, our work is expected to be useful in dealing with associated problems,
+such as distributing slack in a resource-feasible schedule to make it insensitive to durational variability \cite{davenport2014}.
+
+\subsubsection*{Organization}
+A formal problem statement and its LP formulation are presented in Section~2. 
+As the resulting LP can be quite costly to solve,
+Section~3 presents our main result, an efficient dynamic programming algorithm.
+Section~4 concludes the paper and outlines issues to be addressed in future work.
+
